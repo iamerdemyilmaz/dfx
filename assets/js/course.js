@@ -13,7 +13,7 @@
     { num: "01", slug: "01-npi-process", title: "The product development and NPI process", built: true },
     { num: "02", slug: "02-process-selection", title: "Process selection and cost drivers", built: true },
     { num: "03", slug: "03-tolerancing", title: "Tolerancing for manufacturability", built: true },
-    { num: "04", slug: "04-cnc-machining", title: "DFM for CNC machining", built: false },
+    { num: "04", slug: "04-cnc-machining", title: "DFM for CNC machining", built: true },
     { num: "05", slug: "05-sheet-metal", title: "DFM for sheet metal", built: false },
     { num: "06", slug: "06-injection-molding", title: "DFM for injection molding", built: true },
     { num: "07", slug: "07-casting-forging", title: "DFM for casting and forging", built: false },

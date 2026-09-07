@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 4: DFM for CNC machining · DFx Course</title>
+<meta name="description" content="Design for manufacturing rules for CNC machined parts: internal corner radii, depth-to-diameter ratios, thin walls, undercuts, tool access and setups, threads, surface finish, standard stock sizes, and cost drivers.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="04">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 4</p>
+    <h1>DFM for CNC machining</h1>
+    <p class="lead">Machining is the most forgiving process to design for, which is exactly why it produces so many expensive parts. Almost any shape can be cut; the question is how many tools, setups, and minutes it takes. This module gives you the geometry rules that come from a rotating cutter of finite length, and the cost logic that turns them into money.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Specify</strong> internal corner radii, floor radii, and fillets that match standard cutters and avoid tool dwell.</li>
+      <li><strong>Limit</strong> pocket and hole depth-to-diameter ratios to what standard tooling reaches without deflection or special tools.</li>
+      <li><strong>Identify</strong> thin walls, tall features, undercuts, and access problems that add setups or special tooling.</li>
+      <li><strong>Design</strong> threads, engraving, and surface finish callouts to standard sizes and standard as-machined finishes.</li>
+      <li><strong>Choose</strong> part dimensions that sit inside standard stock with clean-up allowance, and estimate the material you buy versus the material you keep.</li>
+      <li><strong>Explain</strong> the cost drivers of a machined part in the order a machine shop experiences them.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>In January and April 1954 two de Havilland Comet 1 airliners broke up in flight. The court of inquiry, reporting to Parliament in February 1955, found that the cause of the first accident "was the structural failure of the pressure cabin brought about by fatigue".<sup class="cite"><a href="#ref-11">[11]</a></sup> To prove it, the Royal Aircraft Establishment at Farnborough put a complete airframe in a water tank and cycled the cabin pressure. After 3,060 cycles "the fuselage failed at the corner of the forward port cabin window"; the accident aircraft's cracks were traced to the corners of the cabin windows and the aerial apertures in the fuselage crown.<sup class="cite"><a href="#ref-12">[12]</a></sup> The Comet was a riveted sheet-metal structure, not a machined part, but the mechanism is the one every machined-part designer meets: a corner concentrates stress, and a sharp corner concentrates it most.</p>
+    <p>In machining the sharp internal corner is doubly bad. It is a stress raiser in the finished part, and it is a shape a rotating cutter cannot produce at all. Every internal vertical corner in a milled pocket has the radius of the tool that cut it, so a drawing that shows a sharp corner is asking for either a hand operation, an electrical discharge machining step, or a change the machinist will make without telling you. The rules in this module exist to keep the drawing and the cutter in agreement.</p>
+    <p>The other side of the story is Apple's 2008 MacBook, whose enclosure was, in the company's words, "made from a single block of aluminum"; its head of design said the traditional multi-part notebook structure had been replaced "with just one part, the unibody".<sup class="cite"><a href="#ref-10">[10]</a></sup> Machining a laptop chassis from billet is an expensive way to make a housing, and Apple did it on purpose, for stiffness and thinness that assembled sheet parts could not match. Machining is often the wrong process at volume; when it is the right one, it is because the design has bought something with the machine time. Knowing what you are buying is the point.</p>
+
+    <h2 id="process">How the process shapes the rules</h2>
+    <p>A CNC mill removes material with a rotating cutter held in a spindle, moving in three (or five) axes over a workpiece clamped to a table. A CNC lathe rotates the workpiece against a stationary tool. Four facts about the equipment produce almost every rule below.</p>
+    <ol>
+      <li><strong>The cutter is round.</strong> Internal vertical corners take the tool's radius. Pocket floors meet walls at a sharp corner or at the corner radius of the tool.</li>
+      <li><strong>The cutter is a cantilever.</strong> Its stiffness falls with the cube of its length, so deep features need thick tools, and deep narrow features need special tools or several passes at low feed.</li>
+      <li><strong>The cutter comes from one direction per setup.</strong> Every face that must be machined from a new direction is a new setup: unclamp, re-fixture, re-locate, and accept a small error between setups.</li>
+      <li><strong>Time is the cost.</strong> Material removal, tool changes, setups, and inspection are bought by the hour. Machining time is "often the primary cost driver", ahead of setup, material, and special features.<sup class="cite"><a href="#ref-5">[5]</a></sup></li>
+    </ol>
+
+    <h2 id="corners">Internal corner radii and fillets</h2>
+    <p>Because the corner radius is the tool radius, a small corner radius forces a small tool, and a small tool must take shallow cuts at low feed and cannot reach deep. The Hubs design guide's rule is that internal vertical corner radii should be larger than one third of the cavity depth, so that a stiff tool can cut the whole wall in one operation; pocket floor edges can be sharp or given a small radius (typically 0.1 mm or 1 mm), because a flat-bottomed end mill cuts them directly.<sup class="cite"><a href="#ref-4">[4]</a></sup> Larger radii reduce cost because they allow larger tools and higher feeds.<sup class="cite"><a href="#ref-5">[5]</a></sup></p>
+    <p>A refinement that machinists appreciate: make the corner radius slightly larger than a standard tool radius (for example R 5.5 mm for a 10 mm tool, or R 3.2 mm for a 6 mm tool), so that the tool sweeps round the corner instead of stopping in it. A tool that dwells in a corner with full engagement chatters, leaves a mark, and wears faster. If a mating part needs a sharp corner, put the relief on the mating part (a chamfer on the outside corner) rather than asking for a sharp inside corner.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 260" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Internal corner radius versus pocket depth</title>
+        <desc id="fig1-desc">Two plan views of a rectangular pocket. Left: a pocket 40 mm wide and 16 mm deep with 1 mm corner radii, requiring a 2 mm end mill that is eight times its diameter in reach; marked as slow and prone to chatter. Right: the same pocket with 6 mm corner radii, cut by a 10 mm end mill in one pass; marked as fast. A note gives the rule: corner radius greater than one third of depth.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- left pocket -->
+          <rect x="40" y="60" width="240" height="120"/>
+          <path d="M60 80 h200 a4 4 0 0 1 4 4 v72 a4 4 0 0 1 -4 4 h-200 a4 4 0 0 1 -4 -4 v-72 a4 4 0 0 1 4 -4 z" class="diagram-accent" stroke-width="3"/>
+          <circle cx="66" cy="86" r="5" class="diagram-accent"/>
+          <!-- right pocket -->
+          <rect x="360" y="60" width="240" height="120"/>
+          <path d="M404 80 h152 a24 24 0 0 1 24 24 v32 a24 24 0 0 1 -24 24 h-152 a24 24 0 0 1 -24 -24 v-32 a24 24 0 0 1 24 -24 z" class="diagram-accent" stroke-width="3"/>
+          <circle cx="404" cy="104" r="24" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="40" y="205">R 1 corner, depth 16: needs a 2 mm tool</text>
+          <text x="40" y="222">at 8 × diameter reach. Slow, deflects, chatters.</text>
+          <text x="360" y="205">R 6 corner, depth 16: a 10 mm tool cuts the</text>
+          <text x="360" y="222">wall in one pass. Rule: R &gt; depth / 3.</text>
+          <text x="40" y="45" font-weight="600">Sharp-cornered pocket</text>
+          <text x="360" y="45" font-weight="600">Pocket designed for the cutter</text>
+          <text x="40" y="250" class="diagram-text-muted">Plan view of a 40 mm wide pocket. Dimensions in mm.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. The corner radius decides the tool, and the tool decides the time. A radius above one third of the pocket depth lets a stiff tool finish the wall in one operation.<sup class="cite"><a href="#ref-4">[4]</a></sup></figcaption>
+    </figure>
+
+    <h2 id="depth">Depth-to-diameter ratios</h2>
+    <p>Cutter deflection and chip evacuation both get worse with depth. The Hubs guide recommends a cavity depth of no more than four times its width, with about ten times the tool diameter feasible using special tooling and reduced parameters.<sup class="cite"><a href="#ref-4">[4]</a></sup> For holes, it recommends a depth of four times the nominal diameter and a maximum of six times; Protolabs says that holes "much more than six diameters deep become a challenge" because end mill lengths are limited, and that deeper holes may need machining from both sides.<sup class="cite"><a href="#ref-3">[3]</a>,<a href="#ref-4">[4]</a></sup> Protolabs' milling service limits pocket depth to 51 mm (2 in) from either side of the part, so a through-cavity can reach about 100 mm only by machining from both faces, which is two setups.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>Deep holes are usually drilled, not milled, and drills reach further than end mills, but a drill wanders and its depth is limited too. Standard-length drills, gun drills, and peck drilling cycles each have their own limits; ask the shop before drawing a 12 × D hole. If a deep hole exists only to clear a fastener, consider a shorter fastener; if it exists to save weight, consider whether a pocket from the side achieves the same thing with a stiff tool.</p>
+
+    <h2 id="walls">Thin walls and tall features</h2>
+    <p>A thin wall vibrates under the cutter, so the shop must reduce feed and take light passes, and it may still leave chatter marks or a wall that is out of tolerance because it moved. The Hubs guide gives a recommended minimum wall of 0.8 mm for metals and 1.5 mm for plastics, with 0.5 mm and about 1.0 mm feasible.<sup class="cite"><a href="#ref-4">[4]</a></sup> Protolabs sets a minimum feature thickness of 0.51 mm (0.020 in) and a minimum nominal part thickness of 1.02 mm (0.040 in), and notes that tool deflection is the real limit, so the achievable value depends on geometry and tooling.<sup class="cite"><a href="#ref-1">[1]</a>,<a href="#ref-3">[3]</a></sup> Tall thin features are worse than thin walls because they are cantilevers of their own: keep the height-to-width ratio of small features below about four to one.<sup class="cite"><a href="#ref-4">[4]</a></sup></p>
+    <p>Where mass matters and a thin wall seems necessary, remember the moulding lesson from Module 6 in reverse: thicker solid sections are cheaper to machine because they can be cut faster, and a thicker wall with a pocket behind it is often lighter than a thin wall that needed a slow finishing strategy.<sup class="cite"><a href="#ref-5">[5]</a></sup></p>
+
+    <h2 id="undercuts">Undercuts</h2>
+    <p>An undercut is a feature the cutter cannot reach from the direction of the setup: a groove in a wall, a T-slot, a dovetail. Special cutters exist, but they come in a limited range of sizes and they cut slowly. The Hubs guide recommends undercut widths from 3 to 40 mm, depths no more than twice the width, and a minimum clearance of four times the depth so the tool body can reach the feature.<sup class="cite"><a href="#ref-4">[4]</a></sup> Design undercuts to a standard T-slot or dovetail cutter, or eliminate them: an O-ring groove on the face of a part instead of in a bore, a retaining ring groove machined on a lathe instead of an end mill, or a two-piece design where the undercut becomes an ordinary feature on the second part.</p>
+
+    <h2 id="access">Tool access and setups</h2>
+    <p>A three-axis mill reaches the six orthogonal faces of a block, one setup per face. Protolabs notes that on its equipment parts larger than about 254 × 178 mm (10 × 7 in) can only be machined on top and bottom, and that setup constraints depend on machine capability.<sup class="cite"><a href="#ref-3">[3]</a></sup> Each setup adds fixturing time and a small positional error between the features machined in different setups, which is why Module 3 advised keeping functional dimensions within one setup. The Hubs cost guidance is blunt: design for a single setup where possible.<sup class="cite"><a href="#ref-5">[5]</a></sup></p>
+    <p>Practical ways to cut setups: put all critical features on one face or in one direction; avoid features on the underside that could live on the top; use through-holes instead of blind holes from two sides; let a five-axis machine reach angled faces in one setup where the shop has one; and give the fixture something to hold, which means leaving a flat, a pair of tapped holes, or a boss that can be removed afterwards.</p>
+
+    <h2 id="threads">Threads</h2>
+    <p>Threads are cheap when standard and expensive when not. The Hubs guide recommends a thread length of three times the nominal diameter, since engagement beyond that adds little strength, and recommends M6 or larger with M2 feasible; Protolabs supports metric threads M2 to M12 and unified threads #2 to 0.5 in.<sup class="cite"><a href="#ref-1">[1]</a>,<a href="#ref-4">[4]</a></sup> For blind holes, leave an unthreaded relief of at least half the hole diameter at the bottom so the tap or thread mill has somewhere to stop.<sup class="cite"><a href="#ref-5">[5]</a></sup> Thread milling can cut any diameter with the same pitch using one tool, which reduces tool changes and gives accurate threads.<sup class="cite"><a href="#ref-3">[3]</a></sup></p>
+    <p>Two design habits follow. Use the coarse standard pitch unless there is a reason not to. And in soft materials (aluminium, plastics) that will be assembled repeatedly, plan for a threaded insert, which is a purchased part and a drilled hole rather than a fragile tapped thread.</p>
+
+    <h2 id="turning">Turned parts</h2>
+    <p>Round parts belong on a lathe, where the rules are simpler and the cycle is faster. Protolabs' turning guidelines give a diameter range of about 4.07 to 100.33 mm and a length up to 228.6 mm; a minimum wall of 0.51 mm; outside grooves at least 1.2 mm wide (0.5 mm in aluminium and brass) and no more than 24.1 mm deep; no internal grooves; live-tooling holes at least 1 mm axially and 2 mm radially (1 mm in aluminium and brass), parallel or perpendicular to the axis only; threads M2 to M12; and a standard tolerance of ±0.13 mm.<sup class="cite"><a href="#ref-2">[2]</a></sup> The DFM consequence: if a part is mostly a cylinder with a few flats and cross-holes, draw it as a turned part with live-tool features rather than as a milled part with a round profile.</p>
+
+    <h2 id="finish">Surface finish</h2>
+    <p>Surface texture is specified by roughness parameters defined in ASME B46.1-2019, of which the arithmetic mean roughness Ra is the one most drawings use.<sup class="cite"><a href="#ref-9">[9]</a></sup> The standard as-machined finish from one network of machine shops is Ra 3.2 µm (125 µin); a finishing pass can bring it to 1.6, 0.8, or 0.4 µm (63, 32, or 16 µin), and "tighter Ra values increase part cost because they require additional machining steps and stricter quality control".<sup class="cite"><a href="#ref-7">[7]</a></sup> Specify finish only on surfaces that seal, slide, or are seen, and accept as-machined everywhere else. A finish callout on every face of a bracket is a finish callout the shop has to honour on every face.</p>
+
+    <h2 id="stock">Standard stock and material utilisation</h2>
+    <p>Machined parts start as standard stock, and you pay for the stock. Common metric plate thicknesses are 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, and 30 mm, then 10 mm steps up to 100 mm; round bar runs in 1 mm steps from 3 to 15 mm and larger standard sizes above that; and between 0.3 and 1.5 mm is removed from each face of the blank during machining.<sup class="cite"><a href="#ref-6">[6]</a></sup> The Hubs cost tips put it as a rule: design parts at least 3 mm smaller than the standard blank.<sup class="cite"><a href="#ref-5">[5]</a></sup> A part 19 mm thick comes from 20 mm plate with 0.5 mm per face; a part 20.5 mm thick comes from 25 mm plate with 4.5 mm of chips.</p>
+    <p>The same logic applies to the pocket. A 100 × 60 × 20 mm blank is 120 cm³ of aluminium (about 324 g). If the finished part keeps 60 cm³, you bought two grams for every gram you shipped and paid to turn the other gram into chips. That ratio, sometimes called buy-to-fly, is the machining equivalent of moulding's material utilisation, and it is set entirely by the design.</p>
+
+    <h2 id="tolerance">Tolerances</h2>
+    <p>Standard machining tolerance from the guides used here is ±0.125 mm (Hubs) or ±0.13 mm (Protolabs), with ±0.025 mm feasible on specific features at extra cost.<sup class="cite"><a href="#ref-1">[1]</a>,<a href="#ref-4">[4]</a></sup> Module 3 covers the arithmetic; the machining-specific points are that tolerances across setups carry the setup error, that tight tolerances on deep features are hard because the tool deflects, and that a tolerance the shop must inspect on every part is a cost on every part. Apply tight tolerances only where a stack-up requires them, and keep them within one setup.<sup class="cite"><a href="#ref-5">[5]</a></sup></p>
+
+    <h2 id="text">Text and marking</h2>
+    <p>Engraved text is cheaper than raised text, because raising text means machining away the whole surrounding surface. Protolabs recommends a stroke and spacing of at least 0.5 mm in a 20-point or larger sans-serif font; Hubs recommends removing text or engraving it.<sup class="cite"><a href="#ref-3">[3]</a>,<a href="#ref-5">[5]</a></sup> For part numbers and serials, a label or laser mark after machining is usually cheaper still.</p>
+
+    <h2 id="cost">Cost drivers, in the shop's order</h2>
+    <p>The cost of a machined part, as described by the suppliers whose guides are cited here, breaks into machining time (the primary driver), setup and programming (fixed per batch, so dominant at low volume), material (raw price and machinability), and special features such as tight tolerances, thin walls, and unusual finishes that need extra operations.<sup class="cite"><a href="#ref-5">[5]</a>,<a href="#ref-8">[8]</a></sup> Protolabs groups them as raw material, manufacturing time (machining, fixtures, setups, with smaller features needing smaller tools that take longer), and fixed costs such as inspection, packaging, and quoting.<sup class="cite"><a href="#ref-8">[8]</a></sup> Almost every rule above is a way to reduce one of these: bigger radii and fewer thin walls cut machining time, single-setup designs cut fixturing, stock-sized dimensions cut material, and standard threads and finishes cut special operations.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Quantitative design rules for CNC machined parts. Values are one or two suppliers' published guidance; your shop's capability list takes precedence.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range (metric)</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Internal vertical corner radius</td><td>Larger than one third of cavity depth</td><td>R &gt; depth / 3; e.g., R 6 for a 16 mm deep pocket</td><td>Allows a stiff tool to finish the wall in one operation</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Pocket floor edge</td><td>Sharp or small radius</td><td>Sharp, 0.1 mm, or 1 mm</td><td>Flat end mills cut floors directly</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Cavity depth to width</td><td>Keep shallow</td><td>≤ 4 × width recommended; ≤ 10 × tool diameter feasible</td><td>Tool deflection and chip evacuation</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Hole depth to diameter</td><td>Standard drills and mills</td><td>≤ 4 × D recommended; 6 × D maximum; deeper needs both sides</td><td>Tool length and drill wander</td><td><a href="#ref-3">[3]</a>, <a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Maximum milled depth</td><td>One supplier's limit</td><td>51 mm from either side</td><td>Tool reach</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Minimum wall</td><td>Thicker is faster</td><td>0.8 mm metal, 1.5 mm plastic recommended; 0.5 mm and about 1.0 mm feasible</td><td>Thin walls vibrate and deflect</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Minimum feature and nominal thickness</td><td>One supplier's limit</td><td>Feature 0.51 mm; nominal thickness 1.02 mm</td><td>Tool deflection</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Tall features</td><td>Limit aspect ratio</td><td>Height to width &lt; 4</td><td>Feature acts as a cantilever</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Undercuts</td><td>Standard cutter sizes</td><td>Width 3 to 40 mm; depth ≤ 2 × width; clearance ≥ 4 × depth</td><td>Special cutters are limited and slow</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Setups</td><td>Design for one</td><td>3-axis reaches six orthogonal faces, one per setup; large parts top and bottom only</td><td>Each setup adds time and positional error</td><td><a href="#ref-3">[3]</a>, <a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Thread length</td><td>Do not over-engage</td><td>≤ 3 × nominal diameter</td><td>Extra engagement adds little strength</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Thread size</td><td>Standard sizes</td><td>M6 or larger recommended, M2 feasible; supplier range M2 to M12</td><td>Small taps break; standard tools are stocked</td><td><a href="#ref-1">[1]</a>, <a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Blind hole thread relief</td><td>Leave room for the tap</td><td>Unthreaded length ≥ 0.5 × hole diameter</td><td>Tap or thread mill needs run-out</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Turned part envelope</td><td>One supplier's limit</td><td>Diameter 4.07 to 100.33 mm; length ≤ 228.6 mm</td><td>Machine capacity</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Turned grooves</td><td>Outside only</td><td>Width ≥ 1.2 mm (0.5 mm Al, brass); depth ≤ 24.1 mm; no ID grooves</td><td>Grooving tool geometry</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Live-tool holes</td><td>Axial or radial only</td><td>Axial ≥ 1 mm; radial ≥ 2 mm (1 mm Al, brass)</td><td>Tool access on the lathe</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Surface finish</td><td>As-machined unless functional</td><td>Ra 3.2 µm standard; 1.6, 0.8, 0.4 µm with extra passes</td><td>Each finer step is an extra operation and inspection</td><td><a href="#ref-7">[7]</a>, <a href="#ref-9">[9]</a></td></tr>
+          <tr><td>Stock plate sizes</td><td>Design to standard minus clean-up</td><td>3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30 mm, then 10 mm steps; 0.3 to 1.5 mm removed per face; part ≥ 3 mm smaller than blank</td><td>You pay for the blank</td><td><a href="#ref-5">[5]</a>, <a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Tolerance</td><td>Standard unless a stack-up requires tighter</td><td>±0.125 to ±0.13 mm standard; ±0.025 mm feasible</td><td>Tight tolerances add operations and inspection</td><td><a href="#ref-1">[1]</a>, <a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Text</td><td>Engrave, do not emboss</td><td>Stroke and spacing ≥ 0.5 mm; 20-point sans-serif</td><td>Embossing removes the whole surface</td><td><a href="#ref-3">[3]</a>, <a href="#ref-5">[5]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: machining a notebook from a block</h2>
+    <p>Apple's announcement of 14 October 2008 described the new MacBook and 15-inch MacBook Pro as having a "precision unibody enclosure" made from "a single block of aluminum", and quoted Jonathan Ive: "Traditionally notebooks are made from multiple parts. With the new MacBook, we've replaced all of those parts with just one part, the unibody."<sup class="cite"><a href="#ref-10">[10]</a></sup> The result was a 13-inch notebook 24 mm (0.95 in) thick.<sup class="cite"><a href="#ref-10">[10]</a></sup></p>
+    <p>Read as a DFM decision, this is the opposite of the usual advice, which makes it instructive. Machining a large aluminium enclosure from billet means buying far more metal than you keep, running long cycles on expensive machines, and designing every internal feature to the reach and radius of a cutter. Apple accepted those costs to remove the fasteners, brackets, and joints of a multi-part chassis and to get a stiffer, thinner product. That is a DFA benefit (fewer parts, fewer assembly operations, see Module 10) and a product benefit bought with machining time.</p>
+    <p>The public statement does not give cycle times, machine counts, or cost, and the course does not estimate them. The lesson does not need them: process selection (Module 2) is a comparison of what a process costs against what it buys, and machining is the right answer when the geometry, the stiffness, or the part-count reduction is worth the time. When you specify machining for a housing that could be moulded or cast, be able to say what you are buying.</p>
+    <!-- AUTHOR: optional personal note here (a machined part you redesigned for fewer setups or larger radii, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Sharp internal corners on a milled pocket.</strong> Consequence: the shop either adds a radius you did not draw, or quotes an EDM operation. Fix: draw the radius, larger than one third of the depth and slightly larger than a standard tool radius.</li>
+      <li><strong>Deep narrow pockets and long small holes.</strong> Consequence: long small tools, slow feeds, deflection, and out-of-tolerance walls. Fix: keep cavity depth under four times width and holes under six diameters; open the feature from the other side or widen it.</li>
+      <li><strong>Features on every face.</strong> Consequence: a setup per face and positional error between them. Fix: put critical features on one face, use through-holes, and leave fixturing surfaces.</li>
+      <li><strong>Walls thinner than the tool can leave standing.</strong> Consequence: chatter marks, bent walls, scrapped parts. Fix: 0.8 mm minimum in metal, more where the wall is tall, or pocket behind a thicker wall.</li>
+      <li><strong>Finished thickness just over a standard plate size.</strong> Consequence: the next plate up, and hours of facing. Fix: design thickness to standard stock minus clean-up.</li>
+      <li><strong>Finish and tolerance callouts everywhere.</strong> Consequence: extra finishing passes and full inspection on faces that do nothing. Fix: as-machined and general tolerance by default; call out finish and tolerance only where they buy function.</li>
+      <li><strong>Non-standard or over-long threads.</strong> Consequence: special taps, broken taps in small sizes, wasted depth. Fix: standard coarse pitch, three diameters of engagement, and inserts in soft materials.</li>
+      <li><strong>Raised lettering.</strong> Consequence: the whole surface is machined down to leave the letters standing. Fix: engrave, or mark after machining.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: a pocketed bracket redesigned for the cutter</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>An aluminium bracket is drawn as a 100 × 60 × 20 mm block with a pocket 80 × 40 mm and 16 mm deep, internal corner radii of 1 mm, a 4 mm diameter hole 30 mm deep through the side, remaining pocket walls of 0.6 mm at their thinnest, four M3 threaded holes 12 mm deep, and Ra 0.8 µm on all surfaces. The finished thickness is 20 mm, the same as the stock plate.</p>
+    <p><strong>Tasks.</strong> (a) List every feature that violates a rule in Table 1 and propose a compliant value for each. (b) Compute the material bought and kept for the original blank and pocket (aluminium density 2.7 g/cm³) and the buy-to-fly ratio. (c) Choose a finished thickness and stock size that leaves clean-up allowance.</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a) Violations and fixes.</strong></p>
+      <ul>
+        <li><em>Corner radii 1 mm on a 16 mm deep pocket.</em> Rule: R &gt; depth / 3 = 5.3 mm. Change to R 6 mm, which allows a 10 mm end mill with a little clearance so the tool sweeps the corner rather than dwelling in it.</li>
+        <li><em>Pocket depth to width.</em> 16 / 40 = 0.4, within the 4 × limit. No change.</li>
+        <li><em>4 mm hole, 30 mm deep.</em> 30 / 4 = 7.5 diameters, above the 6 × maximum. Either shorten to 24 mm (6 × D), or enlarge to 5 mm if the function allows (30 / 5 = 6 × D), or drill from both sides if the hole is through.</li>
+        <li><em>0.6 mm walls.</em> Below the 0.8 mm recommended minimum for metal. Increase to 1.0 mm; if the pocket outline must stay, shrink the pocket by 0.4 mm per side.</li>
+        <li><em>M3 threads 12 mm deep.</em> 12 / 3 = 4 diameters; the rule is 3 × D = 9 mm of thread. Specify 9 mm of thread with a drilled depth that includes at least 1.5 mm (0.5 × D) of relief. M3 is below the M6 recommended size but within the feasible range; if these fasteners will be removed often, plan for inserts.</li>
+        <li><em>Ra 0.8 µm on all surfaces.</em> Standard as-machined is 3.2 µm. Keep 0.8 µm only on the mounting face that seals or slides, if any; all other surfaces as-machined.</li>
+        <li><em>Finished thickness 20 mm from 20 mm plate.</em> No clean-up allowance. See (c).</li>
+      </ul>
+      <p><strong>(b) Material.</strong> Blank: 100 × 60 × 20 mm = 120,000 mm³ = 120 cm³ → 324 g. Pocket removed: 80 × 40 × 16 = 51,200 mm³ = 51.2 cm³ → 138 g. Kept (ignoring the small holes): 68.8 cm³ → 186 g. Buy-to-fly = 324 / 186 ≈ 1.74. You buy 1.74 g for every gram shipped and pay machine time to remove the difference; on 5,000 parts that is 690 kg of chips.</p>
+      <p><strong>(c) Stock.</strong> Standard plate sizes near 20 mm are 20 and 25 mm. A 20 mm finished thickness needs 25 mm plate and 2.5 mm of facing per side. If the function allows, finish the part at 19 mm from 20 mm plate, which leaves 0.5 mm per face, within the 0.3 to 1.5 mm clean-up range, and cuts both material and facing time. If 20 mm is functional, specify 25 mm stock and accept the cost, knowingly.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="04">
+      <fieldset class="q" data-type="numeric" data-answer="4" data-tolerance="0.1">
+        <legend>1. Using the rule that internal corner radius should exceed one third of cavity depth, what is the minimum corner radius in mm for a 12 mm deep pocket?</legend>
+        <label>Answer (mm): <input type="number" name="q1" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>12 / 3 = 4 mm; in practice you would draw R 4.5 or R 5 to suit a standard tool.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>2. According to the Hubs guide, the recommended maximum hole depth for a standard tool is</legend>
+        <label><input type="radio" name="q2" value="a"> 1 × diameter</label>
+        <label><input type="radio" name="q2" value="b"> 10 × diameter</label>
+        <label><input type="radio" name="q2" value="c"> 4 × diameter, with 6 × as the maximum</label>
+        <label><input type="radio" name="q2" value="d"> Unlimited if drilled</label>
+        <p class="explain" hidden>Recommended 4 × D, maximum 6 × D; Protolabs likewise notes that holes much deeper than six diameters become a challenge.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>3. Which supplier statement about machining cost is correct?</legend>
+        <label><input type="radio" name="q3" value="a"> Machining time is often the primary cost driver</label>
+        <label><input type="radio" name="q3" value="b"> Raw material is always more than half the cost</label>
+        <label><input type="radio" name="q3" value="c"> Setup cost grows with volume</label>
+        <label><input type="radio" name="q3" value="d"> Surface finish has no cost effect</label>
+        <p class="explain" hidden>Machining time first; setup is fixed per batch and matters most at low volume; finer finishes cost more.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="18" data-tolerance="0.1">
+        <legend>4. Using the rule of three diameters of engagement, how many millimetres of thread are recommended for an M6 tapped hole?</legend>
+        <label>Answer (mm): <input type="number" name="q4" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>3 × 6 = 18 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>5. The standard as-machined surface roughness quoted by Hubs is</legend>
+        <label><input type="radio" name="q5" value="a"> Ra 0.4 µm</label>
+        <label><input type="radio" name="q5" value="b"> Ra 3.2 µm (125 µin)</label>
+        <label><input type="radio" name="q5" value="c"> Ra 12.5 µm</label>
+        <label><input type="radio" name="q5" value="d"> Ra 0.05 µm</label>
+        <p class="explain" hidden>3.2 µm standard; 1.6, 0.8, and 0.4 µm need additional finishing passes.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="30" data-tolerance="0.1">
+        <legend>6. A part must finish 27 mm thick with at least 1 mm of clean-up per face. From the standard plate list (20, 25, 30, 40 mm), which thickness in mm should be specified?</legend>
+        <label>Answer (mm): <input type="number" name="q6" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>27 + 2 × 1 = 29 mm minimum, so 30 mm plate.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>7. Why does every additional machining setup cost more than just the fixturing time?</legend>
+        <label><input type="radio" name="q7" value="a"> It requires a new CNC program licence</label>
+        <label><input type="radio" name="q7" value="b"> It changes the material properties</label>
+        <label><input type="radio" name="q7" value="c"> It doubles the tool wear</label>
+        <label><input type="radio" name="q7" value="d"> Features machined in different setups carry a positional error relative to each other</label>
+        <p class="explain" hidden>Re-locating the part introduces error between setups, which is why functional dimensions should stay within one setup.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>8. The Comet inquiry's water-tank test found that the fuselage failed after about 3,060 pressure cycles at</legend>
+        <label><input type="radio" name="q8" value="a"> the centre of a flat panel</label>
+        <label><input type="radio" name="q8" value="b"> the engine mounts</label>
+        <label><input type="radio" name="q8" value="c"> the corner of a cabin window</label>
+        <label><input type="radio" name="q8" value="d"> the landing gear bay</label>
+        <p class="explain" hidden>The failure started at a window corner, where stress concentrates; the same mechanism makes sharp internal corners a liability in machined parts.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>4 mm.</li>
+        <li>c. 4 × D recommended, 6 × D maximum.</li>
+        <li>a. Machining time.</li>
+        <li>18 mm.</li>
+        <li>b. Ra 3.2 µm.</li>
+        <li>30 mm plate.</li>
+        <li>d. Positional error between setups.</li>
+        <li>c. Window corner.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>The cutter is round, it is a cantilever, and it comes from one direction per setup. Every machining rule follows from those three facts.</li>
+      <li>Internal corner radii above one third of the pocket depth, and slightly larger than a standard tool, let a stiff cutter finish the wall in one pass.</li>
+      <li>Keep cavities under four times their width and holes under six diameters deep. Deeper features mean special tools, two-sided machining, or both.</li>
+      <li>Walls under 0.8 mm in metal and features taller than four times their width vibrate. Thicker is faster and often lighter than a thin wall machined slowly.</li>
+      <li>Design for one setup, keep functional dimensions in it, and leave the fixture something to hold.</li>
+      <li>Standard threads at three diameters, as-machined finish unless functional, and part thickness designed to standard stock minus clean-up.</li>
+      <li>Machining time is the primary cost. When you choose machining over moulding or casting, be able to say what the time is buying.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07.</p>
+    <ol class="references">
+      <li id="ref-1">Protolabs. "CNC Milling Design Guidelines." n.d. <a href="https://www.protolabs.com/services/cnc-machining/cnc-milling/design-guidelines/">https://www.protolabs.com/services/cnc-machining/cnc-milling/design-guidelines/</a> <span class="tag">(source values in inches; converted)</span></li>
+      <li id="ref-2">Protolabs. "CNC Turning Design Guidelines." n.d. <a href="https://www.protolabs.com/services/cnc-machining/cnc-turning/design-guidelines/">https://www.protolabs.com/services/cnc-machining/cnc-turning/design-guidelines/</a> <span class="tag">(source values in inches; converted)</span></li>
+      <li id="ref-3">Protolabs. "6 Ways to Optimize Part Design for CNC Machining." Design tip, n.d. <a href="https://www.protolabs.com/resources/design-tips/6-ways-to-optimize-part-design-for-cnc-machining/">https://www.protolabs.com/resources/design-tips/6-ways-to-optimize-part-design-for-cnc-machining/</a></li>
+      <li id="ref-4">Protolabs Network (formerly Hubs). "CNC machining design guide." n.d. <a href="https://www.hubs.com/guides/cnc-machining/">https://www.hubs.com/guides/cnc-machining/</a></li>
+      <li id="ref-5">Protolabs Network (formerly Hubs). "14 proven design tips to reduce the cost of CNC machining." n.d. <a href="https://www.hubs.com/knowledge-base/reducing-cnc-machining-costs-design-tips/">https://www.hubs.com/knowledge-base/reducing-cnc-machining-costs-design-tips/</a></li>
+      <li id="ref-6">Protolabs Network (formerly Hubs). "Standard blank sizes for CNC machining (sheets &amp; rods)." n.d. <a href="https://www.hubs.com/knowledge-base/standard-blank-sizes-cnc-machining-sheets-rods/">https://www.hubs.com/knowledge-base/standard-blank-sizes-cnc-machining-sheets-rods/</a></li>
+      <li id="ref-7">Protolabs Network (formerly Hubs). "What are the types of surface finishes for CNC machining?" n.d. <a href="https://www.hubs.com/knowledge-base/surface-finishes-cnc-machinings/">https://www.hubs.com/knowledge-base/surface-finishes-cnc-machinings/</a></li>
+      <li id="ref-8">Protolabs. "Understanding CNC manufacturing costs." n.d. <a href="https://www.protolabs.com/en-gb/resources/blog/understanding-cnc-manufacturing-costs/">https://www.protolabs.com/en-gb/resources/blog/understanding-cnc-manufacturing-costs/</a></li>
+      <li id="ref-9">ASME. <em>ASME B46.1-2019 Surface Texture (Surface Roughness, Waviness, and Lay).</em> ASME catalogue page. <a href="https://www.asme.org/codes-standards/find-codes-standards/b46-1-surface-texture">https://www.asme.org/codes-standards/find-codes-standards/b46-1-surface-texture</a></li>
+      <li id="ref-10">Apple Inc. "New MacBook Family Redefines Notebook Design." Press release, 14 October 2008. <a href="https://www.apple.com/newsroom/2008/10/14New-MacBook-Family-Redefines-Notebook-Design/">https://www.apple.com/newsroom/2008/10/14New-MacBook-Family-Redefines-Notebook-Design/</a></li>
+      <li id="ref-11">UK Parliament, Hansard. "Comet Aircraft Accidents (Report of Inquiry)." House of Commons debate, 16 February 1955. <a href="https://api.parliament.uk/historic-hansard/commons/1955/feb/16/comet-aircraft-accidents-report-of">https://api.parliament.uk/historic-hansard/commons/1955/feb/16/comet-aircraft-accidents-report-of</a></li>
+      <li id="ref-12">DH Aircraft. "Comet 1 Inquiry." n.d. <a href="https://www.dh-aircraft.co.uk/aircraft/dh106/comet1/inquiry/">https://www.dh-aircraft.co.uk/aircraft/dh106/comet1/inquiry/</a> <span class="tag">(secondary: enthusiast summary of the 1955 Cohen inquiry report; cycle count and failure location taken from it)</span></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Oberg, E., Jones, F. D., Horton, H. L., Ryffel, H. H. <em>Machinery's Handbook</em>, 31st ed. Industrial Press, 2020. Thread data, drill sizes, speeds and feeds, and surface finish tables.</li>
+      <li>Bralla, J. G. (ed.). <em>Design for Manufacturability Handbook</em>, 2nd ed. McGraw-Hill, 1999. Chapters on machined parts by process.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>
