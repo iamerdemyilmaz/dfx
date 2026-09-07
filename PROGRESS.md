@@ -9,7 +9,7 @@ Spec: CLAUDE.md. Source register: SOURCES.md.
 |-------|--------|------|
 | A – Research and outline | Complete, approved by author | 2026-09-07 |
 | B – Scaffold + reference module (06) | Complete, approved by author (4,900 words accepted) | 2026-09-07 |
-| C – Remaining modules | **In progress**: 00 to 04 done | 2026-09-07 |
+| C – Remaining modules | **In progress**: 00 to 06 done | 2026-09-07 |
 | D – Verification pass | Not started | |
 | E – Ship (README, final summary) | Not started | |
 
@@ -26,6 +26,7 @@ Author instruction (2026-09-07): no em or en dashes anywhere in the course, incl
 | 02 Process selection | 2026-09-07 | 3,190 | 17 | 2 | 8 | 16 OK; CBS News returns 406 to scripts (opened during research; secondary) | Exercise arithmetic recomputed in Python. |
 | 03 Tolerancing | 2026-09-07 | 4,173 | 16 | 2 | 8 | 13 OK; ISO catalogue pages (3) return 403 to scripts, opened during research | Simply Bearings page used only for shaft deviations because its H7 value conflicts with IT7 = 21 µm; noted in SOURCES S-134. Exercise and quiz arithmetic recomputed. |
 | 04 CNC machining | 2026-09-07 | 3,847 | 12 | 1 | 8 | 12 OK | Comet 1 (Hansard + inquiry summary) used for stress concentration; Apple unibody as the case. |
+| 05 Sheet metal | 2026-09-07 | 3,674 | 10 | 2 | 8 | 7 OK; CPSC, ISO, The Fabricator return 403 to scripts | PEM handbook (PDF) replaced the blocked PEM FAQ as the hardware source. |
 | 06 Injection molding | 2026-09-07 | 4,904 | 14 | 3 | 8 | 14 OK | Length accepted by author. |
 
 Links that return 403 to scripts are recorded here rather than as dead; they will be re-checked by hand in Phase D.
