@@ -1,0 +1,280 @@
+# SOURCES.md
+
+Source register for *Design for Manufacturing and Assembly: From Prototype to Production*.
+
+All entries accessed 2026-09-07 unless noted. Status meanings:
+
+- **verified** – I read the source (web page, PDF, or catalogue page) and it says what the course will claim. For standards, "verified" means the designation, revision, and scope were read on the publisher's catalogue page; the body text of paid standards was not read, and any numeric table values are cited separately from public reproductions marked *secondary*.
+- **secondary** – The source is credible and the claim is attributed to it by another credible source I did read, but I could not read the original (typically a printed book or a paywalled standard body). Secondary sources must be labelled as such in module References.
+- **unverified** – Not to be used in the course. None are listed here; candidates that failed verification are recorded in PROGRESS.md.
+
+Source IDs (S-xx) are stable and will be used as the citation keys in module References.
+
+---
+
+## Cross-cutting sources (used by several modules)
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-01 | Boothroyd, G., Dewhurst, P., Knight, W. A. *Product Design for Manufacture and Assembly*, 3rd ed. CRC Press, 2011. ISBN 9781420089271. https://www.routledge.com/Product-Design-for-Manufacture-and-Assembly/Boothroyd-Dewhurst-Knight/p/book/9781420089271 | secondary (bibliographic details verified; text not read) | DFA method, minimum-part criteria, DFA index, handling and insertion times, process cost models. Specific claims are cited through S-88 and S-89, which quote page numbers. |
+| S-02 | Ulrich, K. T., Eppinger, S. D., Yang, M. C. *Product Design and Development*, 7th ed. McGraw-Hill, 2020. ISBN 9781260043655. https://www.mheducation.com/highered/product/Product-Design-and-Development-7-Ulrich | secondary | Generic product development process, DFM chapter structure, cost-estimation approach. |
+| S-03 | Bralla, J. G. (ed.). *Design for Manufacturability Handbook*, 2nd ed. McGraw-Hill, 1999 (copyright 1998). ISBN 9780070071391. https://www.accessengineeringlibrary.com/content/book/9780070071391 | secondary | Process-by-process design rules; further reading pointer. |
+| S-04 | Ashby, M. F. *Materials Selection in Mechanical Design*, 5th ed. Butterworth-Heinemann, 2017. ISBN 9780081005996. https://www.amazon.com/Materials-Selection-Mechanical-Design-Michael/dp/0081005997 | secondary | Material and process selection charts; process selection method. |
+| S-05 | Swift, K. G., Booker, J. D. *Manufacturing Process Selection Handbook*. Butterworth-Heinemann, 2013. ISBN 9780080993607. https://www.sciencedirect.com/book/9780080993607/manufacturing-process-selection-handbook | secondary | Process information maps (PRIMAs), process capability charts, cost estimating at component level. |
+| S-06 | Protolabs. "Plastic Injection Molding Design Guidelines." https://www.protolabs.com/services/injection-molding/plastic-injection-molding/design-guidelines/ | verified | Wall thickness by resin, draft (0.5°, 2°, 3° shut-off, 3° light texture, 5° medium texture), tolerances ±0.08 mm machining plus ±0.002 mm/mm resin, side-action limits, max part size. |
+| S-07 | Protolabs. "CNC Milling Design Guidelines." https://www.protolabs.com/services/cnc-machining/cnc-milling/design-guidelines/ | verified | Min feature 0.51 mm, nominal thickness 1.02 mm, max depth 50.8 mm, standard tolerance ±0.13 mm, thread range M2–M12, engraving minima, max part envelopes. |
+| S-08 | Protolabs. "Sheet Metal Fabrication Design Guidelines." https://www.protolabs.com/services/sheet-metal-fabrication/design-guidelines/ | verified | Thickness 0.61–6.35 mm, standard bend radii, flange ≥4t, hole ≥t, hole-to-edge 1.57/3.18 mm, features within 4t of bend deform, notch/tab minima, hem return 6t, tolerances by bend count. |
+| S-09 | Protolabs Network (formerly Hubs). "CNC machining design guide." https://www.hubs.com/guides/cnc-machining/ | verified | Corner radius > 1/3 depth, cavity depth 4× width recommended (10× tool dia feasible), wall 0.8 mm metal / 1.5 mm plastic, hole depth 4×D (6×D max), thread 3×D, standard ±0.125 mm, feasible ±0.025 mm, undercut rules. |
+| S-10 | Protolabs Network (formerly Hubs). "Injection molding design guide." https://www.hubs.com/guides/injection-molding/ | verified | Draft 2° min (+1° per 25 mm height, +1–2° textured), rib 0.5× wall and <3× rib thickness high, boss OD 2× screw dia, fillets 0.5×/1.5× wall, living hinge 0.20–0.35 mm, tolerances ±0.25 mm standard, mold cost and cycle-life ranges (aluminium 5k–10k, tool steel 100k+), volume bands. |
+| S-11 | Protolabs Network (formerly Hubs). "14 proven design tips to reduce the cost of CNC machining." https://www.hubs.com/knowledge-base/reducing-cnc-machining-costs-design-tips/ | verified | Cost drivers (machining time primary; setup; material; special features); the 14 tips with values. |
+| S-12 | Protolabs Network (formerly Hubs). "Standard blank sizes for CNC machining." https://www.hubs.com/knowledge-base/standard-blank-sizes-cnc-machining-sheets-rods/ | verified | Standard metric plate thicknesses 3–30 mm then 10 mm steps; rod diameters; 0.3–1.5 mm removed per side. |
+| S-13 | NIST/SEMATECH. *e-Handbook of Statistical Methods*, §6.1.6 "What is Process Capability?" https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm | verified | Cp, Cpk, Cpm formulas; Cp 1.00 = 0.27 % rejects, 1.33 = 64 ppm, 1.66 = 0.6 ppm, 2.00 = 2 ppb (centred). |
+| S-14 | ASME. *ASME Y14.5-2018 Dimensioning and Tolerancing* (reaffirmed 2024). https://www.asme.org/codes-standards/find-codes-standards/y14-5-dimensioning-tolerancing/2018 | verified (catalogue page) | Current revision, scope ("symbols, rules, definitions, requirements, defaults, and recommended practices"), 2018 changes list. |
+| S-15 | ISO. *ISO 2768-1:1989 General tolerances – Part 1: Tolerances for linear and angular dimensions without individual tolerance indications.* https://www.iso.org/standard/7748.html | verified (catalogue page) | Designation, four classes f/m/c/v, applies to metal removal and sheet metal forming, drawing note "ISO 2768-m". |
+| S-16 | ISO. *ISO 286-1:2010 GPS – ISO code system for tolerances on linear sizes – Part 1.* https://www.iso.org/standard/45975.html | verified (catalogue page) | Designation, IT01–IT18 grades, basic hole/basic shaft systems; companion ISO 286-2:2010 for tables. |
+| S-17 | ISO. *ISO 8015:2011 GPS – Fundamentals – Concepts, principles and rules.* https://www.iso.org/obp/ui#iso:std:iso:8015:en | verified (catalogue page) | Independency principle and other fundamental GPS principles. |
+| S-18 | Formlabs. *Formlabs Design Guide* (Form 1+/Form 2, Clear resin at 100 µm). https://archive-media.formlabs.com/upload/formlabs-design-guide.pdf | verified (PDF read) | SLA supported wall 0.4 mm, unsupported 0.6 mm, overhang ≤1.0 mm unsupported, 19° min overhang angle, hole ≥0.5 mm, drain ≥3.5 mm, clearance 0.5 mm, span 21 mm. |
+| S-19 | Formlabs. "Design specifications for 3D models (Form 3/Form 3B)." https://formlabs.com/support/Design-specifications-for-3D-models-form-3 | verified | Form 3 values: walls 0.2 mm, emboss 0.1 mm, engrave 0.15 mm, hole 0.5 mm, drain 2.5 mm, clearance 0.5 mm, overhang 5.0 mm / 10°, span 29 mm (shows machine-to-machine variation of "rules"). |
+
+---
+
+## Module 0 – Introduction: Why DFx
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-20 | Ulrich, K. T., Pearson, S. A. "Does Product Design Really Determine 80% of Manufacturing Cost?" MIT Sloan School of Management Working Paper 3601-93-MSA, August 1993. https://dspace.mit.edu/handle/1721.1/47202 (PDF read via direct bitstream) | verified (PDF read) | The "80 %" claim is folklore with no well-defined empirical basis; 18 drip coffee makers; design range 48 % vs manufacturing range 31 % of average cost under stated assumptions; Krups 178 scenario $14.54 → $4.98; design guidelines (PP vs PC costs 2–3×; 25–50 % purchased parts). |
+| S-21 | Wharton Magazine. "The Inside Story of Product Design." Summer 1997. https://magazine.wharton.upenn.edu/issues/summer-1997/the-inside-story-of-product-design/ | verified | Accessible account of the coffee-maker study; Rowenta ($49 retail, ~$6 estimated cost); Braun polypropylene tank with ribbing to hide sink marks. |
+| S-22 | Boehm, B. W. "Software Engineering." *IEEE Transactions on Computers* C-25(12):1226–1241, Dec. 1976. https://dl.acm.org/doi/10.1109/TC.1976.1674590 | secondary | Origin of the "cost to fix grows ~10× per phase, up to 100×" curve, i.e., the "rule of ten". Attributed, not read. |
+| S-23 | Boehm, B., Basili, V. R. "Software Defect Reduction Top 10 List." *IEEE Computer* 34(1):135–137, 2001. https://dl.acm.org/doi/10.1109/2.962984 | secondary | Restates the 100:1 post-delivery factor and notes 5:1 for small non-critical projects; used to attribute the rule of ten honestly. |
+| S-24 | FlightGlobal. "Airbus reveals latest A380 delay will cost EADS €2.8 billion in pre-tax earnings 2006–2010." Oct. 2006. https://www.flightglobal.com/strategy/2006/10/airbus-reveals-latest-a380-delay-will-cost-eads-e2-8-billion-in-pre-tax-earnings-2006-2010/ | secondary (blocked on fetch; content confirmed via search excerpt and S-25) | €2.8 bn on top of €2 bn announced June 2006; root cause stated by Airbus: 3D digital mock-up for harness installation implemented late. |
+| S-25 | The Register. "Airbus admits A380 delay." 4 Oct. 2006. https://www.theregister.com/2006/10/04/another_a380_delay/ | verified | EADS statement quoted: "the 3D Digital Mock up … was implemented late"; €2.8 bn over four years plus €2 bn from June 2006; delivery slipped to Oct. 2007. |
+| S-26 | Boothroyd Dewhurst, Inc. "History of DFMA." https://www.dfma.com/about-history.asp | verified | Timeline: Boothroyd at UMass 1967, coding system 1976, company founded 1983, DFM costing added 1985, National Medal of Technology 1991; 1987 Assembly Engineering article comparing IBM Proprinter and Epson MX-80 (no numbers given). |
+| S-128 | Boothroyd Dewhurst, Inc. "DFMA Explained: Design for Manufacture and Assembly." https://www.dfma.com/resources/what-is-dfma.asp | verified | Working definitions of DFA and DFM; vendor-stated typical outcome ranges (20–50 % part-count reduction, 10–30 % assembly-time reduction, 15–40 % total cost reduction) to be presented as vendor claims, not data. |
+
+---
+
+## Module 1 – The product development and NPI process
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-27 | OpenBOM (Haw, J.). "EVT vs DVT vs PVT: Understanding the Stages of Product Development." 1 Sep. 2023. https://www.openbom.com/blog/evt-vs-dvt-vs-pvt-understanding-the-stages-of-product-development | verified | Purpose and exit criteria of EVT/DVT/PVT; typical quantities (EVT 10–40, DVT 50–100, PVT 10–20 % of first PO); presented as one practitioner's typical numbers, not a standard. |
+| S-28 | NASA. "3.0 NASA Program/Project Life Cycle." *NASA Systems Engineering Handbook* (NASA/SP-2016-6105 Rev 2) online. https://www.nasa.gov/reference/3-0-nasa-program-project-life-cycle/ | verified | Phases Pre-A through F and the reviews (MCR, SRR, SDR, PDR, CDR, PRR, SIR, TRR, SAR, ORR, FRR…) as a formal phase-gate reference. |
+| S-29 | Stage-Gate International. "The Stage-Gate Model: An Overview." https://www.stage-gate.com/blog/the-stage-gate-model-an-overview/ | verified | Stages 1–5, gate structure (deliverables, criteria, outputs), gatekeepers; Cooper attribution; term first in print 1988. |
+| S-30 | Cooper, R. G. *Winning at New Products*, 5th ed. Basic Books, 2017. ISBN 9780465093328. | secondary | Stage-Gate origin text; further reading. |
+| S-31 | TechCrunch (Etherington, D.). "Elon Musk says 'humans are underrated,' calls Tesla's 'excessive automation' a 'mistake'." 13 Apr. 2018. https://techcrunch.com/2018/04/13/elon-musk-says-humans-are-underrated-calls-teslas-excessive-automation-a-mistake/ | verified | Tweet text "Yes, excessive automation at Tesla was a mistake. To be precise, my mistake. Humans are underrated."; context: Tesla had missed its 2,500-per-week Model 3 target; Musk told CBS the overly complex automated conveyor system was dismantled because "it was not working". Primary post: https://x.com/elonmusk/status/984882630947753984 |
+| S-32 | NBC News. "Elon Musk Warns of 'Manufacturing Hell' for Model 3." July 2017. https://www.nbcnews.com/business/autos/elon-musk-warns-manufacturing-hell-model-3-n788561 | verified | 1 Aug. 2017: Musk quoted, "We're going to go through at least six months of manufacturing hell"; target ~5,000 Model 3 per week by end of 2017; first 30 cars handed over July 2017. |
+
+---
+
+## Module 2 – Process selection and cost drivers
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-33 | NADCA. *Product Specification Standards for Die Castings*, 2015, Section 4A "Engineering & Design: Coordinate Dimensioning" (public excerpt hosted by A&B Die Casting). https://www.abdiecasting.com/wp-content/uploads/2017/08/Section-04a-Coordinate-Dimensioning.pdf | verified (PDF read) | Process comparison text (investment casting at low volume, die casting at high volume; powdered metal; plastics limits); wall thickness 1.016–5.08 mm typical, 0.50 mm possible; linear tolerance standard ±0.25 mm first 25.4 mm + ±0.025 mm per additional 25.4 mm, precision ±0.05 mm first 25.4 mm; draft formula D = L/C with constants (Al inside wall C = 30 (6 mm), outside 60 (12 mm)); general note 2° inside / 1° outside for ≥25 mm deep aluminium features. |
+| S-34 | NBC News. "Ford lightens all-new aluminum F-150." 13 Jan. 2014. https://www.nbcnews.com/business/autos/ford-lightens-all-new-aluminum-f-150-n8386 | verified | 2015 F-150 "500 to more than 700 pounds" (≈230–320 kg) lighter through aluminium-alloy body on a high-strength steel frame; introduced at Detroit auto show 13 Jan. 2014. |
+| S-35 | CBS News. "New aluminum-body Ford F-150 is 700 pounds lighter." Jan. 2014. https://www.cbsnews.com/news/new-aluminum-body-ford-f-150-is-700-pounds-lighter/ | secondary (search excerpt) | Corroborates the 700 lb (≈320 kg) figure and Ford's stated motivations. |
+| S-36 | Protolabs. "Understanding CNC manufacturing costs." https://www.protolabs.com/en-gb/resources/blog/understanding-cnc-manufacturing-costs/ | verified | Three cost buckets: raw material, manufacturing time (machining, fixtures, setups), other/fixed (inspection, packaging, quoting). No percentages given. |
+| S-10, S-11, S-12 | (cross-cutting) | verified | Tooling cost and volume bands; machining cost drivers; stock sizes. |
+| S-04, S-05 | Ashby; Swift & Booker | secondary | Process selection charts and PRIMAs. |
+
+---
+
+## Module 3 – Tolerancing for manufacturability
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-14, S-15, S-16, S-17 | ASME Y14.5-2018; ISO 2768-1:1989; ISO 286-1:2010; ISO 8015:2011 | verified (catalogue pages) | Designations and scope. |
+| S-37 | AmesWeb. "ISO 2768-1 Linear Dimensions Tolerance Table." https://amesweb.info/fits-tolerances/iso-2768-linear-dimensions-tolerances.aspx | secondary (public reproduction of the standard's tables) | f/m/c/v values, e.g., 6–30 mm: ±0.1 / ±0.2 / ±0.5 / ±1.0 mm; 30–120 mm: ±0.15 / ±0.3 / ±0.8 / ±1.5 mm. |
+| S-38 | AmesWeb. "Angular Dimensions Tolerances (ISO 2768-1)." https://amesweb.info/fits-tolerances/iso-2768-angular-dimensions-tolerances.aspx | secondary (reproduction) | Angular table by length of shorter side. |
+| S-39 | AmesWeb. "Straightness & Flatness Tolerances Chart (ISO 2768-2)." https://amesweb.info/fits-tolerances/straightness-flatness-tolerances.aspx | secondary (reproduction) | ISO 2768-2 classes H/K/L, e.g., 30–100 mm: 0.1 / 0.2 / 0.4 mm. |
+| S-40 | Engineers Edge. "International Tolerance (IT) Grades ISO 286-1-2010 Table." https://www.engineersedge.com/international_tol.htm | secondary (reproduction) | IT5–IT12 values, e.g., 18–30 mm: IT7 = 21 µm, IT9 = 52 µm, IT11 = 130 µm. |
+| S-41 | AmesWeb. "Preferred Fits and Tolerances Charts (ISO & ANSI)." https://amesweb.info/fits-tolerances/preferred-tolerances-table.aspx | secondary (reproduction) | Hole-basis preferred fits H11/c11 … H7/u6 with descriptions (sliding H7/g6, locational clearance H7/h6, transition H7/k6, H7/n6, press H7/p6, force H7/u6). |
+| S-42 | Fischer, B. R. *Mechanical Tolerance Stackup and Analysis*, 2nd ed. CRC Press, 2011. ISBN 9781439815724. | secondary | Worst-case and RSS stack-up methodology; author was a Y14.5 committee member. |
+| S-43 | NASA. *The Hubble Space Telescope Optical Systems Failure Report* (Allen Board), November 1990. NTRS 19910003124. https://ntrs.nasa.gov/api/citations/19910003124/downloads/19910003124.pdf | verified (PDF read) | Field lens 1.3 mm mis-spaced in the reflective null corrector; spacing needed correct to 10 µm; measurement operator read reflection from field cap not rod end; inverse null corrector and refractive null corrector both showed the error and were "discounted"; complete reliance on a single test; no independent re-measurement of spacings. |
+| S-44 | NASA Science. "Hubble's Mirror Flaw." https://science.nasa.gov/mission/hubble/observatory/design/optics/hubbles-mirror-flaw/ | verified | Announced 27 June 1990; spacing off by 1.3 mm; mirror too flat toward edge; error "10 times larger than the specified tolerance". |
+| S-45 | Quality-One. "PPAP – Production Part Approval Process." https://quality-one.com/ppap/ | verified | 18 PPAP elements and five submission levels (used in Modules 3 and 14). Ppk acceptance thresholds (≥1.67 acceptable, 1.33–1.67 conditional) are *secondary*, from search excerpts of PPAP 4th ed. summaries. |
+| S-13 | NIST e-Handbook §6.1.6 | verified | Cp/Cpk. |
+
+---
+
+## Module 4 – DFM for CNC machining
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-07, S-09, S-11, S-12 | Protolabs milling; Hubs CNC guide; Hubs cost tips; Hubs blank sizes | verified | All numeric machining rules and cost drivers. |
+| S-46 | Apple Newsroom. "New MacBook Family Redefines Notebook Design." 14 Oct. 2008. https://www.apple.com/newsroom/2008/10/14New-MacBook-Family-Redefines-Notebook-Design/ | verified | Unibody enclosure "made from a single block of aluminum"; Ive: "we've replaced all of those parts with just one part—the unibody"; 0.95 in (24 mm) thick. |
+| S-47 | Oberg, E. et al. *Machinery's Handbook*, 31st ed. Industrial Press, 2020. https://books.industrialpress.com/history-of-machinerys-handbook/ | secondary | Standard thread data, drill sizes, surface finish tables, press-fit formulas (further reading). |
+| S-48 | ASME. *ASME B46.1-2019 Surface Texture (Surface Roughness, Waviness, and Lay).* https://www.asme.org/codes-standards/find-codes-standards/b46-1-surface-texture | verified (catalogue page) | Designation for Ra/Rz specification. Typical Ra-by-process ranges will be taught as "typical" and attributed to supplier guides (S-07, S-33, S-101) rather than to B46.1 tables, which were not read. |
+
+---
+
+## Module 5 – DFM for sheet metal
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-08 | Protolabs sheet metal guidelines | verified | See cross-cutting row. |
+| S-49 | Xometry. *Design Guidelines and Best Practices for Sheet Metal Fabrication* (PDF, 2020 guide, current hosted version). https://f.hubspotusercontent00.net/hubfs/340051/Xometry%20Sheet%20Metal%20Design%20Guide%202020.pdf | verified (PDF read) | Feature clearance table in multiples of thickness (hole to bend 2.5t, slot to bend 4t, hole to edge 2t, hole to hole 6t, countersink 8t); bend radius ≥1t; 5052 vs 6061 bendability; bent-part tolerances ±0.015 in (0.38 mm) edge-to-bend, ±0.030 in (0.76 mm) over multiple bends. |
+| S-50 | KETIV. *Sheet Metal Unfold Rule Equations* (Autodesk Inventor reference), v1.0. https://ketiv.com/wp-content/uploads/2019/04/KETIV-AVA-Sheet-Metal-Unfold-Rules-Equations.pdf | verified (PDF read) | Bend allowance Ln = α·(π/180)·(Ri + K·T); K-factor definition t = K·T, 0 ≤ K ≤ 1, determined experimentally; bend deduction and setback relations. |
+| S-51 | The Fabricator (Benson, S.). "Analyzing the k-factor in sheet metal bending." https://www.thefabricator.com/thefabricator/article/bending/analyzing-the-k-factor-in-sheet-metal-bending | secondary (site blocked fetch; content from search excerpts) | Common default K ≈ 0.4468 (Machinery's Handbook mild steel value 0.446); K varies with Ri/t and material. |
+| S-52 | PennEngineering (PEM). *Tech Sheet: Minimum Distance Hole C/L to Edge*, April 2019. https://www.pemnet.com/wp-content/uploads/sites/2/2022/06/CLtoEdgeRev419.pdf | verified (PDF read) | Definition of minimum centreline-to-edge; violating it causes visible edge bulging and reduced performance; catalog values apply only when the minimum is met. |
+| S-53 | PennEngineering (PEM). "FAQ." https://www.pemnet.com/resources/faq/ | secondary (search excerpt; page blocked) | Some fasteners install in sheets as thin as 0.2 mm but 0.76–1 mm is a practical minimum; hole tolerance typically +0.08/−0 mm; punch-side installation for sheets ≥2.29 mm. To be re-checked before use. |
+| S-54 | U.S. CPSC. "Samsung Recalls Top-Load Washing Machines Due to Risk of Impact Injury." Recall 17-028, 4 Nov. 2016. https://www.cpsc.gov/Recalls/2017/samsung-recalls-top-load-washing-machines | verified | ~2.8 million units; "The washing machine top can detach unexpectedly from the washing machine chassis during use, posing a risk of injury from impact"; 733 reports, 9 injuries; remedy included reinforcing the top. |
+
+---
+
+## Module 6 – DFM for injection molding
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-06, S-10 | Protolabs and Hubs molding guides | verified | All core numeric rules. |
+| S-55 | Covestro (formerly Bayer MaterialScience). *Engineering Polymers: Part and Mold Design – A Design Guide.* https://solutions.covestro.com/-/media/covestro/solution-center/brands/downloads/imported/1557222937.pdf | verified (PDF read; several pages are font-encoded and unreadable, so only the readable pages are cited) | Draft: ≥1° for PC and PC/ABS, ≥3° for high-heat PC, ≥5° plus 0.5–0.6 µm finish for TPU; ejection, venting (vent depth 0.025–0.05 mm), air-poppet valves; wall-thickness/stiffness reasoning. |
+| S-56 | Plastics Industry Association. *Customs and Practices of the Moldmaking Industry* (AR-101), Oct. 1996, rev. May 2023. https://www.plasticsindustry.org/data-report/customs-and-practices-of-the-moldmaking-industry/ | verified (catalogue page) | Existence, code, and revision of the mold class 101–105 document. The cycle-count definitions (101 ≥1,000,000; 102 ≤1,000,000; 103 ≤500,000; 104 ≤100,000; 105 ≤500 cycles) are *secondary*, from molder summaries (e.g., https://www.kaysun.com/blog/the-types-of-spi-mold-classifications). |
+| S-57 | SPI mold finish grades A-1…D-3 (diamond buff #3/#6/#15; 600/400/320 grit paper; 600/400/320 stone; glass bead #11, #240 and #24 oxide blast). Summarised at https://www.injection-moldings.com/groups/engineering-team/spi-mold-finish-standards | secondary | Finish designations; the original SPI plaque set is a physical standard. |
+| S-58 | LEGO Group. "The LEGO moulding philosophy" (LEGO History). https://www.lego.com/en-us/history/articles/e-the-lego-moulding-philosophy | verified | Switch to ABS in 1963 "permits a greater precision in molding to an accuracy of 1/200 mm" (0.005 mm). Used only for this single, sourced statement. |
+| S-59 | DIN 16742:2013 / ISO 20457:2018 plastics moulded-part tolerances. Summary at https://www.makrolar.eu/en/Software/PolTolerances | secondary | Existence and structure of general-tolerance groups for moulded parts (mould-fixed vs non-mould-fixed dimensions). |
+| S-20, S-21 | Ulrich & Pearson; Wharton | verified | Polypropylene vs polycarbonate cost factor 2–3×; ribbing to hide sink marks (Braun tank). |
+
+---
+
+## Module 7 – DFM for casting and forging
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-33 | NADCA 2015 Section 4A | verified (PDF read) | Die casting wall thickness, draft formula and constants, linear tolerances, process comparison. |
+| S-60 | Forging Industry Association. *Product Design Guide for Forging.* https://www.forging.org/Common/Uploaded%20files/Design%20Engineering%20Center/Product%20Design%20Guide%20for%20Forging.pdf | verified (PDF read) | Draft angles 7–10° for heat-resistant alloys; <5° draft usually prohibits hammers for ferrous forgings; press dies with knock-outs allow little or no draft; less draft outside than inside; Table 3-2 fillet/corner radii for 25 mm ribs (carbon steel fillet 10–13 mm preferred, 6 mm min; corner 3 mm preferred, 1.5 mm min); net-shape gear teeth to ±0.10 mm; cold forging needs no draft. |
+| S-61 | Engineers Edge. "Design for Sand Casting." https://www.engineersedge.com/sand_cast.htm | verified | Min wall aluminium 0.10 in (2.5 mm), steel 0.13 in (3.3 mm); standard draft 2°, min ~1°; parting-line mismatch ≤0.020 in (0.5 mm); as-cast finish 200–500 RMS; section ratio ≤2:1. Imperial source; converted values shown metric-first. |
+| S-62 | TFG USA. "Sand Casting Design Guide." https://www.tfgusa.com/sand-casting-design-guide/ | verified | Draft 1–2° external, 2–3° internal, 3–5° deep cavities; qualitative guidance on machining stock. |
+| S-63 | Metal-Castings.com. "Investment Casting Tolerances" (attributed to Investment Casting Institute guidelines). https://metal-castings.com/investment-casting-tolerances/ | verified (vendor page read; its attribution of the values to the ICI handbook could not be checked against the handbook) | Linear ±0.25 mm first 25.4 mm, ±0.08–0.13 mm each additional 25.4 mm; wall thickness ±0.51 mm; flatness 0.005 in/in; surface 63–125 RMS (Ra ≈1.6–3.2 µm). |
+| S-64 | Charged EVs. "In Model Y, Tesla replaces 70 underbody parts with one casting." 4 May 2020. https://chargedevs.com/newswire/in-model-y-tesla-replaces-70-underbody-parts-with-one-casting/ | verified (press report read; it quotes Tesla's Q1 2020 earnings call, which I did not hear) | Musk: "it'll go from 70 parts to 1 with a significant reduction in capital expenditure on all the robots"; Model 3 rear underbody 70 stamped parts vs Model Y two castings then one. |
+| S-65 | Tesla. Q4 2019 Update Letter (quoted in Repairer Driven News, 2 Feb. 2021, https://www.repairerdrivennews.com/2021/02/02/tesla-single-piece-casting-for-rear-of-model-y-has-reached-volume-production/) | secondary (page blocked; search excerpt) | "two big high-pressure die-cast (HPDC) aluminium castings … Later this year we'll transition to the rear underbody being a single-piece casting." |
+
+---
+
+## Module 8 – DFM for additive manufacturing
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-66 | ISO/ASTM. *ISO/ASTM 52900:2021 Additive manufacturing – General principles – Fundamentals and vocabulary.* https://www.iso.org/standard/74514.html | verified (catalogue page) | Seven process categories (binder jetting, directed energy deposition, material extrusion, material jetting, powder bed fusion, sheet lamination, vat photopolymerization). |
+| S-67 | Protolabs Network. "How to design parts for FDM 3D printing." https://www.hubs.com/knowledge-base/how-design-parts-fdm-3d-printing/ | verified | 45° overhang rule; bridges <5 mm; pins ≥5 mm; chamfer/radius at build plate; vertical holes shrink. |
+| S-68 | Protolabs Network. "How to design parts for SLA 3D printing." https://www.hubs.com/knowledge-base/how-design-parts-sla-3d-printing/ | verified | Supported wall 0.4 mm, unsupported 0.6 mm, emboss 0.1 mm, engrave 0.4 mm, hole 0.5 mm, drain 3.5 mm, clearances 0.1/0.2/0.5 mm. |
+| S-69 | Protolabs Network. "How to design parts for SLS 3D printing." https://www.hubs.com/knowledge-base/how-design-parts-sls-3d-printing/ | verified | Wall 0.8 mm (PA12) to 2.0 mm (CF-PA), features 0.8 mm, holes >1.5 mm, escape holes ≥3.5 mm, tolerance ±0.3 % (min ±0.3 mm), clearances 0.2–0.3 mm, living hinge 0.3–0.8 mm, text ≥2 mm. |
+| S-70 | Protolabs Network. "How to design parts for metal 3D printing." https://www.hubs.com/knowledge-base/how-design-parts-metal-3d-printing/ | verified | DMLS/SLM wall 0.4 mm, feature 0.6 mm, hole ≥1.5 mm, overhang 50°, aspect ratio 8:1, ±0.1 mm, layers 20–50 µm, Ra 8–10 µm as-printed, supports always required, stress relief. |
+| S-71 | Protolabs. "Basic Design Guidelines" (3D printing). https://www.protolabs.com/help-center/basic-design-guidelines/ | verified | Build sizes, min features and tolerances by process (SL 0.063 mm/±0.05 mm; SLS 0.76 mm/±0.25 mm; MJF 0.51 mm/±0.30 mm; DMLS 0.15 mm/±0.076 mm; PolyJet; Carbon DLS). |
+| S-72 | Protolabs. "Getting Started with Metal Additive Manufacturing" (DMLS design tip). https://www.protolabs.com/resources/design-tips/designing-for-direct-metal-laser-sintering/ | verified | 45° self-supporting angle, unsupported bridges ≤2 mm (0.080 in), channels ≤8 mm diameter, teardrop/diamond channels, ±0.076 mm, 20 µm high-res layers. |
+| S-73 | Protolabs. "What is Selective Laser Sintering (SLS)?" https://www.protolabs.com/resources/design-tips/designing-for-selective-laser-sintering/ | verified | Wall 1.52–3.81 mm recommended; min feature 0.76 mm; ±0.076 mm plus ±0.025 mm/mm; build 482 × 482 × 558 mm. |
+| S-74 | GE Reports (Kellner, T.). "Transformation In 3D: How A Walnut-Sized Part Changed The Way GE Aviation Builds Jet Engines." 19 Nov. 2018. https://www.ge.com/news/reports/transformation-3d-walnut-sized-part-changed-way-ge-aviation-builds-jet-engines | verified | LEAP fuel nozzle tip: 20 welded pieces → 1; 25 % lighter; 5× more durable; 30 % more cost-efficient; Auburn, AL plant; 30,000th tip Oct. 2018, >33,000 by article date. |
+| S-18, S-19 | Formlabs design guides | verified | SLA values; illustrate machine-specific variation. |
+
+---
+
+## Module 9 – DFM for PCB and PCBA
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-75 | IPC. *IPC-2221B Generic Standard on Printed Board Design*, 2012. https://webstore.ansi.org/standards/ipc/ipc2221b2012 | verified (catalogue page) | Designation and year; foundation of the 2220 series. Trace-current formula I = k·ΔT^0.44·A^0.725 (k = 0.048 external, 0.024 internal) is *secondary*, from calculator pages reproducing the standard, e.g., https://www.schemalyzer.com/en/blog/pcb-design/basics/pcb-trace-width-guide. |
+| S-76 | IPC. *IPC-A-610H Acceptability of Electronic Assemblies*, Sept. 2020. https://webstore.ansi.org/standards/ipc/ipc610h2020 | verified (catalogue page) | Designation, date, purpose (visual acceptability of assemblies); H removed "target condition" category. |
+| S-77 | IPC. *IPC-2231 DFX Guidelines*, 2019 (IPC-2231A current). https://webstore.ansi.org/standards/ipc/ipc22312019 | verified (catalogue page) | DFX process guideline for board design; every rule lists its reason. |
+| S-78 | IPC. *IPC-7351B Generic Requirements for Surface Mount Design and Land Pattern Standard.* https://www.electronics.org/TOC/IPC-7351B.pdf | verified (table of contents) | Land pattern standard; fiducial 1 mm preferred is *secondary* (via S-80 and summaries). |
+| S-79 | Sierra Circuits. "DFM Rules." https://www.protoexpress.com/kb/dfm-rules/ | verified | Aspect ratio 1:10 through-hole, 0.75:1 microvia; solder mask dam 0.005 in (0.13 mm) standard; silkscreen clearances; annular ring = drill-to-copper + 2× plating. |
+| S-80 | Eurocircuits. "Finding fiducials." https://www.eurocircuits.com/tips-tricks/finding-fiducials/ | verified | Fiducial 1–2 mm copper (1.5 mm ideal, 0.6 mm min), mask clearance 1:2 to 1:3, three global fiducials near corners, two diagonal local fiducials per fine-pitch part, panel fiducials on waste rails. |
+| S-81 | VSE. "Wave Soldering: Placement Guidelines." 25 Oct. 2023. https://www.vse.com/blog/2023/10/25/wave-soldering-placement-guidelines/ | verified | Orientation relative to wave, shadowing by tall parts, avoid oversized pads (bridging), backside SMT near through-hole pins complicates pallets. |
+| S-82 | JLCPCB. "PCB Capabilities." https://jlcpcb.com/capabilities/pcb-capabilities | verified | Typical board-house minima: trace/space 0.10/0.10 mm (1–2 layer), 0.09 mm multilayer; drill 0.15 mm; via pad 0.25 mm; PTH annular ring ≥0.20 mm (0.25 mm recommended); mask bridge 0.10 mm; copper-to-edge 0.2 mm routed / 0.4 mm V-cut; FR-4 thicknesses 0.4–2.0 mm standard. |
+| S-83 | Leidecker, H., Brusse, J. *Tin Whiskers: A History of Documented Electrical System Failures.* NASA GSFC / QSS, April 2006. https://nepp.nasa.gov/whisker/reference/tech_papers/2006-Leidecker-Tin-Whisker-Failures.pdf | verified (PDF read) | Galaxy IV (1998, complete loss), Galaxy VII, DBS-1, Solidaridad 1, pacemaker recall 1986, nuclear plant relay failures; Hughes 11 Aug. 1998 statement: tin-plated latching relay in the spacecraft control processor; whisker bridged relay terminal to case. |
+| S-84 | NASA GSFC. "Whisker Failures" (NEPP tin whisker homepage). https://nepp.nasa.gov/whisker/failures/index.htm | verified | Failure list maintained by Sampson and Leidecker; last updated 27 Apr. 2026. |
+| S-85 | JEDEC/IPC/ECIA. *J-STD-048 Notification Standard for Product Discontinuance*, Nov. 2014 (replaces JESD48). https://standards.globalspec.com/std/66088/jedec-jesd-48 | secondary (search excerpt) | PCN/PDN practice; NRND and EOL lifecycle terminology. |
+
+---
+
+## Module 10 – Design for assembly
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-86 | Boothroyd Dewhurst, Inc. "What Is Design for Assembly (DFA)?" https://www.dfma.com/design-for-assembly.asp | verified | Three minimum-part questions (different material/process; relative motion; separate for assembly/service/adjustment); IDEXX Catalyst Dx door 183 → 31 parts, 63 → 0 fasteners, 45 → 11 min, DFA index 3.8 → 35.8; ITT 55 % parts / 58 % labour; Motorola average 35 % part-count reduction. |
+| S-87 | Boothroyd Dewhurst, Inc. "Case Studies." https://www.dfma.com/resources/studies.asp | verified | Additional cases: NCR 2760 (85 % fewer parts, 75 % faster assembly), computer mouse 31 → 16 parts, 17 → 6 min; flashlight 30 → 10 parts; BAIC front structure 35 → 12 parts; Whirlpool microwave 29 % parts, 26 % time. Vendor-published; will be labelled as such. |
+| S-88 | Devenish, B. (L3Harris). "Conducting a Step-by-Step DFA Analysis." DFMA Forum 2019. https://www.dfma.com/forum/2019pdf/devenish.pdf | verified (PDF read) | DFA index = Nmin × 2.93 s / actual time; electronics enclosure example: 11 parts, Nmin = 3, 87.6 s, index 11.76; redesign replacing cover screws with snap-fit raised index to 17.63, saved ~29 s and $0.95; cites S-01 pages. |
+| S-89 | Range, B. (Acorn Product Development). "Hand-Calculated Savings: Case Studies in the Application of a Simplified Boothroyd-Dewhurst Methodology." DFMA Forum 2013. https://www.dfma.com/forum/2013pdf/Range.pdf | verified (PDF read) | Assembly efficiency = Nmin·t0 / t with t0 "usually taken to be 3 seconds"; handling and insertion time charts; penalties for fastener type and engagement; multiple passes for screw patterns. |
+| S-90 | Shingo, S. *Zero Quality Control: Source Inspection and the Poka-yoke System.* Productivity Press, 1986. ISBN 9780915299072. https://www.routledge.com/Zero-Quality-Control-Source-Inspection-and-the-Poka-Yoke-System/Shingo/p/book/9780915299072 | secondary | Origin of poka-yoke; 112 device examples. |
+| S-01, S-26 | Boothroyd et al.; DFMA history | secondary / verified | Method and history. |
+
+---
+
+## Module 11 – Design for test
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-91 | IEEE. *IEEE Std 1149.1-2013 Standard for Test Access Port and Boundary-Scan Architecture.* https://ieeexplore.ieee.org/document/6515989 | verified (catalogue page) | Designation; TAP pins TDI/TMS/TCK/TDO (+TRST); origin in JTAG group, first released 1990. |
+| S-92 | Sierra Circuits. "Design for Testing (DFT) Guidelines for PCB Manufacturing." https://www.protoexpress.com/blog/design-for-testing-guidelines-pcb-manufacturing/ | verified | ICT test pad 1.0 mm best, 0.9 mm min top, 0.7 mm min bottom; probe pitch 2.54 mm (cost factor 1), 1.905 mm (2), 1.27 mm (4); clearance to components 0.7 mm (<2 mm tall) / 1.91 mm (>4 mm tall); 0.9 mm to board edge; 3 mm rails; tooling holes 2.7 mm ±0.05; one test point per net; flying-probe clearance L = 0.29·H + 0.7 mm. |
+| S-93 | Keysight. "How In-Circuit Tests Ensure PCBA Quality and Reliability." 2024. https://www.keysight.com/blogs/en/tech/educ/2024/in-circuit-test | verified | ICT definition, bed-of-nails, defects detected (missing parts, shorts, tombstoning, lifted pins, wrong values), limitations, flying probe. |
+| S-94 | ASTM. *ASTM E2930-13(2021) Standard Practice for Pressure Decay Leak Test Method.* https://www.astm.org/Standards/E2930.htm | verified (catalogue page) | Pressure-decay leak testing basis (ideal gas, non-deformable vessels). |
+| S-95 | ASTM. *ASTM E1003-13(2022) Standard Practice for Hydrostatic Leak Testing.* https://store.astm.org/e1003-13r22.html | verified (catalogue page) | Hydrostatic testing scope and limits. |
+| S-96 | NTSB. *Auxiliary Power Unit Battery Fire, Japan Airlines Boeing 787-8, JA829J, Boston, Massachusetts, January 7, 2013.* Incident Report NTSB/AIR-14/01, adopted 21 Nov. 2014. https://www.ntsb.gov/investigations/AccidentReports/Reports/AIR1401.pdf | verified (PDF read) | Probable cause: internal short circuit in one cell → cascading thermal runaway; Boeing did not incorporate design requirements for the most severe internal-short effects and FAA did not catch it; GS Yuasa did not test under most severe conditions; FOD during cell welding and inspection that could not reliably detect defects; no thermal-runaway test required at certification. |
+| S-97 | ESA. "Ariane 501 – Presentation of Inquiry Board report." Press release, 1996. https://www.esa.int/Newsroom/Press_Releases/Ariane_501_-_Presentation_of_Inquiry_Board_report | verified | 4 June 1996, failure ~40 s, ~3,700 m; SRI software; "did not include adequate analysis and testing of the inertial reference system"; alignment function "not taken into account in the simulations"; tests "not sufficiently representative". Alternative example. |
+
+---
+
+## Module 12 – Design for service, reliability, and compliance
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-98 | NASA GSFC. *Preferred Reliability Practice PD-ED-1201: EEE Parts Derating.* https://extapps.ksc.nasa.gov/Reliability/Documents/Preferred_Practices/1201.pdf | verified (PDF read) | Typical derating: capacitors ≤60 % rated voltage; resistors ≤60 % power; semiconductors ≤50 % power, ≤75 % voltage, Tj ≤110 °C; microcircuits ≤80 % supply voltage, Tj ≤100 °C; relays/connectors ≤50 % current. |
+| S-99 | NAVSEA / NSWC Crane. *SD-18 Parts Requirement and Application Guide* (derating pages). https://www.navsea.navy.mil/Home/Warfare-Centers/NSWC-Crane/Resources/SD-18/Products/Capacitors/Derating/ | secondary (search excerpt) | Navy derating guidance; MIL-HDBK-338B hosted there. |
+| S-100 | IEC. *IEC 60529:1989+AMD1:1999+AMD2:2013 CSV (Ed. 2.2) Degrees of protection provided by enclosures (IP Code).* https://webstore.iec.ch/en/publication/2452 | verified (catalogue page) | Current consolidated edition (29 Aug. 2013); scope ≤72.5 kV. Digit meanings (first 0–6 solids, second 0–9 water) are *secondary* from summaries. |
+| S-101 | IEC. *IEC 60335-1:2020 Household and similar electrical appliances – Safety – Part 1: General requirements*, Ed. 6.0, 2 Sept. 2020. https://webstore.iec.ch/en/publication/61880 | verified (catalogue page) | Scope (≤250 V single-phase, ≤480 V other); sixth edition changes incl. battery charging clause and cybersecurity Annex U. |
+| S-102 | European Parliament and Council. *Directive 2011/65/EU (RoHS 2)*, 8 June 2011, as amended by Delegated Directive (EU) 2015/863. https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32011L0065 | verified | Annex II: Pb, Hg, Cr(VI), PBB, PBDE 0.1 %; Cd 0.01 % by weight in homogeneous materials; definition of homogeneous material; four phthalates (DEHP, BBP, DBP, DIBP) added by 2015/863 (secondary via https://www.legislation.gov.uk/eudr/2015/863/data.html). |
+| S-103 | European Parliament and Council. *Regulation (EC) No 1907/2006 (REACH)*, consolidated. https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02006R1907-20140410 | verified | Article 33 duty to communicate SVHC >0.1 % w/w in articles; consumer requests answered within 45 days; Article 7(2) notification >1 tonne/yr. |
+| S-104 | UL Solutions. "Health Effects Testing and Certification for Drinking Water System Components (NSF/ANSI/CAN 61)." https://www.ul.com/services/health-effects-testing-and-certification-drinking-water-system-components | verified | NSF/ANSI/CAN 61 scope (pipes, fittings, valves, pumps, coatings, plastics), leach-test basis; NSF/ANSI/CAN 372 weighted-average lead ≤0.25 %. |
+| S-105 | NSF. "NSF/ANSI 61: Drinking Water System Components – Health Effects." https://www.nsf.org/knowledge-library/nsf-ansi-standard-61-drinking-water-system-components-health-effects | secondary (page blocked; search excerpt) | Scope and exclusions (no performance, taste/odour, microbial requirements; POU/POE devices excluded). |
+| S-106 | European Commission. *The 'Blue Guide' on the implementation of EU product rules 2022* (OJ C 247, 29 June 2022). https://single-market-economy.ec.europa.eu/news/blue-guide-implementation-product-rules-2022-published-2022-06-29_en | secondary (search excerpt) | CE marking, conformity assessment, market surveillance; non-binding guidance. |
+| S-107 | European Parliament and Council. *Directive (EU) 2024/1799 on common rules promoting the repair of goods*, OJ 10 July 2024. https://eur-lex.europa.eu/eli/dir/2024/1799/oj/eng | secondary (search excerpt) | Right-to-repair obligations; transposition deadline 31 July 2026; one-year guarantee extension after repair. |
+| S-108 | Samsung Newsroom. "Samsung Electronics Announces Cause of Galaxy Note7 Incidents in Press Conference." 23 Jan. 2017. https://news.samsung.com/uk/samsung-electronic-announces-cause-of-galaxy-note7-incidents-in-press-conference | verified | Date; batteries identified as cause; UL, Exponent, TÜV Rheinland participated; 8-Point Battery Safety Check introduced. |
+| S-109 | TechCrunch (Heater, B.). "Samsung details Note 7 battery findings and highlights future safety measures." 22 Jan. 2017. https://techcrunch.com/2017/01/22/note-7-3/ | verified | Battery A: deflections in the negative electrode; Battery B: welding-related defect (melted copper/short during welding); >700 engineers; third parties. The "200,000 devices, 30,000 batteries" figure is *secondary* (search excerpt of Samsung materials). |
+| S-110 | IEC 60068-2 series (e.g., 60068-2-6 sinusoidal vibration, 60068-2-14 change of temperature, 60068-2-30 damp heat cyclic, 60068-2-64 random vibration). https://webstore.ansi.org/standards/iec/iec6006830ed2025 | secondary (search excerpts) | Environmental test method designations for DVT planning. |
+
+---
+
+## Module 13 – Materials, finishes, and joining
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-111 | U.S. DoD. *MIL-A-8625F Anodic Coatings for Aluminum and Aluminum Alloys*, 10 Sept. 1993 (with amendments). https://everyspec.com/MIL-SPECS/MIL-SPECS-MIL-A/MIL-A-8625F_2377/ | verified (index page) | Six types and two classes. Thickness ranges (Type II 1.8–25 µm; Type III 13–115 µm; Type I/IB/IC/IIB 0.5–18 µm) are *secondary* from plating-shop summaries and must be shown as typical. |
+| S-112 | ASTM. *ASTM B633-23 Standard Specification for Electrodeposited Coatings of Zinc on Iron and Steel.* https://store.astm.org/b0633-23.html | verified (catalogue page) | Scope; four thickness classes; five supplementary finish types incl. non-chromate. Class values Fe/Zn 5/8/12/25 µm are *secondary* (search excerpts). |
+| S-113 | ASTM. *ASTM B117-26 Standard Practice for Operating Salt Spray (Fog) Apparatus.* https://store.astm.org/standards/b117 | secondary (search excerpt) | Current revision designation; salt-fog test practice (comparative, not predictive). |
+| S-114 | U.S. DoD. *MIL-STD-889D Galvanic Compatibility of Electrically Conductive Materials*, 21 July 2021. https://corrdesa.com/wp-content/uploads/2024/04/MIL-STD-889D-2021-Release.pdf | verified (PDF read) | Scope; galvanic series in artificial seawater; compatibility ranking 0 (compatible) to 6 with 0.009 mil/yr threshold; protection schemes required for incompatible couples. The older "0.15 / 0.25 / 0.50 V anodic index" rule is from MIL-STD-889B/C (superseded) and will be labelled as such. |
+| S-115 | NIST. "The Statue of Liberty Still Stands Tall, Thanks to Science." https://www.nist.gov/preserving-past/buildings-and-structures/statue-liberty-still-stands-tall-thanks-science | verified | Iron armature vs copper skin galvanic corrosion once shellac-coated asbestos insulation failed; NPS restoration 1981–1986; replacement chromium-nickel-molybdenum stainless steel with Teflon coating; 1996 inspection confirmed success. |
+| S-116 | Copper Development Association. "Statue of Liberty: Reclothing the First Lady of Metals – Repair Concerns." https://copper.org/education/liberty/liberty_reclothed1.php | secondary (blocked; search excerpt) | ~1,800 iron bars replaced; ~600 saddles affected by rivets pulled through skin. |
+| S-117 | Covestro. *Engineering Polymers: Joining Techniques – A Design Guide.* https://solutions.covestro.com/-/media/covestro/solution-center/brands/downloads/imported/1556890495.pdf | verified (PDF read, contents and threads/snap-fit sections) | Plastics joining guide: molded-in threads (avoid where possible; no tapered pipe threads), self-tapping screws, thread lockers, ultrasonic welding/staking/inserts, snap fits, press fits, solvent and adhesive bonding. |
+| S-118 | TIGER Coatings. TIGER Drylac Series 49 technical data sheet. https://www.tiger-coatings.com/fileadmin/user_upload/msds/user_upload/TIGER_Drylac_Series_49_Interior_and_Exterior_TDC_EN.pdf | verified (PDF read) | Series 49 polyester TGIC: "recommended film thickness 60-80 µm (2.5-3.5 mils)" per ISO 2360; properties quoted at 60 µm; two-coat systems reduce mechanical properties. |
+| S-04, S-47 | Ashby; Machinery's Handbook | secondary | Material selection; press-fit formulas. |
+
+---
+
+## Module 14 – Working with suppliers and contract manufacturers
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-119 | Fictiv. "How to Prepare Your Request for Quote Package." https://www.fictiv.com/articles/preparing-your-request-for-quote-package | verified | RFQ contents: STEP model + PDF drawing per part, assembly model + BOM, PRD/renderings, revision control; ask for lead times, inspection, MOQ, payment terms. |
+| S-120 | AIAG. *Production Part Approval Process (PPAP)*, 4th ed., 2006. https://webstore.ansi.org/preview-pages/AIAG/preview_AIAG+PPAP-4-2006.pdf | secondary | 18 elements, five submission levels (verified through S-45). |
+| S-121 | AIAG. *Advanced Product Quality Planning and Control Plan (APQP)*, 2nd ed., Nov. 2008. https://webstore.ansi.org/standards/aiag/aiagapqp2008 | secondary (search excerpt) | Prototype, pre-launch, and production control plans. |
+| S-122 | SAE/IAQG. *AS9102C Aerospace First Article Inspection Requirement*, June 2023. https://store.accuristech.com/standards/sae-as9102c?product_id=2568218 | secondary (publisher pages blocked; search excerpts) | FAI purpose, Forms 1–3, triggers (new part, design change, source/process change, 2-year lapse). |
+| S-123 | ASME. *ASME Y14.41-2019 Digital Product Definition Data Practices.* https://webstore.ansi.org/standards/asme/asmey14412019 | verified (ASME catalogue; note ASME now lists a 2026 edition, see PROGRESS.md) | Requirements for annotated 3D model data sets (MBD). |
+| S-124 | Texas A&M University, Dept. of Philosophy and Mech. Eng. *Engineering Ethics: The Kansas City Hyatt Regency Walkways Collapse* (NSF DIR-9012252), quoting NBS BSS 143 and the Missouri hearing record. https://ethics.tamu.edu/wp-content/uploads/sites/7/2017/04/HyattRegency.pdf | verified (PDF read) | Havens Steel changed single continuous rod to two rods "to avoid threading the entire rod"; disputed telephone approval; 42 shop drawings returned 26 Feb. 1979 with engineer's review stamp; NBS: 20.3 kips (90 kN) design load per hanger, connection load essentially doubled; Nov. 1984 finding of gross negligence; licences revoked; 114 dead, >200 injured (NIST page says 113 dead, 186 injured). |
+| S-125 | NIST. "Walkway Collapse, Kansas City, Missouri, 1981." https://www.nist.gov/el/walkway-collapse-kansas-city-missouri-1981 | verified | Most probable cause: insufficient load capacity of box beam–hanger rod connections; report NBS BSS 143 (May 1982); 113 dead, 186 injured. |
+| S-25, S-24 | A380 (The Register, FlightGlobal) | verified / secondary | Design-data and change-integration failure as a supplier/partner coordination case. |
+
+---
+
+## Module 15 – Cost modeling and should-cost
+
+| ID | Source | Status | Supports |
+|----|--------|--------|----------|
+| S-20, S-21 | Ulrich & Pearson; Wharton | verified | Bottom-up cost modelling of 18 coffee makers; design vs manufacturing-system cost ranges; Krups scenario; purchased parts 25–50 %. |
+| S-10, S-11, S-12, S-36 | Hubs molding cost bands; CNC cost tips; stock sizes; Protolabs cost drivers | verified | Tooling and piece-price structure, cost drivers. |
+| S-126 | U.S. FAR 15.407-4 "Should-cost review." https://www.acquisition.gov/far/15.407-4 | secondary (search excerpt) | Definition of should-cost review in government acquisition; used to define the term honestly. |
+| S-127 | DoD. *Better Buying Power 2.0* guidance memo (should-cost management). https://www.ustranscom.mil/dbw/docs/BBP_2-0_Guidance.pdf | secondary | Should-cost as a program-management practice. |
+| S-01, S-05 | Boothroyd et al. (DFM cost models); Swift & Booker (costing) | secondary | Process cost model structure. |
+
+---
+
+## Module 16 – Capstone
+
+Uses the sources above; no module-specific sources. The capstone product is an illustrative design specified by the course (see PROGRESS.md), not a real program.

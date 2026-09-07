@@ -1,0 +1,111 @@
+# PROGRESS.md
+
+Project: *Design for Manufacturing and Assembly: From Prototype to Production* (static HTML course).
+Spec: CLAUDE.md. Source register: SOURCES.md.
+
+## Status summary
+
+| Phase | Status | Date |
+|-------|--------|------|
+| A – Research and outline | **Complete, awaiting author approval** | 2026-09-07 |
+| B – Scaffold + reference module (06) | Not started | |
+| C – Remaining modules | Not started | |
+| D – Verification pass | Not started | |
+| E – Ship (README, final summary) | Not started | |
+
+No HTML has been written. Git repository initialised; first commit contains CLAUDE.md, SOURCES.md, PROGRESS.md.
+
+---
+
+## Phase A record (2026-09-07)
+
+### Method
+
+Every candidate source was searched for and then read (web page, PDF text extraction, or publisher catalogue page) before being entered in SOURCES.md. 128 sources were registered (S-01 to S-128). Counts by status:
+
+| Status | Count | Notes |
+|--------|-------|-------|
+| verified | 95 | Read directly. Includes 17 PDFs read in full or in the relevant sections. |
+| secondary | 36 | Mostly printed books (Boothroyd et al., Ulrich & Eppinger, Bralla, Ashby, Swift & Booker, Fischer, Machinery's Handbook, Shingo, Cooper), paid standard bodies, and a few web pages that blocked automated fetching but whose content was confirmed through search excerpts or a second source. |
+| unverified | 0 | Not permitted in the course. |
+
+Every module has at least five verified sources. Books are registered as secondary because I cannot read them; where the course states a specific claim from a book, that claim is routed through a verified source that quotes the book with page numbers (for example the DFMA Forum papers S-88 and S-89 quote Boothroyd's DFA index and the 2.93 s / 3 s ideal assembly time).
+
+### Candidate claims and examples that failed verification (not to be used as stated)
+
+| Claim / example | Finding | Decision |
+|-----------------|---------|----------|
+| "70 to 80 percent of product cost is committed during design" | Ulrich & Pearson (S-20) trace it to 1980s trade-press tables (Miller 1988) and call it folklore; their coffee-maker data show design range 48 % vs manufacturing-system range 31 % under stated assumptions. | Teach as a widely cited rule of thumb, cite Ulrich & Pearson as the honest test of it, no fake precision. |
+| "Rule of ten" for cost of change | Traceable to Boehm 1976/1981 software data (5:1 to 100:1). No manufacturing-specific dataset found. | Teach as a heuristic attributed to Boehm; state that the hardware version is by analogy. |
+| IBM Proprinter 152 → 32 parts, 1866 → 170 s | Numbers appear only in third-party summaries; dfma.com history page names the 1987 comparison but gives no numbers; Boothroyd's book not readable. | Do not quote the numbers. Use IDEXX (S-86) and L3Harris (S-88) cases, which are verified, and mention Proprinter qualitatively as the historical origin. |
+| Airbus A380 "CATIA V4 vs V5" as root cause | Widely reported in trade press; Airbus's own statement (S-25) blames the late 3D digital mock-up and learning curve, not a software version. | Use Airbus's wording; mention the CATIA version story only as press reporting. |
+| LEGO "0.002 mm" or "0.005 mm tolerance" | LEGO's own history page says ABS allowed moulding "to an accuracy of 1/200 mm" (0.005 mm) in 1963; no official page gives 0.002 mm. | Quote only the 1/200 mm statement, attributed to LEGO's history page. |
+| Tesla "40 % rear underbody cost saving", "300 robots removed" | Found only in secondary reporting without a Tesla document. | Omit. Use Musk's Q1 2020 call quote (70 parts → 1) via S-64, labelled secondary. |
+| Samsung Note7 "200,000 devices and 30,000 batteries tested" | Appears in press summaries of Samsung's presentation; Samsung's press-release text I could read does not include it. | Label secondary if used; the verified facts are date, cause (batteries), third parties, and 8-point check. |
+| ICT probe pitch / test pad rules "from IPC" | No IPC document read; values are from Sierra Circuits' DFT page (S-92). | Attribute to Sierra Circuits, not IPC. |
+| Cpk ≥ 1.33 / Ppk ≥ 1.67 "required by PPAP" | Confirmed only via secondary summaries of PPAP 4th ed. | Present as the AIAG PPAP default acceptance criteria, labelled secondary, with "confirm with your customer". |
+| MIL-STD-889 "0.15 / 0.25 / 0.50 V anodic index" rule | Current MIL-STD-889D (S-114) uses a corrosion-rate ranking instead; the voltage rule is from superseded revisions. | Teach the current D methodology; mention the old rule as legacy. |
+| PEM minimum sheet thickness and hole tolerance | FAQ page blocked; values from search excerpt only. | Re-check against PEM catalogue during Phase C before use. |
+
+### Fetch failures to retry in Phase C (content currently secondary)
+
+FlightGlobal (S-24), PEM FAQ (S-53), The Fabricator (S-51), NSF (S-105), ECHA candidate-list page, ANSI blog pages, Justia/CourtListener Hyatt decision, SAE AS9102C page (S-122), Repairer Driven News (S-65), Samsung US newsroom (timed out). If a retry fails, the entry stays secondary and is labelled so in the module References.
+
+### Standards revision notes
+
+- ASME Y14.5-2018 is current and reaffirmed 2024 (R2024). ASME's site also lists a Y14.41-2026 edition; the course will cite Y14.41-2019 as the widely available edition and note the 2026 release exists. Verify before Module 14 is written.
+- IPC-2231 has an A revision (IPC-2231A); cite IPC-2231A as current, 2019 as first release.
+- IPC-2221: a C revision is listed by some resellers; IPC's own shop still lists Revision B (2012). Re-check before Module 9 is written.
+- ASTM B117 current is B117-26 (per ANSI blog, secondary); B633 current is B633-23 (verified).
+- IEC 60529 current consolidated edition is 2.2 (2013). IEC 60335-1 current is Ed. 6.0 (2020).
+- MIL-STD-889D (2021) supersedes 889C (2016).
+
+---
+
+## Module outlines and chosen real-world examples
+
+Target 2,500–4,500 words body text each. Word-count deviations will be recorded here as modules are built.
+
+**Module 0 – Introduction: Why DFx.** Defines DFM, DFA, DFT, DFS and the umbrella term DFx; explains where cost becomes locked in across concept, detail design, tooling, and ramp; tests the "80 % of cost is set in design" folklore against Ulrich and Pearson's coffee-maker study (S-20, S-21) and presents the "rule of ten" as Boehm's software heuristic applied by analogy (S-22, S-23); closes with how to use the course. *Real-world example:* the Airbus A380 wiring-harness delay of 2006, in which late integration of design data forced rework on installed harnesses and cost EADS a stated €2.8 bn plus the €2 bn already announced (S-25, S-24). *Exercise:* compute the cost of a late change under three phase-multiplier assumptions and see how sensitive the answer is.
+
+**Module 1 – The product development and NPI process.** Walks concept → EVT → DVT → PVT → mass production, mapping the hardware-industry stage names (S-27) onto formal phase-gate frameworks (NASA life cycle reviews S-28; Stage-Gate S-29, S-30); defines what "DFM review as a formal deliverable" means at each gate, who owns it, and what tooling maturity is expected at each build. *Real-world example:* Tesla's Model 3 ramp of 2017–2018, using Musk's own statements that excessive automation was a mistake and that the overly complex conveyor system was removed (S-31, S-32). *Exercise:* build a gate checklist for a given part and decide which findings block DVT exit.
+
+**Module 2 – Process selection and cost drivers.** Matches annual volume to process using tooling cost versus piece price and break-even analysis; covers cycle time, material utilisation, and secondary operations; presents a process-selection map built from verified supplier bands (Hubs tooling classes and volumes S-10; NADCA's own comparison of die casting with investment casting, powder metal, and plastics S-33; CNC cost drivers S-11, S-36; stock sizes S-12) with Ashby and Swift & Booker as further reading (S-04, S-05). *Real-world example:* Ford's 2015 F-150 move to an aluminium-alloy body, cutting roughly 230–320 kg (500–700 lb), as a material-and-process decision made at very high volume (S-34, S-35). *Exercise:* break-even between machining, soft tooling, and hard tooling for a housing at three volumes.
+
+**Module 3 – Tolerancing for manufacturability.** General tolerances (ISO 2768-1 and -2, S-15, S-37–S-39), ISO 286 IT grades and preferred fits (S-16, S-40, S-41), an introduction to GD&T under ASME Y14.5-2018 with datum reference frames, position, profile, and flatness (S-14), the ISO 8015 independency principle (S-17), worst-case and RSS stack-ups (S-42), and process capability with Cp/Cpk and the reject-rate table (S-13). Explains why ±0.05 mm on a moulded part is a cost decision using Protolabs' resin tolerance of ±0.002 mm/mm (S-06). *Real-world example:* the Hubble primary mirror, where a 1.3 mm spacing error in the test fixture (needed to be correct to 10 µm) went undetected because two independent tests that showed the error were discounted (S-43, S-44). *Exercise:* a five-part stack-up solved worst-case and RSS, then converted to a Cpk requirement.
+
+**Module 4 – DFM for CNC machining.** Internal corner radii versus pocket depth, depth-to-diameter limits for pockets and holes, thin walls, undercuts, tool access and setups, threads, surface finish specification (ASME B46.1, S-48), standard stock sizes and blank allowances, and the cost drivers (S-07, S-09, S-11, S-12, S-36). *Real-world example:* Apple's 2008 unibody MacBook, in which a multi-part enclosure was replaced by one machined part, as a case where a high-cost process was chosen deliberately for a system benefit (S-46). *Exercise:* redesign a pocketed bracket to cut cycle time by changing radii, depths, and setups.
+
+**Module 5 – DFM for sheet metal.** Bend radius versus thickness, K-factor and bend allowance with the full formula (S-50, S-51), minimum flange length, hole-to-edge and hole-to-bend clearances expressed in multiples of thickness (S-08, S-49), bend relief, hems, tabs and slots, flat-pattern development, coatings, and self-clinching hardware including PEM's centreline-to-edge rule and bulging failure (S-52, S-53). *Real-world example:* the 2016 CPSC recall of about 2.8 million Samsung top-load washers whose sheet-metal tops could detach from the chassis under vibration, remedied by reinforcing the top (S-54). *Exercise:* compute a flat pattern for a three-bend bracket and check every feature clearance.
+
+**Module 6 – DFM for injection molding (reference implementation).** Wall thickness and uniformity by resin, draft including textured surfaces, ribs and bosses, undercuts and side actions, gates, weld lines, sink and warp, tolerances and DIN 16742/ISO 20457 tolerance groups, SPI finish grades, material selection, SPI mould classes 101–105 and tool life, and the cost of mould changes (S-06, S-10, S-55–S-59). *Real-world example:* two verified items rather than one weak one: LEGO's statement that ABS enabled moulding to 1/200 mm in 1963 (S-58) to show what precision moulding costs and demands, and Ulrich & Pearson's observation that a coffee-maker maker hid sink marks on a cheap polypropylene tank with a ribbed pattern instead of switching to a resin two to three times more expensive (S-20, S-21). *Exercise:* wall-thickness and rib redesign of a housing to remove sink and reduce cycle time.
+
+**Module 7 – DFM for casting and forging.** Die casting (wall thickness, the NADCA draft formula and constants, ejector marks, porosity, standard versus precision tolerances, S-33), investment casting (S-63), sand casting (S-61, S-62), forging (draft, parting line, fillet and corner radii, net-shape limits, S-60), machining allowances, and when casting beats machining. *Real-world example:* Tesla's Model Y rear underbody, where Musk stated a 70-part stamped assembly would become one high-pressure die casting (S-64, S-65; labelled secondary as press reports of Tesla statements). *Exercise:* apply the NADCA draft formula and tolerance build-up to a die-cast bracket and compare with a machined alternative.
+
+**Module 8 – DFM for additive manufacturing.** The seven ISO/ASTM 52900 process categories (S-66); design rules for FDM, SLA, SLS, MJF, and DMLS with side-by-side supplier values showing how much rules vary by machine (S-18, S-19, S-67–S-73); orientation, supports, anisotropy, post-processing, AM for tooling and fixtures, and when AM is and is not a production process. *Real-world example:* GE Aviation's LEAP fuel nozzle tip, 20 brazed and welded pieces consolidated into one printed part, 25 % lighter and 5× more durable, with more than 33,000 produced by late 2018 (S-74). *Exercise:* orient and support a bracket for DMLS and estimate the effect of build height on cost.
+
+**Module 9 – DFM for PCB and PCBA.** IPC standards overview (IPC-2221B, IPC-A-610H, IPC-2231A, IPC-7351B, S-75–S-78), trace and space, annular rings, via types and aspect ratios, panelisation and rails, fiducials (S-80), component orientation and spacing for reflow and wave (S-81), thermal relief, board-house DFM checks and typical minima (S-79, S-82), component selection and lifecycle risk (S-85). *Real-world example:* the 1998 loss of the Galaxy IV satellite, attributed by the manufacturer to tin whiskers shorting a tin-plated relay in the control processor, as documented by NASA (S-83, S-84). *Exercise:* size a power trace with the IPC-2221 current formula and lay out test-friendly fiducials and rails on a panel.
+
+**Module 10 – Design for assembly.** The Boothroyd Dewhurst method, the three questions for part elimination, theoretical minimum part count, the DFA index with the 2.93 s ideal time, handling and insertion penalties, fastener reduction and the real cost of a screw, self-locating and self-fastening features, poka-yoke (S-90), and assembly sequence and access (S-86–S-89, S-01). *Real-world example:* the IDEXX Catalyst Dx access door redesign, 183 → 31 parts, 63 → 0 fasteners, 45 → 11 minutes (S-86), plus the L3Harris electronics-enclosure worked case (S-88); both are vendor-published and will be labelled as such. *Exercise:* DFA index before and after on a six-part assembly.
+
+**Module 11 – Design for test.** Test strategy through EVT/DVT/PVT; ICT, functional test, and boundary scan (IEEE 1149.1-2013, S-91, S-93); test points, probe pitch, and fixture access (S-92); test coverage and escapes; testability of mechanical assemblies with pressure-decay and hydrostatic leak testing (S-94, S-95); designing the fixture alongside the product. *Real-world example:* the 2013 Boeing 787 APU battery fire in Boston, where the NTSB found the certification tests did not consider the most severe internal-short case and cell manufacturing inspection could not reliably detect defects (S-96). *Alternative if the author prefers a non-aviation case:* Ariane 5 flight 501 (S-97). *Exercise:* build a test-coverage matrix and decide which nets and which mechanical checks must be reachable.
+
+**Module 12 – Design for service, reliability, and compliance.** Serviceability and field-replaceable units, the EU right-to-repair directive (S-107), design-for-reliability basics with NASA derating factors (S-98, S-99) and IEC 60068 environmental tests (S-110), and how regulatory requirements constrain design early: CE marking and the Blue Guide (S-106), IEC 60335-1 (S-101), RoHS substances and limits (S-102), REACH Article 33 (S-103), IP ratings under IEC 60529 (S-100), and NSF/ANSI/CAN 61 and 372 for potable-water contact (S-104, S-105). *Real-world example:* the Galaxy Note7 recall, where Samsung and three independent bodies identified battery defects from two suppliers and introduced an eight-point battery safety check (S-108, S-109). *Exercise:* derate a power board's components and classify an enclosure to an IP code.
+
+**Module 13 – Materials, finishes, and joining.** Material selection trade-offs by process (S-04), surface finish specification, anodising types (S-111), zinc plating classes (S-112), powder coat and e-coat (S-118), salt-fog testing (S-113), welding, brazing, adhesives, press fits (S-47), plastics joining (S-117), and galvanic compatibility under MIL-STD-889D (S-114). *Real-world example:* the Statue of Liberty, whose iron armature corroded galvanically against the copper skin once the shellac-and-asbestos insulation failed, and was replaced in the 1981–1986 restoration with a Teflon-isolated stainless steel armature (S-115, S-116). *Exercise:* choose a fastener, plating, and isolation scheme for an aluminium-to-steel joint in a humid environment.
+
+**Module 14 – Working with suppliers and contract manufacturers.** What a good RFQ package contains (S-119), drawings versus model-based definition under ASME Y14.41 (S-123), reading a supplier DFM review, first article inspection under AS9102C (S-122), PPAP elements and levels and APQP control plans (S-45, S-120, S-121), ECO discipline, and the link between BOM quality and quote quality. *Real-world example:* the 1981 Hyatt Regency walkway collapse, where a fabricator's change from one continuous hanger rod to two rods, made to simplify fabrication, doubled the load on a connection and was approved on shop drawings without being recalculated (S-124, S-125). *Exercise:* review a supplier's DFM feedback list and classify each item as accept, negotiate, or reject with reasons.
+
+**Module 15 – Cost modeling and should-cost.** Bottom-up cost models for a machined, a moulded, and a sheet-metal part; tooling amortisation; the effect of volume; reading a quote; where to push and where not to; should-cost as defined in FAR 15.407-4 and DoD Better Buying Power (S-126, S-127). *Real-world example:* Ulrich & Pearson's cost model of 18 coffee makers, including the Krups 178 scenario in which redesign to the Rowenta architecture cut estimated cost from $14.54 to $9.72 in the same plant, and to $4.98 with plant and design changes together (S-20, S-21). *Exercise:* build the three cost models in a table and compute break-even volumes.
+
+**Module 16 – Capstone: a full DFx review.** An illustrative product fully specified by the course (parts list, sketches, target volume 20,000 units/year, target cost) taken through DFM, DFA, DFT, and DFS reviews producing a scored findings list and a redesigned BOM. **Proposed product: a portable 12 V DC tyre inflator** with two moulded housing halves, a die-cast aluminium cylinder head, a machined piston and crank, a sheet-metal motor bracket and heat shield, a PCBA with pressure sensor and display, a membrane keypad, purchased motor, hose and chuck, and about 20 fasteners. It exercises every process module without touching HVAC, water heating, or thermal storage. **Alternative:** a handheld digital anemometer (smaller, fewer processes). Author to choose.
+
+---
+
+## Decisions needed from the author before Phase B
+
+1. Approve the module outlines and real-world examples above, or name substitutions.
+2. Module 11: Boeing 787 battery (NTSB) or Ariane 5 (ESA) as the primary example.
+3. Module 16: tyre inflator or anemometer as the capstone product.
+4. Confirm that books may appear in References labelled "secondary (not read directly)", or ask me to drop book citations entirely and keep them as unnumbered further reading.
+5. Licence: proposed CC BY-NC-SA 4.0 for content and MIT for code (spec suggestion), to be confirmed before about.html is written.
