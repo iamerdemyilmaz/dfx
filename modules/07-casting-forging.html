@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 7: DFM for casting and forging · DFx Course</title>
+<meta name="description" content="Design for manufacturing rules for die casting, investment casting, sand casting, and forging: wall thickness, draft, ejector marks, porosity, tolerances, machining allowances, and when casting beats machining.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="07">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 7</p>
+    <h1>DFM for casting and forging</h1>
+    <p class="lead">Casting and forging make metal parts by shaping them hot, in a mould or between dies, instead of cutting them cold. They can consolidate many machined or stamped parts into one and put metal only where it is needed. In return they ask for draft, uniform walls, generous radii, a tolerance budget that respects the parting line, and honesty about what is inside the metal.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Choose</strong> between high-pressure die casting, investment casting, sand casting, and forging on the basis of volume, tolerance, alloy, and geometry.</li>
+      <li><strong>Calculate</strong> die-casting draft with the NADCA formula and apply the standard and precision linear tolerances.</li>
+      <li><strong>Specify</strong> wall thickness, fillets, and corner radii for castings and forgings, and explain why inside and outside draft differ.</li>
+      <li><strong>Place</strong> datums and critical dimensions in one die half and add machining allowance where a cast surface cannot serve.</li>
+      <li><strong>Explain</strong> where porosity, parting-line shift, and internal defects come from and how design and inspection address them.</li>
+      <li><strong>Decide</strong>, with a break-even, when a casting beats a machined part and when it does not.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>On 19 July 1989 the stage 1 fan disk of the tail engine of a DC-10 burst in flight; the debris cut all three of the aircraft's hydraulic systems, and the crew's crash landing at Sioux City, Iowa, was survived by 185 of the 296 people on board. The disk was a titanium forging. The FAA's lessons-learned record states that "the fan disk failure was caused by a fatigue crack that initiated from a metallurgical defect located on the surface of the disk bore", and that the defect "formed during the initial manufacture of the titanium alloy material and was not detected by inspections performed during the manufacturing process" in 1971.<sup class="cite"><a href="#ref-8">[8]</a></sup> The National Transportation Safety Board's probable cause was the inadequate consideration of human-factors limitations in the inspection and quality-control procedures at the overhaul facility, which "resulted in the failure to detect a fatigue crack originating from a previously undetected metallurgical defect".<sup class="cite"><a href="#ref-8">[8]</a></sup> At the last fluorescent penetrant inspection, 760 cycles before the accident, the surface crack is estimated to have been about 12 mm (0.5 in) long, and it was not found.<sup class="cite"><a href="#ref-8">[8]</a></sup> The industry response was to change how the material was made and inspected: the double vacuum arc remelt process was judged "inadequate to consistently produce defect-free parts" and gave way to triple melting, and an airworthiness directive required ultrasonic inspection of the affected disks.<sup class="cite"><a href="#ref-8">[8]</a></sup></p>
+    <p>Few readers will design fan disks. Everyone who specifies a casting or forging inherits the same fact: the process puts material where you cannot see it, and defects in the melt, the fill, or the flow become defects inside the part. A die casting traps gas as porosity; a sand casting has inclusions and shrinkage cavities; a forging has flow lines and, occasionally, whatever was in the billet. Design for these processes therefore includes designing the inspection: which surfaces will be machined and how far, where porosity is tolerable and where it is not, and what the foundry or forge will check before the part ships.</p>
+    <p>The positive side of the same coin is consolidation. The most public recent example is Tesla's move to cast the rear underbody of the Model Y as one or two large aluminium castings in place of about 70 stamped and joined parts, described in the next sections. Casting removes joints, fasteners, and assembly steps; the price is a set of rules about walls, draft, and tolerances that this module lays out.</p>
+
+    <h2 id="family">The casting family, and forging</h2>
+    <p>Four processes cover most engineered metal parts that are not machined from stock or formed from sheet.</p>
+    <ul>
+      <li><strong>High-pressure die casting (HPDC).</strong> Molten aluminium, zinc, or magnesium injected under high pressure into a hardened steel die. Fast cycles, thin walls, good surface, tight tolerances for a casting; expensive dies, so high volume. Gas trapped in the fast fill leaves porosity.</li>
+      <li><strong>Investment casting.</strong> A wax pattern is coated in ceramic, the wax is melted out, and metal is poured into the shell. Almost any alloy, fine detail, good finish, no parting line on the part; slow and labour-intensive, so low to medium volume.</li>
+      <li><strong>Sand casting.</strong> Metal poured into a sand mould made around a pattern. Any size, any alloy, cheap tooling; rough surface, generous tolerances, machining on every functional face.</li>
+      <li><strong>Forging.</strong> Hot or cold metal deformed between dies. No melting, so a wrought grain structure that follows the part shape and the best fatigue properties of the four; dies are expensive and the shapes are limited to what metal will flow into.</li>
+    </ul>
+    <p>The die casting industry's own standard states the volume logic plainly: at low volumes investment casting can reach precision tolerances economically, while at higher volumes die casting is "the clear choice"; powder metallurgy offers accuracy but not die casting's thin walls and detail; and plastics can match the shape but not rigidity, creep resistance, or strength at temperature.<sup class="cite"><a href="#ref-1">[1]</a></sup> Module 2 gives the break-even arithmetic; this module gives the geometry rules for each process.</p>
+
+    <h2 id="hpdc">High-pressure die casting</h2>
+    <h3>Walls, fillets, and uniformity</h3>
+    <p>Typical die-cast wall thickness ranges from 1.0 to 5.1 mm (0.040 to 0.200 in) depending on alloy, configuration, size, and application; smaller castings can be cast with walls as thin as 0.5 mm with die caster consultation.<sup class="cite"><a href="#ref-1">[1]</a></sup> NADCA's illustration of good practice has sharp corners eliminated and proper draft and radii provided "to maximize the potential die life and to aid in filling the die cavity completely under high production cycle speeds".<sup class="cite"><a href="#ref-1">[1]</a></sup> The reasoning is the same as for moulding (Module 6): thick sections cool slowly and shrink last, and in a die casting the last-to-solidify region is where gas and shrinkage porosity concentrate. Keep walls uniform, core out heavy sections, and put fillets at every intersection.</p>
+
+    <h3>Draft</h3>
+    <p>Every surface perpendicular to the parting line needs draft so the casting releases from the die. NADCA's standard draft is not a fixed angle. It is computed from the depth of the feature and a constant that depends on alloy and on whether the surface is inside or outside:<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p><strong>D = √L / C</strong>, where D is the draft distance, L the depth of the feature from the parting line, and C a constant from the table below. The draft angle follows from tan θ = D / L. Because of the square root, the angle decreases as the feature gets deeper.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. NADCA draft constants C for standard tolerances (Table S-4A-7). Use the metric constant with L and D in mm.<sup class="cite"><a href="#ref-1">[1]</a></caption>
+        <thead><tr><th>Alloy</th><th class="num">Inside wall</th><th class="num">Outside wall</th><th class="num">Hole (total draft)</th></tr></thead>
+        <tbody>
+          <tr><td>Zinc and ZA</td><td class="num">9.90</td><td class="num">19.80</td><td class="num">6.75</td></tr>
+          <tr><td>Aluminium</td><td class="num">6.00</td><td class="num">12.00</td><td class="num">4.68</td></tr>
+          <tr><td>Magnesium</td><td class="num">7.00</td><td class="num">14.00</td><td class="num">4.76</td></tr>
+          <tr><td>Copper alloys</td><td class="num">4.90</td><td class="num">9.90</td><td class="num">3.33</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Two features of the table carry the physics. Inside walls need twice the draft of outside walls "because as the alloy solidifies it shrinks onto the die features that form inside surfaces (usually located in the ejector half) and away from features that form outside surfaces".<sup class="cite"><a href="#ref-1">[1]</a></sup> And the constant is smaller for alloys that grip the die more. In practice draft is specified by a general note with exceptions; NADCA's example is that an aluminium casting whose features are at least 25 mm deep can be covered by "2° minimum draft on inside surfaces and 1° minimum on outside surfaces".<sup class="cite"><a href="#ref-1">[1]</a></sup> Less draft than the formula gives is available as a precision tolerance, at a price.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+
+    <figure>
+      <svg viewBox="0 0 640 280" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Inside and outside draft on a die-cast wall</title>
+        <desc id="fig1-desc">A section through a cup-shaped die casting sitting on the ejector half of a die. The outside wall leans inward at a small angle labelled outside draft, about 1 degree. The inside wall, formed by a core in the ejector half, leans at a larger angle labelled inside draft, about 2 degrees. An arrow shows the alloy shrinking onto the core as it solidifies, which is why the inside needs more draft. The parting line is drawn across the top of the die.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- die (ejector half) -->
+          <rect x="60" y="150" width="520" height="110" class="diagram-soft"/>
+          <!-- core -->
+          <path d="M235 150 L245 60 L395 60 L405 150" class="diagram-soft" stroke="currentColor"/>
+          <!-- casting -->
+          <path d="M200 150 L210 40 L430 40 L440 150 L405 150 L395 60 L245 60 L235 150 Z" class="diagram-accent" stroke-width="3"/>
+          <!-- parting line -->
+          <path d="M40 150 L600 150" stroke-dasharray="8 5"/>
+          <!-- reference verticals -->
+          <path d="M210 150 L210 40 M245 150 L245 60" stroke-dasharray="3 3"/>
+          <!-- shrink arrows -->
+          <path d="M290 110 L310 110 M306 106 L310 110 L306 114 M350 110 L330 110 M334 106 L330 110 L334 114" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="70" y="240">Ejector half of die</text>
+          <text x="290" y="170">Core</text>
+          <text x="455" y="90">Outside draft, about 1°</text>
+          <text x="455" y="108">(alloy shrinks away from cavity)</text>
+          <text x="60" y="90">Inside draft, about 2°</text>
+          <text x="60" y="108">(alloy shrinks onto core)</text>
+          <text x="290" y="100" class="diagram-text-muted">shrinkage</text>
+          <text x="460" y="145" class="diagram-text-muted">Parting line</text>
+          <text x="60" y="272" class="diagram-text-muted">Aluminium, features 25 mm or deeper: NADCA general note 2° inside, 1° outside. Angles exaggerated.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. Inside surfaces need about twice the draft of outside surfaces because the solidifying alloy shrinks onto the core and away from the cavity.<sup class="cite"><a href="#ref-1">[1]</a></sup></figcaption>
+    </figure>
+
+    <h3>Tolerances and the parting line</h3>
+    <p>NADCA publishes two tolerance levels. Standard tolerances represent "normal casting production practice at the most economical level"; precision tolerances involve "extra precision in die construction and/or special control in production" and "should be specified only when and where necessary".<sup class="cite"><a href="#ref-1">[1]</a></sup> For linear dimensions formed in the same die half with no moving components, the standard tolerance is ±0.25 mm on the first 25.4 mm plus ±0.025 mm for each additional 25.4 mm; the precision tolerance is ±0.05 mm on the first 25.4 mm plus the same ±0.025 mm per additional 25.4 mm.<sup class="cite"><a href="#ref-1">[1]</a></sup> NADCA's own example: a 127 mm (5 in) aluminium dimension carries ±0.35 mm standard or ±0.15 mm precision.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>The qualifier matters more than the numbers. Linear tolerance "only applies to linear dimensions formed in the same die half with no moving components"; dimensions across the parting line or formed by slides must be increased for parting-line shift and slide movement.<sup class="cite"><a href="#ref-1">[1]</a></sup> This is the casting version of the rule from Modules 3 and 6: keep functional dimensions in one half of the tool. NADCA also notes the economic reason to avoid over-tolerancing: tighter tolerances mean die wear affects the part sooner and production runs are shorter between die maintenance, so "the objective is to have as much tolerance as possible without affecting form, fit and function".<sup class="cite"><a href="#ref-1">[1]</a></sup> Zinc, which creeps after casting, may need artificial ageing to hold critical dimensions.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+
+    <h3>Porosity and ejector marks</h3>
+    <p>High-pressure fill traps gas, and thick sections shrink after the skin freezes; both leave porosity inside the casting. The dense skin of a die casting is its best material, so machining deep into a die casting can open porosity that was harmlessly buried. Design consequence: keep machining stock on die castings thin, avoid machining into heavy sections, and place sealing surfaces and pressure-tight regions where the wall is uniform and the fill is good. Ask the die caster where the gate and overflows will be, because the last metal to fill is the most porous. Ejector pins leave shallow marks on the ejector-half surfaces; specify which surfaces are cosmetic and let the die caster put the pins elsewhere.</p>
+
+    <h2 id="investment">Investment casting</h2>
+    <p>Investment casting reproduces a wax pattern closely, in almost any alloy, with a surface far better than sand. One foundry's published guidelines, attributed to Investment Casting Institute practice, give linear tolerances of ±0.25 mm on the first 25.4 mm and ±0.08 to 0.13 mm for each additional 25.4 mm; a wall-thickness tolerance of ±0.51 mm as a minimum absolute; flatness and straightness of about 0.13 mm per 25 mm; angularity of ±0.5° to ±2° depending on how the feature is supported; and a general surface finish of about 1.6 to 3.2 µm Ra (63 to 125 RMS).<sup class="cite"><a href="#ref-4">[4]</a></sup> Investment castings have no parting line on the part itself (the wax pattern's die has one), which is why complex undercut shapes that would need slides in a die casting are routine.</p>
+    <p>The process is slow and manual by comparison with die casting, and its wax and shell steps limit size. It earns its place at low to medium volume for complex shapes, for alloys that cannot be die cast (steels, superalloys, cobalt and titanium alloys), and where a near-net shape saves expensive machining. Minimum wall and feature sizes vary widely with alloy and foundry; ask yours rather than trusting a table.</p>
+
+    <h2 id="sand">Sand casting</h2>
+    <p>Sand casting has the cheapest tooling and the widest size range, and the roughest results. Published guidance gives minimum wall thicknesses of about 2.5 mm (0.10 in) for aluminium and 3.3 mm (0.13 in) for magnesium and steel; a standard draft of 2° with a minimum of about 1° on external and internal features; a parting-line mismatch and flash allowance that should not exceed about 0.5 mm (0.020 in); an as-cast surface of 200 to 500 RMS; and a rule to avoid section thickness ratios above 2 to 1, tapering unavoidable transitions no steeper than 1 in 4.<sup class="cite"><a href="#ref-2">[2]</a></sup> Another guide gives draft of 1° to 2° on external walls, 2° to 3° on internal pockets, and 3° to 5° in deep cavities, and notes that machining allowances depend on alloy, casting size, and finish requirement and should be set with the foundry.<sup class="cite"><a href="#ref-3">[3]</a></sup></p>
+    <p>Because the as-cast surface is rough and the tolerances generous, every sealing, locating, and bearing face on a sand casting is machined. Design the casting with that in mind: leave machining stock on those faces, provide cast locating pads or bosses for the first machining setup, and keep the machined faces in one plane where possible so that they can be finished in one pass.</p>
+
+    <h2 id="forging">Forging</h2>
+    <p>Forging deforms solid metal between dies. Nothing melts, so the wrought structure is preserved and the grain flow follows the part shape, which is why forgings carry the highest fatigue and impact loads of the family. The Forging Industry Association's design guide gives the rules.<sup class="cite"><a href="#ref-5">[5]</a></sup></p>
+    <ul>
+      <li><strong>Draft.</strong> Draft angles should be "the maximum allowable, consistent with functional, assembly and weight constraints". For ferrous forgings, draft angles below 5° "usually prohibit the use of hammers"; press dies with knock-out pins can produce forgings with little or no draft. Less draft is needed on the outside of a feature than on the inside, for the same reason as in casting. Heat-resistant alloys typically carry 7° to 10°.<sup class="cite"><a href="#ref-5">[5]</a></sup> Cold forgings need no draft.<sup class="cite"><a href="#ref-5">[5]</a></sup></li>
+      <li><strong>Fillets and corners.</strong> Interior corner (fillet) radii depend on rib height and alloy forgeability; sharp fillets obstruct metal flow and may require extra preform dies. For 25 mm high ribs the guide's representative values are: carbon steels, fillet 10 to 13 mm preferred and 6 mm minimum, corner 3 mm preferred and 1.5 mm minimum; stainless steels, fillet 6 to 13 mm preferred and 5 mm minimum, corner 5 mm preferred and 2.5 mm minimum; titanium alloys, fillet 13 to 16 mm preferred and 10 mm minimum, corner 6 mm preferred and 3 mm minimum.<sup class="cite"><a href="#ref-5">[5]</a></sup></li>
+      <li><strong>Parting line and balance.</strong> Forging cost is minimised and tolerances reduced when forging loads are balanced, eliminating side thrust. A part oriented so that it generates side thrust needs a counterlock in the die, which wears; rotating the part to balance the loads removes the counterlock but may mean features such as holes in bosses can no longer be forged and must be fully machined.<sup class="cite"><a href="#ref-5">[5]</a></sup> Flash forms where excess metal escapes at the parting line and is trimmed afterwards.<sup class="cite"><a href="#ref-5">[5]</a></sup></li>
+      <li><strong>Tolerances and datums.</strong> Features held to close tolerances should be formed in the same die member to avoid cross-die tolerance, and all datum targets and tooling points should be on features made in the same die half, preferably the upper die where there is less die contact and cooling.<sup class="cite"><a href="#ref-5">[5]</a></sup> Net-shape forging can hold remarkable tolerances on specific features (gear teeth up to 125 mm diameter forged to ±0.10 mm), but general forging tolerances are generous and appendices of the FIA guide give the industry values.<sup class="cite"><a href="#ref-5">[5]</a></sup> For rough-turned rolled rings, a tolerance of about ±1.6 mm and a 6.3 µm finish are practical.<sup class="cite"><a href="#ref-5">[5]</a></sup></li>
+    </ul>
+
+    <figure>
+      <svg viewBox="0 0 640 280" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Section through an impression-die forging</title>
+        <desc id="fig2-desc">Upper and lower dies meet at a parting line. Between them a forged section shows a web with two ribs 25 mm high. The ribs have drafted sides, generous fillet radii where they meet the web, and smaller corner radii at their tips. Flash extends from the parting line on both sides. Labels give carbon steel fillet radius 10 to 13 mm preferred and corner radius 3 mm preferred, and draft 5 degrees or more for hammer forging.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="40" y="30" width="560" height="90" class="diagram-soft"/>
+          <rect x="40" y="170" width="560" height="90" class="diagram-soft"/>
+          <path d="M20 145 L620 145" stroke-dasharray="8 5"/>
+          <!-- forging: web + two ribs, flash -->
+          <path d="M60 140 L140 140 L160 150 L172 150 Q180 150 182 142 L196 70 Q198 60 210 60 L226 60 Q238 60 240 70 L254 142 Q256 150 264 150 L376 150 Q384 150 386 142 L400 70 Q402 60 414 60 L430 60 Q442 60 444 70 L458 142 Q460 150 468 150 L480 150 L500 140 L580 140 L580 150 L500 160 L480 160 L172 160 L160 160 L60 150 Z" class="diagram-accent" stroke-width="3"/>
+        </g>
+        <g class="diagram-text">
+          <text x="50" y="52">Upper die</text>
+          <text x="50" y="250">Lower die</text>
+          <text x="470" y="140" class="diagram-text-muted">Parting line</text>
+          <text x="520" y="135">Flash</text>
+          <text x="270" y="105">Fillet R 10 to 13</text>
+          <text x="270" y="121">(carbon steel, 25 mm rib)</text>
+          <text x="470" y="60">Corner R 3</text>
+          <text x="470" y="80">Draft ≥ 5° for</text>
+          <text x="470" y="96">hammer forging</text>
+          <text x="50" y="200" class="diagram-text-muted">Web between ribs; keep critical features in one die half.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. An impression-die forging: generous fillets let metal flow into the ribs, corner radii keep the die from cracking, and flash escapes at the parting line to be trimmed. Values for 25 mm ribs in carbon steel.<sup class="cite"><a href="#ref-5">[5]</a></sup></figcaption>
+    </figure>
+
+    <h2 id="allowance">Machining allowances and datums</h2>
+    <p>Castings and forgings are rarely finished parts. The near-net shape is machined where the function needs a flat, a bore, a thread, or a seal. Three rules keep that machining cheap.</p>
+    <ol>
+      <li><strong>Leave stock only where you will machine,</strong> and enough of it to clean up the cast or forged surface under worst-case draft, mismatch, and tolerance. Stock that is too thin leaves an unmachined patch; too thick wastes time and, on a die casting, cuts into porosity.</li>
+      <li><strong>Put the first-operation datums on features in one die half,</strong> as both NADCA and the FIA guide advise, so the machining fixture locates on surfaces whose relationship the tool controls.<sup class="cite"><a href="#ref-1">[1]</a>,<a href="#ref-5">[5]</a></sup> Cast-in locating pads are cheap; a machining setup that locates on a drafted, mismatched surface is not.</li>
+      <li><strong>Machine related features in one setup.</strong> Bores that must be coaxial, faces that must be parallel, and a pattern of holes that must align with a mating part should all be cut without re-fixturing, exactly as in Module 4.</li>
+    </ol>
+
+    <h2 id="when">When casting beats machining</h2>
+    <p>The comparison is the break-even of Module 2 with two additions. A casting or forging consolidates parts: internal passages, bosses, and ribs that would be several machined pieces or a welded fabrication become one part with no joints. And it changes the material: a die casting is a casting alloy with porosity, a forging has directional properties, and a machined part is uniform wrought stock. Casting wins when volume amortises the die, when the shape has internal features a cutter cannot reach, and when the tolerance budget can live with ±0.25 mm plus parting-line effects on most dimensions and machining on the few that cannot. Machining wins when volume is low, when every dimension is tight, when the design is still changing, and when the material properties of wrought stock are needed throughout. Forging wins when fatigue or impact loading is the driver and the shape is forgeable.</p>
+    <p>The Tesla case below is the extreme of consolidation at volume. Your version will be smaller: a machined block with cross-drilled passages that becomes a die casting with cored passages at 20,000 units a year, or a welded steel bracket that becomes a forging because it keeps failing in fatigue.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Quantitative design rules for castings and forgings. Values are from industry standards and published guides; your foundry or forge takes precedence.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range (metric)</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Die casting wall</td><td>Thin and uniform</td><td>1.0 to 5.1 mm typical; 0.5 mm possible with consultation</td><td>Fill at high cycle speed; porosity in thick sections</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Die casting draft</td><td>Depth-dependent; inside twice outside</td><td>D = √L / C; aluminium C = 6.00 inside, 12.00 outside (mm); general note 2° inside, 1° outside for ≥ 25 mm</td><td>Alloy shrinks onto cores, away from cavity</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Die casting linear tolerance, standard</td><td>Same die half only</td><td>±0.25 mm first 25.4 mm plus ±0.025 mm per additional 25.4 mm</td><td>Die wear and thermal growth</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Die casting linear tolerance, precision</td><td>Only where necessary</td><td>±0.05 mm first 25.4 mm plus ±0.025 mm per additional 25.4 mm</td><td>Extra die precision and process control</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Dimensions across parting line or slides</td><td>Add parting-line shift and slide tolerance</td><td>Increase per NADCA tables S-4A-2, S-4A-3</td><td>Die halves and slides move</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Investment casting linear tolerance</td><td>Tight for a casting</td><td>±0.25 mm first 25.4 mm plus ±0.08 to 0.13 mm per additional 25.4 mm</td><td>Ceramic shell reproduces the wax</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Investment casting wall tolerance</td><td>Absolute minimum</td><td>±0.51 mm</td><td>Shell and pattern variation</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Investment casting flatness, angularity, finish</td><td>Machine what must be flat</td><td>About 0.13 mm per 25 mm; ±0.5° to ±2°; Ra 1.6 to 3.2 µm</td><td>Shell distortion; supported versus unsupported features</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Sand casting wall</td><td>Thicker than die cast</td><td>About 2.5 mm aluminium; 3.3 mm magnesium and steel</td><td>Slow fill in sand</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Sand casting draft</td><td>More inside and deeper</td><td>Standard 2°, minimum about 1°; 1 to 2° external, 2 to 3° internal, 3 to 5° deep cavities</td><td>Pattern withdrawal from sand</td><td><a href="#ref-2">[2]</a>, <a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Sand casting mismatch and finish</td><td>Machine functional faces</td><td>Parting-line mismatch ≤ about 0.5 mm; surface 200 to 500 RMS</td><td>Mould halves and sand texture</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Sand casting section ratio</td><td>Avoid abrupt changes</td><td>≤ 2 : 1; taper no steeper than 1 in 4</td><td>Differential cooling, hot tears</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Forging draft</td><td>Maximum allowable</td><td>≥ 5° for hammer forging of steel; little or none on presses with knock-outs; 7 to 10° for heat-resistant alloys; none for cold forging</td><td>Release from impression dies</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Forging fillet radius (25 mm rib)</td><td>Generous</td><td>Carbon steel 10 to 13 mm preferred, 6 mm min; stainless 6 to 13, 5 min; titanium 13 to 16, 10 min</td><td>Metal flow into ribs</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Forging corner radius (25 mm rib)</td><td>Smaller than fillets</td><td>Carbon steel 3 mm preferred, 1.5 mm min; stainless 5, 2.5; titanium 6, 3</td><td>Die stress and fill at rib tips</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Forging datums and close tolerances</td><td>One die half</td><td>Datum targets on features from the same die half, upper preferred</td><td>Avoids cross-die tolerance</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Net-shape forging capability</td><td>Special features only</td><td>Gear teeth to 125 mm diameter at ±0.10 mm</td><td>Precision dies and process</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Rolled ring, rough turned</td><td>Do not over-specify</td><td>About ±1.6 mm; 6.3 µm finish</td><td>Practical for the process</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Machined comparison</td><td>Machine only the faces that need it</td><td>Machining standard ±0.125 mm versus casting ±0.25 mm plus parting effects</td><td>Combine near-net shape with selective machining</td><td><a href="#ref-1">[1]</a>, <a href="#ref-10">[10]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: the Model Y rear underbody</h2>
+    <p>Tesla's Q4 2019 shareholder update described the Model Y as having "basically two big high-pressure die-cast (HPDC) aluminium castings that are joined", with a plan to transition "to the rear underbody being a single-piece casting that also integrates the rear crash rails".<sup class="cite"><a href="#ref-7">[7]</a></sup> On the Q1 2020 earnings call Elon Musk said of the Model 3's stamped rear underbody: "When we get the big casting machine, it'll go from 70 parts to 1 with a significant reduction in capital expenditure on all the robots to put those parts together."<sup class="cite"><a href="#ref-6">[6]</a></sup> By January 2021 press reports of production vehicles showed the single-piece rear casting in place; the Model 3's rear underbody had been about 70 stamped metal parts, and the Model Y's was two large castings moving to one.<sup class="cite"><a href="#ref-9">[9]</a></sup></p>
+    <p>Everything in this module is visible in that decision. Consolidation removes not only 69 parts but the joining operations and the robots that performed them, which is the capital-expenditure argument Musk made. The casting is high-pressure die cast aluminium, so it follows the die-casting rules: uniform walls, draft on every surface, tolerances that depend on which die half forms a feature, and machining only where a mating face needs it. The scale of the machine is a consequence of the part size, not a new process. And the trade-offs are the standard ones: a die that costs far more than a stamping die set for a single part, amortised over a very high volume; a casting alloy in place of wrought sheet; and repairability questions that follow from replacing a bolted and welded assembly with one casting.</p>
+    <p>The figures here come from Tesla's published letter and call, as reported by trade press; the course does not use the cost savings or robot counts that circulate without a Tesla document behind them.</p>
+    <!-- AUTHOR: optional personal note here (a casting or forging conversion you have seen succeed or fail, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Drawing a casting like a machined part.</strong> Consequence: sharp corners, no draft, and thick sections; the foundry's DFM review rewrites the part. Fix: fillets everywhere, draft on every surface perpendicular to the parting line, uniform walls.</li>
+      <li><strong>Tolerancing across the parting line.</strong> Consequence: parting-line shift consumes the tolerance and parts fail inspection. Fix: keep functional dimensions in one die half; machine the rest.</li>
+      <li><strong>Precision tolerances everywhere.</strong> Consequence: faster die wear, shorter runs between maintenance, higher price. Fix: standard tolerances by default; precision only where function requires, as NADCA advises.</li>
+      <li><strong>Machining deep into a die casting.</strong> Consequence: porosity exposed on a sealing face; leaks. Fix: thin machining stock on the dense skin, and sealing faces where fill is good.</li>
+      <li><strong>Same draft inside and outside.</strong> Consequence: castings stick to cores and distort on ejection. Fix: about twice the draft on inside surfaces.</li>
+      <li><strong>Sharp fillets on forgings.</strong> Consequence: incomplete fill, extra preform dies, die cracking. Fix: fillet radii at the FIA preferred values for the rib height and alloy.</li>
+      <li><strong>Datums on features from different die halves.</strong> Consequence: the machining fixture locates on surfaces that move relative to each other; scrap at first article. Fix: datum targets on one die half, with cast locating pads.</li>
+      <li><strong>Assuming the metal is sound.</strong> Consequence: internal defects reach the field. Fix: agree the inspection method (X-ray, ultrasonic, pressure test) and the acceptance criteria with the supplier before tooling, and design critical areas so they can be inspected.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: draft and tolerance on a die-cast bracket</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>An aluminium die-cast bracket has a pocket 40 mm deep on the ejector side, formed by a core, and an outside wall of the same depth. A mounting face is 127 mm long and is formed entirely in the ejector half. A second dimension of 60 mm runs across the parting line to a feature in the cover half.</p>
+    <p><strong>Tasks.</strong> (a) Compute the NADCA standard draft distance and angle for the inside wall of the pocket and for the outside wall. (b) Compare with the general note of 2° inside and 1° outside. (c) State the standard and precision linear tolerances for the 127 mm face. (d) Explain what happens to the 60 mm dimension and what you would do if it must be ±0.20 mm.</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a) Draft by formula.</strong> Inside wall, aluminium, C = 6.00 (metric): D = √40 / 6.00 = 6.32 / 6.00 = 1.05 mm over 40 mm; angle = arctan(1.05 / 40) ≈ 1.5°. Outside wall, C = 12.00: D = 6.32 / 12.00 = 0.53 mm; angle ≈ 0.75°. Check against NADCA's inch example: a 25.4 mm deep inside wall gives D = √25.4 / 6.00 = 0.84 mm, or 1.9°, which matches the standard's example of about 2° at one inch of depth.</p>
+      <p><strong>(b) Versus the general note.</strong> The general note (2° inside, 1° outside for features at least 25 mm deep) is more conservative than the formula at 40 mm depth (1.5° and 0.75°), because the formula's angle falls with depth. Either is acceptable; the general note is simpler to put on a drawing, and the formula tells you how much you could reduce it if a specific feature needs less. Do not go below the formula without asking for precision tolerances.</p>
+      <p><strong>(c) Linear tolerance on the 127 mm face.</strong> 127 mm is 5 in: the first 25.4 mm plus four additional 25.4 mm increments. Standard: ±0.25 + 4 × 0.025 = ±0.35 mm. Precision: ±0.05 + 4 × 0.025 = ±0.15 mm. These are NADCA's own worked values for a 5 in aluminium casting.</p>
+      <p><strong>(d) The 60 mm dimension across the parting line.</strong> The linear tolerance tables do not apply to it; NADCA requires the tolerance to be increased for parting-line shift using its separate tables. If the function needs ±0.20 mm, the practical options are: move the feature so both ends are formed in the same die half; or machine one end after casting, which turns a cross-parting-line casting dimension into a machined dimension at about ±0.125 mm standard capability, with a cast-in locating pad in the ejector half as the datum for that machining setup.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="07">
+      <fieldset class="q" data-answer="c">
+        <legend>1. According to NADCA, why do inside surfaces of a die casting need about twice the draft of outside surfaces?</legend>
+        <label><input type="radio" name="q1" value="a"> Inside surfaces are always deeper</label>
+        <label><input type="radio" name="q1" value="b"> Inside surfaces are machined afterwards</label>
+        <label><input type="radio" name="q1" value="c"> The solidifying alloy shrinks onto the cores that form inside surfaces and away from the cavity that forms outside surfaces</label>
+        <label><input type="radio" name="q1" value="d"> Ejector pins are on the outside</label>
+        <p class="explain" hidden>Shrinkage grips cores and releases from cavities, so inside features need more taper to eject.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.35" data-tolerance="0.005">
+        <legend>2. What is the NADCA standard linear tolerance (±, mm) for a 127 mm aluminium die-cast dimension formed in one die half?</legend>
+        <label>Answer (± mm): <input type="number" name="q2" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>±0.25 mm for the first 25.4 mm plus 4 × ±0.025 mm = ±0.35 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.84" data-tolerance="0.02">
+        <legend>3. Using D = √L / C with the aluminium inside-wall constant C = 6.00 (metric), what draft distance in mm does a 25.4 mm deep inside wall need?</legend>
+        <label>Answer (mm): <input type="number" name="q3" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>√25.4 = 5.04; 5.04 / 6.00 = 0.84 mm, about 1.9°.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>4. NADCA's linear tolerance tables apply only to dimensions that are</legend>
+        <label><input type="radio" name="q4" value="a"> smaller than 25 mm</label>
+        <label><input type="radio" name="q4" value="b"> formed in the same die half with no moving components</label>
+        <label><input type="radio" name="q4" value="c"> machined after casting</label>
+        <label><input type="radio" name="q4" value="d"> in zinc alloys</label>
+        <p class="explain" hidden>Dimensions across the parting line or formed by slides must have their tolerance increased for shift and movement.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>5. Per the Forging Industry Association guide, draft angles below about 5° on ferrous forgings usually</legend>
+        <label><input type="radio" name="q5" value="a"> improve fatigue life</label>
+        <label><input type="radio" name="q5" value="b"> are required for cold forging</label>
+        <label><input type="radio" name="q5" value="c"> reduce flash</label>
+        <label><input type="radio" name="q5" value="d"> prohibit the use of hammers; presses with knock-out pins are needed</label>
+        <p class="explain" hidden>Hammer forgings need draft to release; press dies with knock-outs can produce little or no draft.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>6. For a 25 mm high rib in a carbon steel forging, the FIA guide's preferred fillet radius is about</legend>
+        <label><input type="radio" name="q6" value="a"> 10 to 13 mm</label>
+        <label><input type="radio" name="q6" value="b"> 0.5 mm</label>
+        <label><input type="radio" name="q6" value="c"> 1.5 mm</label>
+        <label><input type="radio" name="q6" value="d"> 50 mm</label>
+        <p class="explain" hidden>Fillet 10 to 13 mm preferred (6 mm minimum); corner radius 3 mm preferred (1.5 mm minimum).</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>7. The NADCA standard says that compared with die casting, investment casting is attractive</legend>
+        <label><input type="radio" name="q7" value="a"> only for zinc</label>
+        <label><input type="radio" name="q7" value="b"> at the highest volumes</label>
+        <label><input type="radio" name="q7" value="c"> at low volumes where precision tolerances are needed</label>
+        <label><input type="radio" name="q7" value="d"> never</label>
+        <p class="explain" hidden>At higher volumes die casting is "the clear choice".</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>8. The 1989 Sioux City fan-disk failure originated from</legend>
+        <label><input type="radio" name="q8" value="a"> a machining error in the bore</label>
+        <label><input type="radio" name="q8" value="b"> a metallurgical defect formed when the titanium ingot was melted, which later grew a fatigue crack that inspection did not detect</label>
+        <label><input type="radio" name="q8" value="c"> a casting porosity void</label>
+        <label><input type="radio" name="q8" value="d"> corrosion from de-icing fluid</label>
+        <p class="explain" hidden>The defect was in the material before forging; the lesson for castings and forgings is that internal soundness and inspection are part of the design.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>c. Shrinkage onto cores.</li>
+        <li>±0.35 mm.</li>
+        <li>0.84 mm.</li>
+        <li>b. Same die half, no moving components.</li>
+        <li>d. Prohibit hammers.</li>
+        <li>a. 10 to 13 mm.</li>
+        <li>c. Low volume, precision tolerances.</li>
+        <li>b. Melt defect in the titanium, undetected fatigue crack.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>Die casting for high volume and thin walls, investment casting for complex shapes and hard alloys at lower volume, sand casting for size and cheap tooling, forging for fatigue and impact loads.</li>
+      <li>Draft is depth- and alloy-dependent; inside surfaces need about twice the draft of outside surfaces because the alloy shrinks onto cores. NADCA's general note for aluminium: 2° inside, 1° outside.</li>
+      <li>Casting tolerances apply only within one die half. Dimensions across the parting line or through slides carry extra variation; keep function in one half or machine it.</li>
+      <li>Standard tolerances by default. Precision tolerances shorten die life and runs between maintenance, so specify them only where function requires.</li>
+      <li>Forgings want generous fillets for metal flow, balanced loads to avoid counterlocks, and datums in one die half.</li>
+      <li>Leave thin machining stock only where a face must be machined, and locate the first machining setup on cast-in pads from one die half.</li>
+      <li>The process puts material where you cannot see it. Agree the inspection method and acceptance criteria before tooling; a defect in the melt is a defect in the part.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07.</p>
+    <ol class="references">
+      <li id="ref-1">North American Die Casting Association. <em>NADCA Product Specification Standards for Die Castings</em>, 2015, Section 4A, "Engineering &amp; Design: Coordinate Dimensioning." Public excerpt hosted by A&amp;B Die Casting. <a href="https://www.abdiecasting.com/wp-content/uploads/2017/08/Section-04a-Coordinate-Dimensioning.pdf">https://www.abdiecasting.com/wp-content/uploads/2017/08/Section-04a-Coordinate-Dimensioning.pdf</a> <span class="tag">(source values in inches with metric equivalents)</span></li>
+      <li id="ref-2">Engineers Edge. "Design for Sand Casting: Design Guide and Considerations." n.d. <a href="https://www.engineersedge.com/sand_cast.htm">https://www.engineersedge.com/sand_cast.htm</a> <span class="tag">(source values in inches; converted)</span></li>
+      <li id="ref-3">TFG USA. "Sand Casting Design Guide." n.d. <a href="https://www.tfgusa.com/sand-casting-design-guide/">https://www.tfgusa.com/sand-casting-design-guide/</a></li>
+      <li id="ref-4">Metal-Castings.com. "Investment Casting Tolerances." n.d. <a href="https://metal-castings.com/investment-casting-tolerances/">https://metal-castings.com/investment-casting-tolerances/</a> <span class="tag">(foundry page attributing its values to Investment Casting Institute guidelines; inch values converted)</span></li>
+      <li id="ref-5">Forging Industry Association. <em>Product Design Guide for Forging.</em> n.d. <a href="https://www.forging.org/Common/Uploaded%20files/Design%20Engineering%20Center/Product%20Design%20Guide%20for%20Forging.pdf">https://www.forging.org/Common/Uploaded%20files/Design%20Engineering%20Center/Product%20Design%20Guide%20for%20Forging.pdf</a></li>
+      <li id="ref-6">Charged EVs. "In Model Y, Tesla replaces 70 underbody parts with one casting." 4 May 2020. <a href="https://chargedevs.com/newswire/in-model-y-tesla-replaces-70-underbody-parts-with-one-casting/">https://chargedevs.com/newswire/in-model-y-tesla-replaces-70-underbody-parts-with-one-casting/</a> <span class="tag">(press report quoting Tesla's Q1 2020 earnings call)</span></li>
+      <li id="ref-7">Repairer Driven News. "Tesla: Single-piece Model Y rear underbody casting in volume production." 2 February 2021, quoting Tesla's Q4 2019 Update Letter. <a href="https://www.repairerdrivennews.com/2021/02/02/tesla-single-piece-casting-for-rear-of-model-y-has-reached-volume-production/">https://www.repairerdrivennews.com/2021/02/02/tesla-single-piece-casting-for-rear-of-model-y-has-reached-volume-production/</a> <span class="tag">(secondary: page blocks automated access; quotation taken from search excerpt)</span></li>
+      <li id="ref-8">Federal Aviation Administration. "McDonnell Douglas DC-10, N1819U, United Airlines Flight 232, Sioux City, Iowa, July 19, 1989." FAA Lessons Learned from Civil Aviation Accidents. <a href="https://www.faa.gov/lessons_learned/transport_airplane/accidents/N1819U">https://www.faa.gov/lessons_learned/transport_airplane/accidents/N1819U</a></li>
+      <li id="ref-9">Lambert, F. "Tesla starts production of Model Y with massive single-piece rear casting." Electrek, 11 January 2021. <a href="https://electrek.co/2021/01/11/tesla-starts-production-model-y-massive-single-piece-rear-casting/">https://electrek.co/2021/01/11/tesla-starts-production-model-y-massive-single-piece-rear-casting/</a></li>
+      <li id="ref-10">Protolabs Network (formerly Hubs). "CNC machining design guide." n.d. <a href="https://www.hubs.com/guides/cnc-machining/">https://www.hubs.com/guides/cnc-machining/</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Bralla, J. G. (ed.). <em>Design for Manufacturability Handbook</em>, 2nd ed. McGraw-Hill, 1999. Chapters on die castings, investment castings, sand castings, and forgings.</li>
+      <li>Swift, K. G., and Booker, J. D. <em>Manufacturing Process Selection Handbook.</em> Butterworth-Heinemann, 2013. Process information maps and capability charts for the casting and forging processes.</li>
+      <li>National Transportation Safety Board. <em>Aircraft Accident Report NTSB/AAR-90/06, United Airlines Flight 232.</em> 1990. The full investigation behind the Sioux City example.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>

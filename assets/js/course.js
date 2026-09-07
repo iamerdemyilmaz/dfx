@@ -16,7 +16,7 @@
     { num: "04", slug: "04-cnc-machining", title: "DFM for CNC machining", built: true },
     { num: "05", slug: "05-sheet-metal", title: "DFM for sheet metal", built: true },
     { num: "06", slug: "06-injection-molding", title: "DFM for injection molding", built: true },
-    { num: "07", slug: "07-casting-forging", title: "DFM for casting and forging", built: false },
+    { num: "07", slug: "07-casting-forging", title: "DFM for casting and forging", built: true },
     { num: "08", slug: "08-additive", title: "DFM for additive manufacturing", built: false },
     { num: "09", slug: "09-pcb-pcba", title: "DFM for PCB and PCBA", built: false },
     { num: "10", slug: "10-design-for-assembly", title: "Design for assembly", built: false },

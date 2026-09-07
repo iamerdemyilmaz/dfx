@@ -9,7 +9,7 @@ Spec: CLAUDE.md. Source register: SOURCES.md.
 |-------|--------|------|
 | A – Research and outline | Complete, approved by author | 2026-09-07 |
 | B – Scaffold + reference module (06) | Complete, approved by author (4,900 words accepted) | 2026-09-07 |
-| C – Remaining modules | **In progress**: 00 to 06 done | 2026-09-07 |
+| C – Remaining modules | **In progress**: 00 to 07 done | 2026-09-07 |
 | D – Verification pass | Not started | |
 | E – Ship (README, final summary) | Not started | |
 
@@ -28,6 +28,7 @@ Author instruction (2026-09-07): no em or en dashes anywhere in the course, incl
 | 04 CNC machining | 2026-09-07 | 3,847 | 12 | 1 | 8 | 12 OK | Comet 1 (Hansard + inquiry summary) used for stress concentration; Apple unibody as the case. |
 | 05 Sheet metal | 2026-09-07 | 3,674 | 10 | 2 | 8 | 7 OK; CPSC, ISO, The Fabricator return 403 to scripts | PEM handbook (PDF) replaced the blocked PEM FAQ as the hardware source. |
 | 06 Injection molding | 2026-09-07 | 4,904 | 14 | 3 | 8 | 14 OK | Length accepted by author. |
+| 07 Casting and forging | 2026-09-07 | 4,080 | 10 | 2 | 8 | 10 OK | NADCA draft formula recovered as D = √L / C (the PDF text lost the root sign; verified against NADCA's own 1 in example giving about 2°). Sioux City fan disk (FAA Lessons Learned, read in browser) as the inspection lesson; Tesla casting as the case. |
 
 Links that return 403 to scripts are recorded here rather than as dead; they will be re-checked by hand in Phase D.
 
