@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 8: DFM for additive manufacturing · DFx Course</title>
+<meta name="description" content="Design for manufacturing rules for FDM, SLA, SLS, MJF, and DMLS: orientation, supports, minimum features, anisotropy, post-processing, AM for tooling and fixtures, and when additive manufacturing is and is not a production process.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="08">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 8</p>
+    <h1>DFM for additive manufacturing</h1>
+    <p class="lead">Additive manufacturing (AM) builds a part layer by layer from a digital model, with no tooling. That removes most of the rules in Modules 4 to 7 and replaces them with a different set: which way is up, what holds the overhangs, how small a feature the process resolves, and which direction the part is weakest in. This module gives those rules for the five processes you will actually be offered, and a clear answer to the question of when AM is a production process.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Classify</strong> the common AM processes (FDM, SLA, SLS, MJF, DMLS) into the ISO/ASTM 52900 categories and state what each one is good for.</li>
+      <li><strong>Orient</strong> a part on the build plate to control overhangs, supports, surface finish, and anisotropy.</li>
+      <li><strong>Specify</strong> minimum wall, feature, hole, and clearance dimensions for each process from published guides, and explain why they differ between machines.</li>
+      <li><strong>Design</strong> hollow and channelled parts with the escape holes and channel shapes each process needs.</li>
+      <li><strong>Plan</strong> post-processing: support removal, stress relief, machining of datum faces, and surface finishing.</li>
+      <li><strong>Decide</strong> when AM is the right production process and when it is a prototype or a tooling process.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>Two documented facts frame this module. The first is what AM can do when the design is built for it. GE Aviation's fuel nozzle tip for the LEAP engine replaced an assembly of about 20 pieces welded and brazed together with a single printed part that "weighed 25 percent less than its predecessor" and was "five times more durable", housing 14 internal fluid passages; by late 2018 more than 33,000 had been printed at a dedicated plant in Auburn, Alabama.<sup class="cite"><a href="#ref-11">[11]</a></sup> That is AM as a production process, and it worked because the part was redesigned for it, not converted.</p>
+    <p>The second is what goes wrong when design rules are treated as universal. Every AM guide publishes minimum feature sizes, and they are machine-specific. Formlabs' guide for its Form 2 stereolithography printer gives a minimum supported wall of 0.4 mm and an unsupported wall of 0.6 mm, a maximum unsupported overhang of 1.0 mm, and a minimum drain hole of 3.5 mm.<sup class="cite"><a href="#ref-9">[9]</a></sup> The same company's specifications for the later Form 3 give 0.2 mm for both wall types, a 5.0 mm unsupported overhang, and a 2.5 mm drain hole.<sup class="cite"><a href="#ref-10">[10]</a></sup> Both are correct; they describe different machines, resins, and layer thicknesses. A design that meets the rules for one printer and is quoted to a bureau running another will either fail to print or be rejected at DFM review. The rule in this module is therefore always "for this process, on this machine, in this material", and the design task includes asking which one you will get.</p>
+    <p>The gap between those two facts is the gap this module fills: AM is a production process for the right part, and a source of expensive surprises when its rules are borrowed rather than checked.</p>
+
+    <h2 id="categories">Seven categories, five you will be offered</h2>
+    <p>ISO/ASTM 52900:2021 defines the vocabulary of additive manufacturing and classifies every AM process into seven categories: binder jetting, directed energy deposition, material extrusion, material jetting, powder bed fusion, sheet lamination, and vat photopolymerization.<sup class="cite"><a href="#ref-1">[1]</a></sup> The trade names you will hear map onto them as follows.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Common AM processes and their ISO/ASTM 52900 categories.</caption>
+        <thead><tr><th>Common name</th><th>ISO/ASTM 52900 category</th><th>How it works</th><th>Typical use</th></tr></thead>
+        <tbody>
+          <tr><td>FDM (fused deposition modelling), FFF</td><td>Material extrusion</td><td>Thermoplastic filament melted and extruded through a nozzle in layers</td><td>Cheap prototypes, jigs, fixtures, low-load functional parts</td></tr>
+          <tr><td>SLA (stereolithography), DLP, and similar resin processes</td><td>Vat photopolymerization</td><td>Liquid photopolymer cured by a laser or projected light, layer by layer</td><td>Fine detail, smooth surfaces, visual models, patterns for casting</td></tr>
+          <tr><td>SLS (selective laser sintering)</td><td>Powder bed fusion (polymer)</td><td>Laser fuses nylon powder; unfused powder supports the part</td><td>Functional nylon parts, no supports, small production runs</td></tr>
+          <tr><td>MJF (Multi Jet Fusion)</td><td>Powder bed fusion (polymer)</td><td>Fusing and detailing agents jetted onto nylon powder, then fused by infrared energy</td><td>Similar to SLS; fine detail, good mechanical properties</td></tr>
+          <tr><td>DMLS, SLM, LPBF (metal laser powder bed)</td><td>Powder bed fusion (metal)</td><td>Laser melts metal powder layer by layer on a build plate; supports and stress relief required</td><td>Metal parts with internal passages, consolidation, low to medium volume</td></tr>
+          <tr><td>PolyJet, MultiJet</td><td>Material jetting</td><td>Droplets of photopolymer jetted and cured</td><td>Multi-material and multi-colour models</td></tr>
+          <tr><td>Binder jetting (sand, metal)</td><td>Binder jetting</td><td>Liquid binder jetted onto powder; metal parts sintered afterwards</td><td>Sand moulds and cores; metal parts at volume</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The rest of the module covers the five in the first five rows, because those are what prototyping bureaus and production AM suppliers quote as standard services.</p>
+
+    <h2 id="orientation">Orientation, overhangs, and supports</h2>
+    <p>Every layer must be built on something. A feature that projects sideways beyond the layer below is an overhang, and past a certain angle it needs a support structure printed under it, which then has to be removed and leaves a mark. The angle differs by process because the physics differs.</p>
+    <ul>
+      <li><strong>FDM.</strong> Overhangs up to 45° from vertical print without support; beyond that, supports are required. Bridges (horizontal spans between two supported ends) should be kept under about 5 mm to avoid sagging. Vertical pins under about 5 mm diameter are fragile; add a fillet at the base or use an off-the-shelf pin. Add a 45° chamfer or radius to edges that touch the build plate to ease removal.<sup class="cite"><a href="#ref-2">[2]</a></sup></li>
+      <li><strong>SLA.</strong> Resin parts are printed on supports almost by default. Hubs' guide gives a minimum unsupported overhang angle of 19° from level and a maximum unsupported overhang length of 1.0 mm.<sup class="cite"><a href="#ref-3">[3]</a></sup> Formlabs' Form 2 guide agrees (19° from level, 1.0 mm); its Form 3 specification lowers the angle to 10° and extends the unsupported length to 5.0 mm.<sup class="cite"><a href="#ref-9">[9]</a>,<a href="#ref-10">[10]</a></sup> Same category, different machines, different rules.</li>
+      <li><strong>SLS and MJF.</strong> No supports are needed because the unfused powder bed supports every layer. Orientation still matters for surface finish and for the slight thermal distortion of large flat areas; Protolabs tips parts at a compound incline of 10° to 15° in X and Y to control warping.<sup class="cite"><a href="#ref-8">[8]</a></sup></li>
+      <li><strong>DMLS/SLM.</strong> Supports are always required, both to hold overhangs and to anchor the part against the thermal stresses of melting metal; Hubs gives a maximum overhang angle of about 50° and unsupported edges of 0.5 mm, Protolabs a self-supporting limit of 45° and unsupported bridges of no more than about 2 mm.<sup class="cite"><a href="#ref-5">[5]</a>,<a href="#ref-7">[7]</a></sup> Supports in metal are removed by machining or hand work and leave witness marks; design so that they land on surfaces that will be machined anyway.</li>
+    </ul>
+
+    <figure>
+      <svg viewBox="0 0 640 260" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Overhang angle and support need</title>
+        <desc id="fig1-desc">Three features rising from a build plate. Left: a wall leaning 30 degrees from vertical, labelled self-supporting in FDM and metal. Middle: a wall leaning 60 degrees from vertical, labelled needs support, with dashed support structure beneath it. Right: a horizontal bridge between two pillars labelled bridge, keep under about 5 mm in FDM and 2 mm in DMLS. The 45 degree limit is marked with a dashed reference line.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 220 L620 220" stroke-width="3"/>
+          <!-- 30 deg wall -->
+          <path d="M80 220 L80 200 L150 80 L170 90 L100 210 L100 220 Z" class="diagram-accent" stroke-width="3"/>
+          <path d="M80 220 L80 80" stroke-dasharray="3 3"/>
+          <!-- 60 deg wall with supports -->
+          <path d="M260 220 L260 200 L400 120 L410 138 L280 212 L280 220 Z" class="diagram-accent" stroke-width="3"/>
+          <path d="M300 220 L300 190 M330 220 L330 172 M360 220 L360 155 M390 220 L390 140" stroke-dasharray="4 3"/>
+          <!-- bridge -->
+          <path d="M470 220 L470 150 L490 150 L490 165 L580 165 L580 150 L600 150 L600 220" class="diagram-accent" stroke-width="3"/>
+          <path d="M490 175 L580 175 M494 171 L490 175 L494 179 M576 171 L580 175 L576 179"/>
+          <!-- 45 deg reference at left feature -->
+          <path d="M80 220 L200 100" stroke-dasharray="6 4" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="30" y="60">30° from vertical:</text>
+          <text x="30" y="76">self-supporting</text>
+          <text x="150" y="130" class="diagram-text-muted">45° limit (FDM, DMLS)</text>
+          <text x="270" y="100">60° from vertical:</text>
+          <text x="270" y="116">needs supports</text>
+          <text x="470" y="130">Bridge</text>
+          <text x="360" y="200" class="diagram-text-muted">FDM under about 5 mm; DMLS under about 2 mm</text>
+          <text x="30" y="245" class="diagram-text-muted">Build plate. Angles measured from vertical; SLA guides quote the angle from horizontal instead.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. Past the self-supporting angle a feature needs support, which costs material, time, and a witness mark. The angle is process- and machine-specific.<sup class="cite"><a href="#ref-2">[2]</a>,<a href="#ref-5">[5]</a>,<a href="#ref-7">[7]</a></sup></figcaption>
+    </figure>
+
+    <p>Orientation is a trade between four things: minimising supports, putting the best surface finish where it is seen (up-facing and vertical surfaces are better than down-facing supported ones), aligning the strongest direction with the load (next section), and minimising build height, since time scales with the number of layers. There is rarely an orientation that wins all four. Decide which two matter for the part and say so in the RFQ.</p>
+
+    <h2 id="anisotropy">Anisotropy</h2>
+    <p>Layered parts are weakest across the layers. In FDM the bond between layers is a partial weld and the part is markedly weaker in the build direction than along the extruded roads. In SLS and MJF the effect is smaller but present. In metal powder bed fusion the microstructure is columnar along the build direction and the as-built part carries residual stress from the thermal cycling; Hubs notes that internal stresses develop because of the very high processing temperatures and that a stress-relief thermal cycle is mandatory before other operations.<sup class="cite"><a href="#ref-5">[5]</a></sup> For a loaded part the rule is simple: orient so that the principal tensile stress runs along the layers, not across them, and treat published tensile data with suspicion unless the test direction is stated.</p>
+
+    <h2 id="features">Minimum features, by process</h2>
+    <p>The published minima below are from two supplier networks and one machine maker. They agree closely where they overlap and differ where machines differ. Treat them as a starting point for the RFQ and expect your supplier's numbers to override them.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Minimum feature guidance by process, mm. Sources as marked; where two sources differ, both are given.</caption>
+        <thead><tr><th>Feature</th><th>FDM</th><th>SLA</th><th>SLS</th><th>MJF</th><th>DMLS / SLM</th></tr></thead>
+        <tbody>
+          <tr><td>Minimum wall</td><td>Not specified by the guide; several nozzle widths in practice<sup class="cite"><a href="#ref-2">[2]</a></sup></td><td>0.4 supported, 0.6 unsupported (Hubs, Formlabs Form 2); 0.2 (Form 3)<sup class="cite"><a href="#ref-3">[3]</a>,<a href="#ref-9">[9]</a>,<a href="#ref-10">[10]</a></sup></td><td>0.8 (PA12) to 2.0 (carbon-filled PA); Protolabs recommends 1.52 to 3.81 uniform<sup class="cite"><a href="#ref-4">[4]</a>,<a href="#ref-8">[8]</a></sup></td><td>Comparable to SLS</td><td>0.4 (Hubs); 1.0 required (Protolabs)<sup class="cite"><a href="#ref-5">[5]</a>,<a href="#ref-12">[12]</a></sup></td></tr>
+          <tr><td>Minimum feature or detail</td><td>Pins ≥ 5 diameter print reliably<sup class="cite"><a href="#ref-2">[2]</a></sup></td><td>Emboss 0.1 high; engrave 0.4 wide and deep (Hubs); 0.063 minimum feature (Protolabs SL)<sup class="cite"><a href="#ref-3">[3]</a>,<a href="#ref-6">[6]</a></sup></td><td>0.8 (Hubs); 0.76 (Protolabs)<sup class="cite"><a href="#ref-4">[4]</a>,<a href="#ref-6">[6]</a></sup></td><td>0.51<sup class="cite"><a href="#ref-6">[6]</a></sup></td><td>0.6 feature, 0.4 detail (Hubs); 0.15 (Protolabs)<sup class="cite"><a href="#ref-5">[5]</a>,<a href="#ref-6">[6]</a></sup></td></tr>
+          <tr><td>Minimum hole</td><td>Vertical holes shrink; drill after printing for accuracy<sup class="cite"><a href="#ref-2">[2]</a></sup></td><td>0.5 (holes under 0.8 may close)<sup class="cite"><a href="#ref-3">[3]</a></sup></td><td>1.5<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>Comparable to SLS</td><td>1.5<sup class="cite"><a href="#ref-5">[5]</a></sup></td></tr>
+          <tr><td>Overhang</td><td>45° max without support; bridges &lt; 5<sup class="cite"><a href="#ref-2">[2]</a></sup></td><td>≥ 19° from level, ≤ 1.0 unsupported (Form 2); ≥ 10°, ≤ 5.0 (Form 3)<sup class="cite"><a href="#ref-3">[3]</a>,<a href="#ref-9">[9]</a>,<a href="#ref-10">[10]</a></sup></td><td>None needed</td><td>None needed</td><td>50° max (Hubs); 45° self-supporting, bridges ≤ 2 (Protolabs)<sup class="cite"><a href="#ref-5">[5]</a>,<a href="#ref-7">[7]</a></sup></td></tr>
+          <tr><td>Clearance, assemblies and moving parts</td><td>Not specified</td><td>0.1 snug, 0.2 assembly, 0.5 moving<sup class="cite"><a href="#ref-3">[3]</a></sup></td><td>0.3 bearing surfaces; 0.2 to 0.3 hinges<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>Comparable to SLS</td><td>Machine mating surfaces</td></tr>
+          <tr><td>Escape or drain hole (hollow parts)</td><td>Not applicable</td><td>≥ 3.5 (Form 2, Hubs); ≥ 2.5 (Form 3); hollow walls ≥ 2<sup class="cite"><a href="#ref-3">[3]</a>,<a href="#ref-9">[9]</a>,<a href="#ref-10">[10]</a></sup></td><td>≥ 3.5<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>Comparable to SLS</td><td>Powder must escape internal channels; channels ≤ 8 diameter, teardrop or diamond<sup class="cite"><a href="#ref-7">[7]</a></sup></td></tr>
+          <tr><td>Text</td><td>Not specified</td><td>Emboss ≥ 0.1<sup class="cite"><a href="#ref-3">[3]</a></sup></td><td>Height ≥ 2 (14 pt); emboss and engrave ≥ 1<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>Comparable to SLS</td><td>Not specified</td></tr>
+          <tr><td>Living hinge</td><td>Not specified</td><td>Not recommended</td><td>0.3 to 0.8 thick, ≥ 5 long<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>Comparable to SLS</td><td>Not applicable</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="tolerance">Tolerances and build envelopes</h2>
+    <p>AM tolerances are looser than machining and depend on size, orientation, and process. Protolabs' published standard tolerances and maximum build sizes: stereolithography ±0.05 mm with a 736 × 635 × 533 mm envelope; SLS ±0.25 mm in 482 × 482 × 431 mm (its design tip gives ±0.076 mm plus ±0.025 mm per mm as typically achievable); MJF ±0.30 mm in 281 × 378 × 378 mm; DMLS ±0.076 mm in 245 × 245 × 330 mm; PolyJet ±0.13 mm; Carbon DLS ±0.25 mm.<sup class="cite"><a href="#ref-6">[6]</a>,<a href="#ref-8">[8]</a></sup> Hubs gives SLS at ±0.3 percent with a lower limit of ±0.3 mm and metal powder bed fusion at ±0.1 mm.<sup class="cite"><a href="#ref-4">[4]</a>,<a href="#ref-5">[5]</a></sup> Two consequences: a tolerance tighter than these is a machining operation after printing, and a part larger than the envelope is two parts and a joint.</p>
+    <p>Layer thickness sets the vertical resolution and the stair-stepping on shallow slopes: Hubs quotes 20 to 50 µm for metal, and SLA resolution of 25 to 200 µm vertically and 30 to 140 µm in the plane.<sup class="cite"><a href="#ref-3">[3]</a>,<a href="#ref-5">[5]</a></sup> Thinner layers mean more layers and longer builds. Specify the thinnest layer only where the surface or the feature needs it.</p>
+
+    <h2 id="channels">Holes, channels, and hollow parts</h2>
+    <p>Internal passages are the reason to choose AM for many metal parts, and they have their own rules. Powder processes need an exit for the unfused powder: escape holes of at least 3.5 mm in SLS, and channels that powder can be blown out of in metal.<sup class="cite"><a href="#ref-4">[4]</a></sup> Resin processes need a drain for uncured resin, or a hollow part traps liquid and, in Formlabs' words, can lead to "an explosion of the print" during post-curing.<sup class="cite"><a href="#ref-9">[9]</a></sup> In metal, Protolabs limits channels to about 8 mm diameter and recommends teardrop or diamond cross-sections rather than circular, because the roof of a round channel is an unsupported overhang that cannot be reached to remove supports.<sup class="cite"><a href="#ref-7">[7]</a></sup> In FDM, vertical holes come out undersize because of nozzle compression; the guide's advice is to print test pieces or to drill critical holes afterwards.<sup class="cite"><a href="#ref-2">[2]</a></sup></p>
+
+    <figure>
+      <svg viewBox="0 0 640 240" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Channel cross-sections for metal powder bed fusion</title>
+        <desc id="fig2-desc">Three channel cross-sections through a metal block. Left: a round channel whose roof is a horizontal overhang, marked as needing internal supports that cannot be removed. Middle: a teardrop channel with a pointed roof that is self-supporting. Right: a diamond channel, also self-supporting. A note gives the diameter limit of about 8 mm.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="40" y="40" width="560" height="140" class="diagram-soft"/>
+          <circle cx="140" cy="110" r="40" class="diagram-accent" stroke-width="3"/>
+          <path d="M110 80 L170 80" stroke-dasharray="4 3"/>
+          <path d="M320 150 A40 40 0 1 1 320 70 L320 50 Z" class="diagram-accent" stroke-width="3"/>
+          <path d="M280 110 A40 40 0 0 0 320 150 A40 40 0 0 0 360 110" class="diagram-accent" stroke-width="3"/>
+          <path d="M320 150 L280 110 L320 70 L360 110 Z" transform="translate(180 0)" class="diagram-accent" stroke-width="3"/>
+        </g>
+        <g class="diagram-text">
+          <text x="90" y="205">Round: roof is an</text>
+          <text x="90" y="221">unsupported overhang</text>
+          <text x="280" y="205">Teardrop: self-supporting roof</text>
+          <text x="470" y="205">Diamond: self-supporting</text>
+          <text x="400" y="60" class="diagram-text-muted">Keep channels ≤ about 8 mm across</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. In metal powder bed fusion, a round channel's roof needs supports that cannot be removed. Teardrop and diamond sections are self-supporting.<sup class="cite"><a href="#ref-7">[7]</a></sup></figcaption>
+    </figure>
+
+    <h2 id="post">Post-processing</h2>
+    <p>No AM part is finished when the build ends. Metal parts need stress relief before they are cut from the plate, then support removal, then often heat treatment, then machining of any surface that must be flat, round, or toleranced; as-built surface roughness is about Ra 8 to 10 µm for metal and around 100 to 250 RMS for SLS nylon, so sealing faces and bearing surfaces are machined and cosmetic surfaces are blasted, tumbled, or polished.<sup class="cite"><a href="#ref-5">[5]</a>,<a href="#ref-8">[8]</a></sup> Resin parts need washing and curing. Powder parts need de-powdering and usually bead blasting. Each step is a cost and a source of variation, and each needs the part to be designed for it: leave machining stock on datum faces, provide a way to hold the part, and make sure every internal cavity can be reached.</p>
+
+    <h2 id="tooling">AM for tooling, jigs, and fixtures</h2>
+    <p>The most reliable production use of AM is not the product but the things that make it. Assembly jigs, inspection fixtures, soft-jaw inserts, drill guides, and cable-routing aids are low-volume, geometry-specific, and lightly loaded, which is exactly the AM sweet spot. Printed injection-mould inserts for very short runs exist too: Hubs' moulding guide lists simple moulds at roughly US$250 to 1,000 against aluminium pilot moulds at US$3,000 to 5,000.<sup class="cite"><a href="#ref-13">[13]</a></sup> A printed fixture built during EVT (Module 1) also documents the assembly sequence that a production fixture will later have to reproduce, which is a DFA benefit in itself.</p>
+
+    <h2 id="production">When AM is, and is not, a production process</h2>
+    <p>Return to the cost logic of Module 2. AM has almost no fixed cost and a per-part cost that barely falls with volume, so its unit-cost curve is nearly flat. Every tooled process crosses below it at some volume. AM is therefore a production process when one of the following holds.</p>
+    <ul>
+      <li><strong>The part could not otherwise exist.</strong> Internal passages, lattices, and consolidated assemblies like the LEAP nozzle tip, whose 14 internal passages and 20-to-1 consolidation had no tooled equivalent.<sup class="cite"><a href="#ref-11">[11]</a></sup></li>
+      <li><strong>The value per part is high and the volume is modest,</strong> so that the flat AM cost is acceptable and tooling never pays back.</li>
+      <li><strong>Variants are many.</strong> Patient-specific, customer-specific, or frequently revised parts pay a tooling cost for every variant in a tooled process and none in AM.</li>
+      <li><strong>Lead time dominates.</strong> Spares, bridge production before hard tooling arrives, and parts for obsolete products.</li>
+    </ul>
+    <p>AM is not a production process when the part is large and simple (material and machine time dominate), when tolerances are tight on many surfaces (each becomes a machining operation), when cosmetic surfaces are large (finishing dominates), or when volume is high and the geometry is tooled easily. In those cases AM is a prototype process that stands in for the production process, and the design should follow the production process's rules (Module 1), not AM's.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 3. Quantitative design rules for additive manufacturing. All values are one supplier's or one machine maker's published guidance; confirm with the bureau and machine you will use.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range (metric)</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>FDM overhang</td><td>45° rule</td><td>≤ 45° from vertical without support; bridges &lt; 5 mm</td><td>Each layer must overlap the one below</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>FDM pins</td><td>Not too thin</td><td>≥ 5 mm diameter, or insert a purchased pin</td><td>Thin vertical pins have few roads and weak layer bonds</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>FDM holes</td><td>Print small, drill to size</td><td>Vertical holes undersize; drill critical holes</td><td>Nozzle compression of the perimeter</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>SLA walls</td><td>Machine-specific</td><td>0.4 supported, 0.6 unsupported (Form 2, Hubs); 0.2 (Form 3)</td><td>Thin walls warp or detach during peel</td><td><a href="#ref-3">[3]</a>, <a href="#ref-9">[9]</a>, <a href="#ref-10">[10]</a></td></tr>
+          <tr><td>SLA overhang</td><td>Support shallow angles</td><td>≥ 19° from level, ≤ 1.0 mm unsupported (Form 2); ≥ 10°, ≤ 5.0 mm (Form 3)</td><td>Layers deform without support</td><td><a href="#ref-9">[9]</a>, <a href="#ref-10">[10]</a></td></tr>
+          <tr><td>SLA holes and drains</td><td>Do not trap resin</td><td>Holes ≥ 0.5 mm; drain ≥ 3.5 mm (Form 2), ≥ 2.5 mm (Form 3); hollow walls ≥ 2 mm</td><td>Small holes close; trapped resin can burst on cure</td><td><a href="#ref-3">[3]</a>, <a href="#ref-9">[9]</a>, <a href="#ref-10">[10]</a></td></tr>
+          <tr><td>SLA clearances</td><td>By fit type</td><td>0.1 snug; 0.2 assembly; 0.5 moving</td><td>Resin cures slightly oversize</td><td><a href="#ref-3">[3]</a></td></tr>
+          <tr><td>SLS walls and features</td><td>Material-dependent</td><td>0.8 mm (PA12) to 2.0 mm (CF-PA); features ≥ 0.8 mm; Protolabs 1.52 to 3.81 mm uniform, 0.76 mm features</td><td>Thin sections sinter unevenly</td><td><a href="#ref-4">[4]</a>, <a href="#ref-8">[8]</a></td></tr>
+          <tr><td>SLS holes and escape holes</td><td>Let powder out</td><td>Holes &gt; 1.5 mm; escape holes ≥ 3.5 mm</td><td>Unfused powder fills cavities</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>SLS tolerance</td><td>Percentage with a floor</td><td>±0.3 % with ±0.3 mm minimum (Hubs); ±0.076 mm plus ±0.025 mm/mm, ±0.25 mm standard (Protolabs)</td><td>Thermal shrinkage scales with size</td><td><a href="#ref-4">[4]</a>, <a href="#ref-6">[6]</a>, <a href="#ref-8">[8]</a></td></tr>
+          <tr><td>SLS clearances and hinges</td><td>Powder needs room</td><td>0.3 mm bearing; 0.2 to 0.3 mm hinges; living hinge 0.3 to 0.8 mm thick, ≥ 5 mm long</td><td>Sintered powder bridges small gaps</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>MJF minimum feature and tolerance</td><td>Similar to SLS</td><td>0.51 mm; ±0.30 mm; build 281 × 378 × 378 mm</td><td>Agent resolution</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>DMLS walls and features</td><td>Thin is possible, tall thin is not</td><td>Wall 0.4 mm, feature 0.6 mm (Hubs); 1.0 mm required (Protolabs); SLS 0.8 mm, MJF 0.5 mm, PolyJet 0.8 mm (Protolabs)</td><td>Thermal distortion of thin unsupported sections</td><td><a href="#ref-5">[5]</a>, <a href="#ref-12">[12]</a></td></tr>
+          <tr><td>DMLS overhangs and bridges</td><td>Support or redesign</td><td>≤ 45 to 50°; unsupported bridges ≤ 2 mm; unsupported edges 0.5 mm</td><td>Molten metal needs a solid layer below</td><td><a href="#ref-5">[5]</a>, <a href="#ref-7">[7]</a></td></tr>
+          <tr><td>DMLS channels</td><td>Self-supporting sections</td><td>≤ about 8 mm across; teardrop or diamond, not round</td><td>Round roofs need unreachable supports</td><td><a href="#ref-7">[7]</a></td></tr>
+          <tr><td>DMLS holes and aspect ratio</td><td>Standard limits</td><td>Holes ≥ 1.5 mm; aspect ratio ≤ 8:1</td><td>Powder removal and stability</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>DMLS tolerance, layers, finish</td><td>Machine what must be precise</td><td>±0.1 mm (Hubs), ±0.076 mm (Protolabs); layers 20 to 50 µm; Ra 8 to 10 µm as built</td><td>Melt pool and powder size</td><td><a href="#ref-5">[5]</a>, <a href="#ref-6">[6]</a>, <a href="#ref-7">[7]</a></td></tr>
+          <tr><td>DMLS post-processing</td><td>Always</td><td>Stress relief before removal from plate; supports removed; heat treat; machine datums</td><td>Residual stress from thermal cycling</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Build envelopes (one supplier)</td><td>Larger means two parts</td><td>SL 736 × 635 × 533; SLS 482 × 482 × 431; DMLS 245 × 245 × 330 mm</td><td>Machine size</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Printed soft tooling</td><td>Very short runs</td><td>Simple moulds about US$250 to 1,000 versus US$3,000 to 5,000 aluminium</td><td>No hard tooling cost, short tool life</td><td><a href="#ref-13">[13]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: the LEAP fuel nozzle tip</h2>
+    <p>GE Aviation's account of the fuel nozzle tip for the CFM LEAP engine is the clearest public record of AM as a production process. The previous design was about 20 pieces welded together; the new tip is "a single elegant piece" that "weighed 25 percent less than its predecessor", was "five times more durable", and was described as 30 percent more cost-efficient, with 14 internal fluid passages built up in more than 3,000 layers of powdered metal.<sup class="cite"><a href="#ref-11">[11]</a></sup> Production began in 2015 at a purpose-built plant in Auburn, Alabama; the 30,000th tip was printed in October 2018 and more than 33,000 had been made by the time of the article.<sup class="cite"><a href="#ref-11">[11]</a></sup></p>
+    <p>Every criterion from the previous section is present. The part could not be made any other way: the 14 passages are the function, and welding and brazing 20 pieces to create them was the cost and the failure risk that AM removed. The value per part is high and the volume, tens of thousands over years, is modest by tooled-process standards. And the part was redesigned for the process, not converted: the consolidation, the passage geometry, and the material choice are AM decisions. The claims here are GE's own about its own part; the course does not have independent test data and does not present the numbers as general expectations for metal AM.</p>
+    <!-- AUTHOR: optional personal note here (a printed fixture or a part that should not have been printed, from your own experience, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Printing the machined or moulded design unchanged.</strong> Consequence: a part that carries the constraints of a process it is not made by (draft, uniform walls, tool-reach radii) and none of AM's advantages. Fix: redesign for AM (consolidate, add internal passages, remove tooling constraints) or use AM only as a prototype of the tooled design.</li>
+      <li><strong>Copying design rules across machines.</strong> Consequence: walls or overhangs that print on one machine fail on another. Fix: ask which process, machine, material, and layer thickness will be used, and design to that supplier's published minima.</li>
+      <li><strong>Ignoring build direction under load.</strong> Consequence: a bracket that fails across its layers at a fraction of the datasheet strength. Fix: orient so principal tensile stress runs along the layers; ask for test direction on any strength data.</li>
+      <li><strong>Round internal channels in metal.</strong> Consequence: supports inside the channel that cannot be removed, or a collapsed roof. Fix: teardrop or diamond sections under about 8 mm, with powder exits.</li>
+      <li><strong>Hollow parts without drains or escape holes.</strong> Consequence: trapped resin or powder; in resin, a part that can burst during post-curing. Fix: drains of 2.5 to 3.5 mm as the machine requires, or design the part solid.</li>
+      <li><strong>Tight tolerances on as-built surfaces.</strong> Consequence: ±0.1 to ±0.3 mm surfaces that fail a ±0.05 mm callout. Fix: leave machining stock on datum and mating faces and machine them after printing.</li>
+      <li><strong>Forgetting post-processing in the quote.</strong> Consequence: a cheap print and an expensive part after stress relief, support removal, heat treatment, machining, and finishing. Fix: quote the finished part, and design supports to land on machined faces.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: orienting a bracket for metal powder bed fusion</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>An L-shaped stainless steel bracket has a base 60 × 40 × 6 mm and an upright 40 × 30 × 6 mm, with a 10 mm diameter cooling channel running the length of the base. The upright carries a load that puts its root in tension. Two mounting faces on the base must be flat to 0.05 mm. Layer thickness is 30 µm.</p>
+    <p><strong>Tasks.</strong> (a) Compare the two obvious orientations (base flat on the plate; base standing on its 40 mm edge) for build height, layer count, support need, and load direction. (b) Check the channel against the DMLS rules and propose a section. (c) State how the two flat faces will be achieved. (d) If the same bracket were printed in SLS nylon, what tolerance would the 60 mm dimension carry by the Hubs rule?</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a) Orientation.</strong> Base flat: build height is the upright, 30 + 6 = 36 mm, so 36 / 0.030 = 1,200 layers. The upright is vertical, so the tensile load at its root runs along the layers, which is the strong direction. The channel roof (round, 10 mm) is a horizontal overhang and needs internal supports. The underside of the base sits on plate supports, which are cut off and leave a face to be machined. Base on edge: build height is 60 mm, so 2,000 layers (about 67 percent longer build). The channel now runs vertically and its walls are self-supporting. But the upright projects sideways as a 30 mm overhang that needs a support column, and its root load now runs across the layers, the weak direction. Choose base flat for load direction and build time, and fix the channel in (b).</p>
+      <p><strong>(b) Channel.</strong> 10 mm exceeds the about 8 mm limit for self-supporting channels, and a round section has an unsupported roof. Options: reduce to 8 mm with a teardrop section (same flow area as a 7 to 8 mm round, so check the thermal requirement), or split the 10 mm channel into two 6 mm teardrop channels side by side, which also stiffens the base. Both keep the roof self-supporting and leave powder exits at both ends of the base, which are open anyway.</p>
+      <p><strong>(c) Flat faces.</strong> As-built tolerance is about ±0.1 mm and roughness Ra 8 to 10 µm, so 0.05 mm flatness is a machining requirement. Add 0.5 mm of stock to both mounting faces, place the plate supports on the underside face (which is one of them), and machine both after stress relief and heat treatment in one setup, using the printed upright as the fixturing reference.</p>
+      <p><strong>(d) SLS comparison.</strong> ±0.3 % of 60 mm is ±0.18 mm, below the ±0.3 mm floor, so the dimension carries ±0.3 mm. The cooling channel would need a 3.5 mm escape hole if it were closed, and the nylon bracket could not carry a heated fluid at any rate, which is the reminder that process, material, and function are chosen together.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="08">
+      <fieldset class="q" data-answer="c">
+        <legend>1. Under ISO/ASTM 52900, selective laser sintering (SLS) and DMLS both belong to which process category?</legend>
+        <label><input type="radio" name="q1" value="a"> Material extrusion</label>
+        <label><input type="radio" name="q1" value="b"> Vat photopolymerization</label>
+        <label><input type="radio" name="q1" value="c"> Powder bed fusion</label>
+        <label><input type="radio" name="q1" value="d"> Sheet lamination</label>
+        <p class="explain" hidden>Both fuse powder in a bed, one polymer and one metal.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>2. In FDM, an overhang steeper than about what angle from vertical needs support material?</legend>
+        <label><input type="radio" name="q2" value="a"> 10°</label>
+        <label><input type="radio" name="q2" value="b"> 45°</label>
+        <label><input type="radio" name="q2" value="c"> 80°</label>
+        <label><input type="radio" name="q2" value="d"> Any overhang needs support</label>
+        <p class="explain" hidden>The 45° rule; bridges should also be kept under about 5 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="1200" data-tolerance="1">
+        <legend>3. A part is built 36 mm tall at a layer thickness of 30 µm. How many layers is that?</legend>
+        <label>Answer (layers): <input type="number" name="q3" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>36 mm / 0.030 mm = 1,200 layers.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>4. Why does Protolabs recommend teardrop or diamond cross-sections for internal channels in DMLS?</legend>
+        <label><input type="radio" name="q4" value="a"> They carry more flow</label>
+        <label><input type="radio" name="q4" value="b"> They are easier to draw</label>
+        <label><input type="radio" name="q4" value="c"> Round channels cannot be modelled</label>
+        <label><input type="radio" name="q4" value="d"> A round channel's roof is an unsupported overhang that would need supports which cannot be removed</label>
+        <p class="explain" hidden>Self-supporting roof shapes avoid internal supports; channels are also kept to about 8 mm across.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.3" data-tolerance="0.01">
+        <legend>5. By the Hubs SLS rule (±0.3 % with a ±0.3 mm minimum), what tolerance (±, mm) applies to an 80 mm dimension?</legend>
+        <label>Answer (± mm): <input type="number" name="q5" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>0.3 % of 80 mm is 0.24 mm, below the 0.3 mm floor, so ±0.3 mm applies.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>6. Formlabs' guides give a minimum unsupported wall of 0.6 mm for the Form 2 and 0.2 mm for the Form 3. The lesson for a designer is</legend>
+        <label><input type="radio" name="q6" value="a"> minimum feature rules are machine-specific and must be checked for the machine that will print the part</label>
+        <label><input type="radio" name="q6" value="b"> the Form 2 guide is wrong</label>
+        <label><input type="radio" name="q6" value="c"> always design to 0.6 mm</label>
+        <label><input type="radio" name="q6" value="d"> SLA cannot print thin walls</label>
+        <p class="explain" hidden>Both are correct for their machines; a design must target the process, machine, and material actually used.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>7. GE's LEAP fuel nozzle tip consolidated how many previously welded pieces into one printed part?</legend>
+        <label><input type="radio" name="q7" value="a"> 2</label>
+        <label><input type="radio" name="q7" value="b"> 5</label>
+        <label><input type="radio" name="q7" value="c"> About 20</label>
+        <label><input type="radio" name="q7" value="d"> About 200</label>
+        <p class="explain" hidden>About 20 pieces became one, 25 % lighter and five times more durable, per GE.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>8. Which step is mandatory for metal powder bed fusion parts before other post-processing, according to the Hubs guide?</legend>
+        <label><input type="radio" name="q8" value="a"> Anodising</label>
+        <label><input type="radio" name="q8" value="b"> A stress-relief thermal cycle</label>
+        <label><input type="radio" name="q8" value="c"> Painting</label>
+        <label><input type="radio" name="q8" value="d"> Ultrasonic cleaning</label>
+        <p class="explain" hidden>Internal stresses from the thermal cycling of melting must be relieved before the part is removed from the plate and machined.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>c. Powder bed fusion.</li>
+        <li>b. 45°.</li>
+        <li>1,200 layers.</li>
+        <li>d. Unsupported roof.</li>
+        <li>±0.3 mm.</li>
+        <li>a. Machine-specific rules.</li>
+        <li>c. About 20.</li>
+        <li>b. Stress relief.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>AM removes tooling and its rules, and replaces them with orientation, supports, minimum features, and anisotropy. Design for those from the start.</li>
+      <li>Rules are process-, machine-, and material-specific. Two guides from one company give different minimum walls for two printers. Ask which machine will print your part.</li>
+      <li>Orient for load direction first (tension along the layers), then for supports and surface, then for build height.</li>
+      <li>Powder and resin must get out: escape holes, drains, and self-supporting channel sections are not optional.</li>
+      <li>As-built tolerances are ±0.1 to ±0.3 mm and surfaces are rough. Anything tighter is a machining operation; leave stock and plan the datums.</li>
+      <li>Metal parts always need stress relief, support removal, and usually heat treatment and machining. Quote the finished part.</li>
+      <li>AM is a production process when the part could not otherwise exist, when value is high and volume modest, when variants are many, or when lead time rules. Otherwise it is a prototype or tooling process, and the design should follow the production process's rules.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07.</p>
+    <ol class="references">
+      <li id="ref-1">ISO/ASTM. <em>ISO/ASTM 52900:2021 Additive manufacturing: General principles: Fundamentals and vocabulary.</em> ISO catalogue page. <a href="https://www.iso.org/standard/74514.html">https://www.iso.org/standard/74514.html</a></li>
+      <li id="ref-2">Protolabs Network (formerly Hubs). "How to design parts for FDM 3D printing." n.d. <a href="https://www.hubs.com/knowledge-base/how-design-parts-fdm-3d-printing/">https://www.hubs.com/knowledge-base/how-design-parts-fdm-3d-printing/</a></li>
+      <li id="ref-3">Protolabs Network (formerly Hubs). "How to design parts for SLA 3D printing." n.d. <a href="https://www.hubs.com/knowledge-base/how-design-parts-sla-3d-printing/">https://www.hubs.com/knowledge-base/how-design-parts-sla-3d-printing/</a></li>
+      <li id="ref-4">Protolabs Network (formerly Hubs). "How to design parts for SLS 3D printing." n.d. <a href="https://www.hubs.com/knowledge-base/how-design-parts-sls-3d-printing/">https://www.hubs.com/knowledge-base/how-design-parts-sls-3d-printing/</a></li>
+      <li id="ref-5">Protolabs Network (formerly Hubs). "How to design parts for metal 3D printing." n.d. <a href="https://www.hubs.com/knowledge-base/how-design-parts-metal-3d-printing/">https://www.hubs.com/knowledge-base/how-design-parts-metal-3d-printing/</a></li>
+      <li id="ref-6">Protolabs. "Basic Design Guidelines" (3D printing processes). n.d. <a href="https://www.protolabs.com/help-center/basic-design-guidelines/">https://www.protolabs.com/help-center/basic-design-guidelines/</a> <span class="tag">(source values in inches; converted)</span></li>
+      <li id="ref-7">Protolabs. "Getting Started with Metal Additive Manufacturing" (DMLS design tip). n.d. <a href="https://www.protolabs.com/resources/design-tips/designing-for-direct-metal-laser-sintering/">https://www.protolabs.com/resources/design-tips/designing-for-direct-metal-laser-sintering/</a></li>
+      <li id="ref-8">Protolabs. "What is Selective Laser Sintering (SLS)?" (design tip). n.d. <a href="https://www.protolabs.com/resources/design-tips/designing-for-selective-laser-sintering/">https://www.protolabs.com/resources/design-tips/designing-for-selective-laser-sintering/</a></li>
+      <li id="ref-9">Formlabs. <em>Formlabs Design Guide</em> (Form 1+ and Form 2, Clear Resin at 100 µm). <a href="https://archive-media.formlabs.com/upload/formlabs-design-guide.pdf">https://archive-media.formlabs.com/upload/formlabs-design-guide.pdf</a></li>
+      <li id="ref-10">Formlabs. "Design specifications for 3D models (Form 3/Form 3B)." Formlabs Support. <a href="https://formlabs.com/support/Design-specifications-for-3D-models-form-3">https://formlabs.com/support/Design-specifications-for-3D-models-form-3</a></li>
+      <li id="ref-11">Kellner, T. "Transformation In 3D: How A Walnut-Sized Part Changed The Way GE Aviation Builds Jet Engines." GE Reports, 19 November 2018. <a href="https://www.ge.com/news/reports/transformation-3d-walnut-sized-part-changed-way-ge-aviation-builds-jet-engines">https://www.ge.com/news/reports/transformation-3d-walnut-sized-part-changed-way-ge-aviation-builds-jet-engines</a></li>
+      <li id="ref-12">Protolabs. "An Introduction to Design for Manufacture for Additive Manufacturing." Protolabs blog, n.d. <a href="https://www.protolabs.com/en-gb/resources/blog/an-introduction-to-design-for-manufacture-for-additive-manufacturing/">https://www.protolabs.com/en-gb/resources/blog/an-introduction-to-design-for-manufacture-for-additive-manufacturing/</a></li>
+      <li id="ref-13">Protolabs Network (formerly Hubs). "Injection molding design guide." n.d. <a href="https://www.hubs.com/guides/injection-molding/">https://www.hubs.com/guides/injection-molding/</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>ISO/ASTM. <em>ISO/ASTM 52900:2021.</em> The vocabulary standard; the seven categories and their definitions.</li>
+      <li>Bralla, J. G. (ed.). <em>Design for Manufacturability Handbook</em>, 2nd ed. McGraw-Hill, 1999. Predates modern AM but frames the process-selection logic the module applies.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>
