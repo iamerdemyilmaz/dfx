@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 6: DFM for injection molding · DFx Course</title>
+<meta name="description" content="Design for manufacturing rules for injection moulded plastic parts: wall thickness, draft, ribs and bosses, undercuts, gates and weld lines, sink and warp, tolerances, finish, and tooling classes.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="06">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 6</p>
+    <h1>DFM for injection molding</h1>
+    <p class="lead">Injection moulding is the process where design decisions are hardest to undo. The mould is cut in steel before you have seen a part, and every wall, rib, and radius you draw becomes a cost the moment the tool is ordered. This module gives you the rules, the reasons behind them, and the arithmetic to argue for them.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Specify</strong> a nominal wall thickness for a given resin and keep adjacent walls within the ratio that avoids sink, warp, and voids.</li>
+      <li><strong>Calculate</strong> rib, boss, fillet, and spacing dimensions from the nominal wall, and estimate how a wall-thickness change moves cooling time and material cost.</li>
+      <li><strong>Apply</strong> draft angles by feature depth and surface texture, and explain why textured surfaces need more.</li>
+      <li><strong>Identify</strong> undercuts and decide between a side action, a redesign, or a change of parting line.</li>
+      <li><strong>Explain</strong> where sink marks, weld lines, and warp come from and which design choices cause them.</li>
+      <li><strong>Choose</strong> a tolerance, a surface finish, and a tooling class with an understanding of what each one costs.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>A machined part that comes back wrong can be fixed by changing a program. A moulded part that comes back wrong means a tool change, and the direction of the change decides the cost. Removing steel from a mould (which adds plastic to the part) is a machining operation. Adding steel to a mould (which removes plastic from the part) means welding, inserts, or a new cavity block. Moulders call the cheap direction "steel-safe" and design their first cut so that the likely corrections go that way. If your part needs a wall to get thinner after first shots, you are asking for the expensive direction.</p>
+    <p>The precision that good moulding can reach is real. The LEGO Group's own history notes that its 1963 switch from cellulose acetate to ABS permitted moulding "to an accuracy of 1/200 mm", which is 0.005 mm.<sup class="cite"><a href="#ref-10">[10]</a></sup> That precision is bought with tooling quality, process control, and a part design that gives the process a chance: uniform walls, generous draft, and features that cool at the same rate.</p>
+    <p>The cheaper lesson comes from a study of eighteen automatic drip coffee makers by Ulrich and Pearson at MIT. One maker's water tank was moulded in inexpensive polypropylene, which shows sink marks where walls meet. Rather than switch to polycarbonate, a resin the authors estimated at two to three times the price, the designers hid the sink with a ribbed pattern on the tank surface.<sup class="cite"><a href="#ref-11">[11]</a>,<a href="#ref-12">[12]</a></sup> That is DFM working as intended: the physics of the process was accepted and the design absorbed it, at almost no cost.</p>
+
+    <h2 id="process">How the process shapes the rules</h2>
+    <p>Molten polymer is injected under high pressure into a steel cavity, packed to compensate for shrinkage as it cools, held until it is stiff enough to survive ejection, then pushed out by ejector pins when the mould opens. Almost every design rule in this module comes from one of four facts about that cycle.</p>
+    <ol>
+      <li><strong>The part must come out.</strong> The mould opens in one direction. Any feature that would trap the part in either half is an undercut and needs a moving mould component or a redesign. Walls parallel to the opening direction drag on the steel unless they are tapered (draft).</li>
+      <li><strong>Cooling dominates the cycle.</strong> The hot plastic loses heat through the mould walls, so the thickest section sets the cooling time. For a plate cooling by conduction, the cooling time to a given centre temperature is proportional to the square of the thickness.<sup class="cite"><a href="#ref-6">[6]</a></sup> A 3 mm wall does not cool 50 % slower than a 2 mm wall; it cools 2.25 times slower.</li>
+      <li><strong>Plastic shrinks as it cools, and thick sections shrink last.</strong> Where a thick section meets a thin one, the thin section has already frozen when the thick section is still pulling inward. The result is a sink mark on the surface or a void inside.</li>
+      <li><strong>Everything about the tool is expensive and slow.</strong> Aluminium prototype moulds and production steel moulds differ by an order of magnitude in life, and a hardened multi-cavity production tool can take months. Features that need side actions, lifters, or hand-loaded inserts add cost and cycle time for the life of the tool.</li>
+    </ol>
+
+    <figure>
+      <svg viewBox="0 0 640 300" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Cross-section of a two-plate injection mould</title>
+        <desc id="fig1-desc">A cavity half on top and a core half below meet at a horizontal parting line. A cup-shaped part sits between them. Molten plastic enters through a sprue and gate at the top. Ejector pins in the core half push the part off the core when the mould opens. The part walls are drawn with a slight taper, the draft angle, and a callout shows the mould opening direction.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- cavity half -->
+          <rect x="60" y="30" width="520" height="110" class="diagram-soft" stroke="currentColor"/>
+          <!-- core half -->
+          <rect x="60" y="150" width="520" height="120" class="diagram-soft" stroke="currentColor"/>
+          <!-- core block -->
+          <path d="M215 150 L225 240 L415 240 L425 150" />
+          <!-- part (cup) -->
+          <path d="M195 150 L205 250 L435 250 L445 150 L425 150 L415 240 L225 240 L215 150 Z" class="diagram-accent" stroke-width="3"/>
+          <!-- cavity opening above part -->
+          <path d="M195 150 L195 140 L445 140 L445 150" />
+          <!-- sprue and gate -->
+          <path d="M320 30 L316 90 L324 90 L320 30 M312 90 L328 90 L322 140 L318 140 Z" class="diagram-accent"/>
+          <!-- ejector pins -->
+          <path d="M260 270 L260 240 M380 270 L380 240" stroke-dasharray="4 3"/>
+          <!-- parting line -->
+          <path d="M40 145 L600 145" stroke-dasharray="8 5"/>
+          <!-- opening arrow -->
+          <path d="M610 100 L610 40 M602 50 L610 40 L618 50" />
+        </g>
+        <g class="diagram-text">
+          <text x="70" y="52">Cavity half (A side)</text>
+          <text x="70" y="262">Core half (B side, ejector side)</text>
+          <text x="330" y="60">Sprue</text>
+          <text x="332" y="128">Gate</text>
+          <text x="455" y="200">Part</text>
+          <text x="455" y="150" dy="-8">Parting line</text>
+          <text x="180" y="290">Ejector pins</text>
+          <text x="230" y="170">Core</text>
+          <text x="530" y="95">Opening</text>
+          <text x="530" y="110">direction</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. A two-plate mould. The part must release from the cavity when the mould opens and then be pushed off the core by ejector pins. Both requirements drive the draft rules.</figcaption>
+    </figure>
+
+    <h2 id="walls">Wall thickness and uniformity</h2>
+    <p>Wall thickness is the first number you choose, and most other dimensions in the part scale from it. Thicker walls are stiffer and fill more easily, but they add material, cycle time, and sink. Thinner walls save all three but fill harder, especially far from the gate and in viscous resins. Suppliers publish typical ranges by resin; Protolabs' are shown in Table 1.<sup class="cite"><a href="#ref-1">[1]</a>,<a href="#ref-2">[2]</a></sup></p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Typical wall thickness ranges by resin (Protolabs). The source is in inches; metric values are converted and shown first.</caption>
+        <thead><tr><th>Resin</th><th class="num">Range, mm</th><th class="num">Source value, in</th></tr></thead>
+        <tbody>
+          <tr><td>ABS</td><td class="num">1.14 – 3.56</td><td class="num">0.045 – 0.140</td></tr>
+          <tr><td>Acetal (POM)</td><td class="num">0.76 – 3.05</td><td class="num">0.030 – 0.120</td></tr>
+          <tr><td>Acrylic (PMMA)</td><td class="num">0.64 – 12.7</td><td class="num">0.025 – 0.500</td></tr>
+          <tr><td>Nylon (PA)</td><td class="num">0.76 – 2.92</td><td class="num">0.030 – 0.115</td></tr>
+          <tr><td>Polycarbonate (PC)</td><td class="num">1.02 – 3.81</td><td class="num">0.040 – 0.150</td></tr>
+          <tr><td>Polyethylene (PE)</td><td class="num">0.76 – 5.08</td><td class="num">0.030 – 0.200</td></tr>
+          <tr><td>Polypropylene (PP)</td><td class="num">0.64 – 3.81</td><td class="num">0.025 – 0.150</td></tr>
+          <tr><td>Polystyrene (PS)</td><td class="num">0.89 – 3.81</td><td class="num">0.035 – 0.150</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Within a part, the rule that matters more than the absolute value is uniformity. Protolabs' guidance is that walls should be no less than 40 to 60 percent of the adjacent wall, and that secondary features such as ribs and bosses should sit at roughly 40 to 60 percent of the surrounding wall.<sup class="cite"><a href="#ref-2">[2]</a></sup> Non-uniform walls drive sink, warp, internal stress, and dimensional error, because the thick regions are still shrinking after the thin ones have frozen.<sup class="cite"><a href="#ref-2">[2]</a></sup> When a region must be thick for function, core it out from the back so that the wall is uniform and the stiffness comes from ribs rather than mass. Covestro's design guide makes the economic point directly: increasing wall thickness adds part weight, cycle time, and material cost, and geometric features such as ribs, curves, and corrugations can add stiffness at very little of that cost.<sup class="cite"><a href="#ref-5">[5]</a></sup></p>
+
+    <div class="note">
+      <p><strong>Cooling time arithmetic.</strong> The one-dimensional conduction estimate used by resin suppliers gives cooling time t<sub>c</sub> = (ℓ² / π²α) · ln[(θ<sub>0</sub> − θ<sub>s</sub>) / (θ − θ<sub>s</sub>)], where ℓ is the wall thickness, α the thermal diffusivity of the polymer, θ<sub>0</sub> the melt temperature, θ<sub>s</sub> the mould temperature, and θ the ejection temperature.<sup class="cite"><a href="#ref-6">[6]</a></sup> Everything except ℓ² is fixed by the resin and process settings, so the ratio of cooling times between two designs is simply the ratio of thickness squared. Going from 3.0 mm to 2.5 mm cuts cooling time to (2.5/3.0)² = 0.69 of the original.</p>
+    </div>
+
+    <h2 id="ribs">Radii, ribs, bosses, and gussets</h2>
+    <p>Sharp internal corners concentrate stress in the part, concentrate stress in the tool steel, and create a locally thick section where the two walls overlap. The Hubs design guide recommends an internal radius of 0.5 times the wall thickness and an external radius of 1.5 times the wall, which keeps the wall thickness constant around the corner.<sup class="cite"><a href="#ref-4">[4]</a></sup></p>
+    <p>Ribs add stiffness without adding wall. The rule set from the same guide: rib thickness equal to 0.5 times the main wall, rib height less than 3 times the rib thickness, a fillet at the rib base greater than a quarter of the rib thickness, and at least 4 times the rib thickness between adjacent ribs and walls.<sup class="cite"><a href="#ref-4">[4]</a></sup> The thickness ratio is the sink control: a rib at half the wall creates an intersection only modestly thicker than the wall, so the surface opposite the rib sinks little. Suppliers vary on the height limit; some allow taller ribs with more draft and a thicker base. Ask yours, and expect them to want draft on both faces of any rib taller than a few millimetres.</p>
+    <p>Bosses are hollow cylinders that receive screws or pins. Hubs recommends an outer diameter of 2 times the nominal screw diameter and an inner diameter equal to the screw's core diameter.<sup class="cite"><a href="#ref-4">[4]</a></sup> A boss standing alone in the middle of a wall is a thick section and a sink mark waiting to happen, so connect it to the nearest wall with a gusset rib and, if it is tall, core the wall behind it.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 300" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Rib and boss proportions for a 2.5 mm nominal wall</title>
+        <desc id="fig2-desc">Left: a section through a 2.5 mm wall with a rib 1.25 mm thick and 3.75 mm tall, a 0.4 mm fillet at the rib base, and a 5 mm gap to the next rib. Right: a boss for an M3 screw with 6 mm outer diameter and 2.5 mm hole, tied to the wall by a gusset. Internal corner radius 1.25 mm and external radius 3.75 mm are shown at a wall corner.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- left: wall with two ribs -->
+          <path d="M40 200 L300 200 L300 225 L40 225 Z" class="diagram-soft"/>
+          <path d="M100 200 L100 165 L112.5 165 L112.5 200" class="diagram-accent"/>
+          <path d="M180 200 L180 165 L192.5 165 L192.5 200" class="diagram-accent"/>
+          <!-- base fillets (drawn small) -->
+          <path d="M96 200 Q100 200 100 196 M116.5 200 Q112.5 200 112.5 196" class="diagram-accent"/>
+          <!-- dimension lines -->
+          <path d="M100 150 L112.5 150 M100 146 L100 154 M112.5 146 L112.5 154"/>
+          <path d="M60 165 L60 200 M56 165 L64 165 M56 200 L64 200"/>
+          <path d="M320 200 L320 225 M316 200 L324 200 M316 225 L324 225"/>
+          <path d="M112.5 240 L180 240 M112.5 236 L112.5 244 M180 236 L180 244"/>
+          <!-- right: boss -->
+          <path d="M400 200 L620 200 L620 225 L400 225 Z" class="diagram-soft"/>
+          <path d="M480 200 L480 150 L495 150 L495 190 M505 190 L505 150 L520 150 L520 200" class="diagram-accent"/>
+          <path d="M495 150 L505 150" class="diagram-accent" stroke-dasharray="3 3"/>
+          <!-- gusset -->
+          <path d="M520 165 L560 200" class="diagram-accent" stroke-dasharray="4 3"/>
+          <!-- boss dims -->
+          <path d="M480 135 L520 135 M480 131 L480 139 M520 131 L520 139"/>
+          <path d="M495 160 L505 160" stroke-width="1"/>
+          <!-- corner radii example -->
+          <path d="M40 60 L40 110 Q40 120 50 120 L120 120" />
+          <path d="M65 60 L65 95 Q65 97 67 97 L120 97" />
+          <path d="M40 60 L65 60" />
+        </g>
+        <g class="diagram-text">
+          <text x="70" y="140">Rib 1.25 mm (0.5 × wall)</text>
+          <text x="20" y="188">3.75</text>
+          <text x="330" y="216">Wall 2.5</text>
+          <text x="122" y="258">Spacing ≥ 5 (4 × rib)</text>
+          <text x="100" y="212">Base fillet R 0.4</text>
+          <text x="460" y="125">Boss OD 6 (2 × M3)</text>
+          <text x="530" y="180">Hole 2.5 (core dia.)</text>
+          <text x="525" y="230">Gusset to wall</text>
+          <text x="130" y="100">Inside R 1.25 (0.5 × wall)</text>
+          <text x="130" y="124">Outside R 3.75 (1.5 × wall)</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. Feature proportions derived from a 2.5 mm nominal wall using the Hubs rules. Dimensions in mm. Values are recomputed for every wall thickness; the ratios are what to remember.</figcaption>
+    </figure>
+
+    <h2 id="draft">Draft</h2>
+    <p>Draft is the taper on any face parallel to the mould opening direction. Without it the part drags on the steel as the mould opens or as the ejectors push, which scratches the surface and can bend, break, or warp the part, and in bad cases damages the mould.<sup class="cite"><a href="#ref-3">[3]</a></sup> Texture makes it worse: a textured mould surface is a field of micro-undercuts, and it needs steeper walls to release cleanly.<sup class="cite"><a href="#ref-3">[3]</a></sup></p>
+    <p>Published minimums differ, which tells you that draft is a negotiation with your moulder rather than a constant. Protolabs advises at least 0.5° on all vertical faces, says 1° to 2° works in most situations, and requires 3° for a shut-off (steel sliding on steel), 3° for light texture, and 5° or more for medium texture.<sup class="cite"><a href="#ref-1">[1]</a>,<a href="#ref-3">[3]</a></sup> Its rule of thumb is 1° of draft per 25 mm (1 inch) of depth.<sup class="cite"><a href="#ref-3">[3]</a></sup> Hubs recommends a 2° minimum on all vertical walls, increasing by 1° for every 25 mm of height, plus 1° to 2° extra for textured surfaces.<sup class="cite"><a href="#ref-4">[4]</a></sup> Covestro ties the minimum to the resin: at least 1° for its polycarbonate and PC/ABS grades, 3° or more for high-heat polycarbonate, and at least 5° plus a 0.5 to 0.6 µm surface finish for thermoplastic polyurethane.<sup class="cite"><a href="#ref-5">[5]</a></sup> Soft, grippy, or high-temperature resins need more.</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Protolabs' minimum draft by feature depth and wall thickness. Source values are in inches; converted to mm.<sup class="cite"><a href="#ref-3">[3]</a></sup></caption>
+        <thead><tr><th class="num">Feature depth, mm (in)</th><th>Minimum wall and draft combinations</th></tr></thead>
+        <tbody>
+          <tr><td class="num">6.4 (0.25)</td><td>1.0 mm wall at 0.5°</td></tr>
+          <tr><td class="num">12.7 (0.5)</td><td>1.0 mm at 1°, or 1.5 mm at 0.5°</td></tr>
+          <tr><td class="num">19 (0.75)</td><td>1.0 mm at 2°, or 1.5 mm at 1°, or 2.0 mm at 0.5°</td></tr>
+          <tr><td class="num">25.4 (1.0)</td><td>1.5 mm at 2°, or 2.0 mm at 1°, or over 2.5 mm at 0.5°</td></tr>
+          <tr><td class="num">38 (1.5)</td><td>2.0 mm at 2°, or over 2.5 mm at 1°</td></tr>
+          <tr><td class="num">51 (2.0)</td><td>over 2.5 mm at 2°</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The geometry is simple: a wall of height H with draft angle θ moves H·tan θ at its free end. A 40 mm deep housing wall at 2° moves 40 × tan 2° = 1.4 mm. That is why draft has to be in the CAD model from the first concept, not added at the end: it changes the outside dimensions, the inside clearances, and where mating parts sit.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 260" role="img" aria-labelledby="fig3-title fig3-desc">
+        <title id="fig3-title">Draft angle geometry on a 40 mm deep wall</title>
+        <desc id="fig3-desc">Two wall sections side by side. The left wall is vertical with no draft and is marked as dragging on the mould during ejection. The right wall leans outward by 2 degrees over 40 mm of height, giving a 1.4 mm offset at the top, labelled H times tan theta.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- left: no draft -->
+          <path d="M60 220 L300 220" />
+          <path d="M120 220 L120 60 L140 60 L140 220" class="diagram-accent"/>
+          <path d="M100 60 L100 220 M96 60 L104 60 M96 220 L104 220"/>
+          <!-- right: draft -->
+          <path d="M340 220 L600 220" />
+          <path d="M420 220 L406 60 L426 60 L440 220" class="diagram-accent"/>
+          <path d="M420 220 L420 60" stroke-dasharray="4 3"/>
+          <path d="M406 45 L420 45 M406 41 L406 49 M420 41 L420 49"/>
+          <!-- angle arc -->
+          <path d="M420 120 A100 100 0 0 0 413 120.2" />
+        </g>
+        <g class="diagram-text">
+          <text x="70" y="140">H = 40</text>
+          <text x="150" y="140">0° draft:</text>
+          <text x="150" y="156">drags on steel</text>
+          <text x="150" y="172">during ejection</text>
+          <text x="380" y="36">1.4 = H · tan 2°</text>
+          <text x="450" y="140">2° draft</text>
+          <text x="450" y="156">releases cleanly</text>
+        </g>
+      </svg>
+      <figcaption>Figure 3. A 2° draft over 40 mm of depth shifts the wall by 1.4 mm. Put the draft in the model early so mating parts are designed to the real geometry.</figcaption>
+    </figure>
+
+    <h2 id="undercuts">Parting line, undercuts, and side actions</h2>
+    <p>Look at the part along the opening direction. Anything that would prevent either mould half from pulling straight away, such as a side hole, a snap hook facing sideways, an external groove, or a lip that faces the wrong way, is an undercut. Every undercut needs one of three answers.</p>
+    <ul>
+      <li><strong>Move the parting line</strong> so the feature is formed by the two halves meeting, or open it into a pass-through so a core from one half forms it. This costs nothing in the tool.</li>
+      <li><strong>Redesign the feature.</strong> Replace a side hole with a slot open to the top edge. Turn a sideways snap into one whose hook faces the opening direction. Use a shut-off so a core from the cavity side forms the underside of a hook (which is why shut-offs need 3° of draft, as above).</li>
+      <li><strong>Add a side action</strong> (a slide, cam, or lifter that moves before ejection). Protolabs states maximum side-core dimensions of roughly 214 mm wide, 60 mm tall, and 74 mm of pull for its process, which shows the scale of what is routine and what is not.<sup class="cite"><a href="#ref-1">[1]</a></sup> Side actions add tool cost, maintenance, and cycle time for the life of the tool, and they leave witness lines on the part.</li>
+    </ul>
+    <p>Two related marks that surprise first-time designers: ejector pins leave shallow circular witnesses on the core-side surface, and the parting line leaves a fine line all the way round the part. Both can be positioned, neither can be eliminated. Decide early which surfaces are cosmetic and put the pins and the parting line somewhere else.</p>
+
+    <h2 id="flow">Gates, flow, weld lines, and vents</h2>
+    <p>The gate is where plastic enters the cavity. Its location decides how the melt flows, how the part packs, and where the surface blemish at the gate sits. Flow fronts that split around a hole or a core and meet again on the far side leave a weld line (also called a knit line): a visible line and a locally weak zone, because the two fronts have cooled before they merge. Every through-hole in a moulded part has a weld line on its downstream side. You cannot remove them, but you can put them where they are neither seen nor loaded, by choosing the gate location and by giving the moulder freedom to place it.</p>
+    <p>Air in the cavity has to leave as plastic enters. Covestro's guide puts vents first along the parting line, with typical vent depths of 0.025 to 0.05 mm (0.0010 to 0.0020 in), shallow enough that plastic does not flash through them.<sup class="cite"><a href="#ref-5">[5]</a></sup> Deep, closed-bottom pockets and the ends of tall ribs are where air gets trapped; they are also where burns and short shots show up in first samples. If a rib must be tall and blind, expect the moulder to ask for a vent pin or a slight opening.</p>
+
+    <h2 id="shrink">Shrinkage, sink, and warp</h2>
+    <p>Polymers shrink as they cool from melt to room temperature, and the tool is cut oversize to compensate. The amount depends on the resin. Semi-crystalline polymers such as polypropylene and nylon shrink more than amorphous polymers such as ABS and polycarbonate because their chains pack into an ordered structure on cooling. One moulder's published ranges: ABS 0.4 to 0.7 %, polypropylene 1 to 2 %, PA11 nylon 1 to 2.5 %, with glass filling reducing shrinkage in nylon.<sup class="cite"><a href="#ref-7">[7]</a></sup> Shrinkage data is on every resin datasheet and the tool is cut to the datasheet, so changing resin after the tool is cut is a tool change.</p>
+    <p>Sink marks are local depressions where a thick section (a rib root, a boss, a corner without a radius) kept shrinking after the surface froze. Warp is the part-scale version: one region cooled and shrank at a different rate from another, so the part bends. Both are controlled by the same design decisions already covered: uniform walls, ribs at half the wall, coring of thick regions, and consistent corner radii. Glass fibre changes the picture because the fibres align with the flow and shrink less along their length than across it, so filled parts warp in ways unfilled ones do not; Covestro's guide devotes discussion to rib thickness versus warpage in filled and unfilled resins.<sup class="cite"><a href="#ref-5">[5]</a></sup></p>
+
+    <h2 id="tolerances">Tolerances and capability</h2>
+    <p>A moulded dimension has two sources of variation stacked on top of each other: the steel and the plastic. Protolabs quotes a machining tolerance of ±0.08 mm (±0.003 in) on the tool plus a resin tolerance of at least ±0.002 mm per mm of dimension.<sup class="cite"><a href="#ref-1">[1]</a></sup> On a 50 mm dimension that resin term alone is ±0.10 mm before the steel is considered. Hubs' guide gives a standard tolerance of ±0.25 mm (0.010 in), notes that ±0.125 mm is achievable at extra cost, and that ±0.025 mm is possible only in special cases.<sup class="cite"><a href="#ref-4">[4]</a></sup></p>
+    <p>This is why a ±0.05 mm tolerance on a moulded part is a cost decision and not a drafting habit. Meeting it means a tool cut to a tighter steel tolerance, a resin with low and stable shrinkage, a process held to a tighter window, more inspection, and usually a lower Cpk than the drawing implies. Recall from Module 3 that a centred process at Cp = 1.00 produces about 0.27 % rejects and at Cp = 1.33 about 64 parts per million.<sup class="cite"><a href="#ref-14">[14]</a></sup> Ask which dimensions actually need the tolerance, and put general tolerances on the rest.</p>
+    <p>The general-tolerance standards for moulded parts are DIN 16742:2013 and ISO 20457:2018. They define tolerance groups by nominal size and distinguish mould-fixed dimensions (formed within one half of the tool) from non-mould-fixed dimensions (across the parting line or formed by moving components), which get a larger allowance because tool movement adds variation.<sup class="cite"><a href="#ref-13">[13]</a></sup> The same logic appears in die casting (Module 7). If a dimension matters, keep it in one mould half.</p>
+
+    <h2 id="finish">Surface finish and texture</h2>
+    <p>Mould finish is specified by the SPI (Society of the Plastics Industry, now the Plastics Industry Association) grades. Group A finishes are diamond-buffed and glossy (A-1 the highest gloss, A-2 the usual high-gloss choice, A-3 a practical polish), group B are paper-sanded (B-1 600 grit, B-2 400, B-3 320), group C are stone-finished (C-1 600, C-2 400, C-3 320), and group D are blasted textures (D-1 glass bead, D-2 fine oxide, D-3 coarse oxide).<sup class="cite"><a href="#ref-9">[9]</a></sup> Polishing is skilled manual work and its cost scales with the area polished, so Ulrich and Pearson's guideline for low-cost parts stands: concentrate high-quality finishes only on surfaces that are visible, and leave inside surfaces at a machined or stoned finish.<sup class="cite"><a href="#ref-11">[11]</a></sup> Texture hides sink, flow marks, and scratches, but it demands the extra draft described earlier.</p>
+
+    <h2 id="materials">Material selection for mouldability</h2>
+    <p>Resin choice sets wall-thickness range, shrinkage, draft requirement, and price at the same time. The main families for mechanical parts:</p>
+    <ul>
+      <li><strong>Commodity amorphous</strong> (ABS, PS): low shrinkage, easy to mould and finish, moderate strength and temperature.</li>
+      <li><strong>Commodity semi-crystalline</strong> (PP, PE): cheap, chemically resistant, higher shrinkage, hard to hold tight tolerances, prone to sink.</li>
+      <li><strong>Engineering amorphous</strong> (PC, PC/ABS, PMMA): stiff, clear or tough, low shrinkage, higher price. Ulrich and Pearson estimated polycarbonate at two to three times the price of polypropylene.<sup class="cite"><a href="#ref-11">[11]</a></sup></li>
+      <li><strong>Engineering semi-crystalline</strong> (PA, POM, PBT): good wear and fatigue, higher shrinkage, often glass-filled for stiffness at the cost of warp behaviour and tool wear.</li>
+    </ul>
+    <p>Choose the resin with the moulder in the room. A grade change within a family (a different flow index, a filled version) can rescue a part that will not fill or will not hold size, and it is far cheaper than a tool change.</p>
+
+    <h2 id="tooling">Tooling classes, tool life, and the cost of change</h2>
+    <p>Mould quality is specified by class. The Plastics Industry Association's <em>Customs and Practices of the Moldmaking Industry</em> (document AR-101, first issued 1996 and revised May 2023) defines the classes and their expected lives to standardise quoting.<sup class="cite"><a href="#ref-8">[8]</a></sup> As summarised by moulders, Class 101 tools are built for one million cycles or more, Class 102 for up to one million, Class 103 for up to 500,000, Class 104 for up to 100,000, and Class 105 for prototype use of up to about 500 cycles.<sup class="cite"><a href="#ref-8">[8]</a></sup> The class determines the steel, the hardening, the cooling design, and the price.</p>
+    <p>For orientation only, Hubs' published bands: aluminium pilot-run moulds at about US$3,000 to 5,000 lasting 5,000 to 10,000 cycles; tool-steel moulds lasting 100,000 cycles or more; pilot runs of 500 to 10,000 parts at roughly US$1 to 5 per part; full production above 100,000 parts at a few cents to US$1 per part; mould fabrication of 4 to 6 weeks and total lead times of 6 to 10 weeks.<sup class="cite"><a href="#ref-4">[4]</a></sup> These are one supplier's figures for small parts and will not match a multi-cavity hot-runner tool for a large housing. Module 15 builds a proper cost model.</p>
+    <p>The cost of a mould change depends almost entirely on direction. Making a hole smaller, a wall thicker, or a boss taller means removing steel: a machining setup on an existing tool. Making a hole larger, a wall thinner, or removing a rib means adding steel: welding and re-machining, an insert, or a new cavity block, followed by re-polishing and re-texturing anything the work touched. Experienced designers and moulders therefore cut uncertain features steel-safe: holes slightly small, walls slightly thick, snap engagement slightly deep, so that first-shot corrections go the cheap way. Build that expectation into your first-article plan and into which dimensions you flag as critical.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 3. Quantitative design rules for injection moulded parts. Values are typical supplier guidance; your moulder's numbers take precedence for their process.</caption>
+        <thead>
+          <tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range (metric)</th><th>Why</th><th>Source</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Nominal wall</td><td>Stay in the resin's published range</td><td>ABS 1.14–3.56 mm; PC 1.02–3.81 mm; PP 0.64–3.81 mm; PA 0.76–2.92 mm</td><td>Too thin will not fill; too thick sinks and cools slowly</td><td><a href="#ref-1">[1]</a>, <a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Wall uniformity</td><td>Adjacent walls no less than 40–60 % of each other</td><td>Ratio 0.4–0.6 minimum</td><td>Thick regions shrink after thin ones freeze: sink, warp, voids</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Cooling time</td><td>Scales with thickness squared</td><td>t<sub>c</sub> ∝ ℓ²; 3.0 → 2.5 mm gives 0.69× cooling time</td><td>One-dimensional heat conduction through the wall</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Internal corner radius</td><td>0.5 × wall</td><td>1.25 mm on a 2.5 mm wall</td><td>Keeps wall constant round the corner; reduces stress in part and tool</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>External corner radius</td><td>1.5 × wall (internal radius + wall)</td><td>3.75 mm on a 2.5 mm wall</td><td>Constant wall through the corner</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Rib thickness</td><td>0.5 × wall</td><td>1.25 mm on a 2.5 mm wall</td><td>Limits the thick intersection that causes sink opposite the rib</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Rib height</td><td>&lt; 3 × rib thickness (suppliers vary; taller with more draft)</td><td>&lt; 3.75 mm for a 1.25 mm rib per Hubs</td><td>Tall thin ribs are hard to fill, vent, and eject</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Rib base fillet</td><td>&gt; 0.25 × rib thickness</td><td>≥ 0.3 mm for a 1.25 mm rib</td><td>Stress relief and flow without a large thick spot</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Rib spacing</td><td>≥ 4 × rib thickness between ribs and walls</td><td>≥ 5 mm for 1.25 mm ribs</td><td>Room for steel between ribs to cool and be polished</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Boss</td><td>OD = 2 × screw nominal; ID = screw core diameter; tie to wall with gusset</td><td>M3: OD 6 mm, ID about 2.5 mm</td><td>Enough wall for thread-forming screws; avoids an isolated thick section</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Draft, plain walls</td><td>0.5° minimum; 1–2° typical; about 1° per 25 mm of depth; Hubs uses 2° minimum + 1° per 25 mm</td><td>0.5–2°</td><td>Release without dragging or bending the part</td><td><a href="#ref-1">[1]</a>, <a href="#ref-3">[3]</a>, <a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Draft, shut-offs</td><td>3° minimum</td><td>3°</td><td>Steel sliding on steel wears without taper</td><td><a href="#ref-1">[1]</a>, <a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Draft, textured</td><td>3° light texture; 5° or more medium texture; or +1–2° over plain</td><td>3–5°</td><td>Texture is a field of micro-undercuts</td><td><a href="#ref-1">[1]</a>, <a href="#ref-3">[3]</a>, <a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Draft, by resin</td><td>PC and PC/ABS ≥ 1°; high-heat PC ≥ 3°; TPU ≥ 5° plus 0.5–0.6 µm finish</td><td>1–5°</td><td>Soft and high-temperature resins grip the steel</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Side action size</td><td>Within the moulder's slide limits</td><td>Protolabs: &lt; 214 mm wide, &lt; 60 mm tall, &lt; 74 mm pull</td><td>Slides add tool cost, cycle time, and witness lines</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Vents</td><td>Along the parting line first</td><td>Depth 0.025–0.05 mm</td><td>Air must escape without plastic flashing through</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Living hinge</td><td>Thin, in PP; split long hinges</td><td>0.20–0.35 mm thick; sections &lt; 150 mm</td><td>Thin enough to flex, thick enough to fill</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Raised text</td><td>Shallow, readable font</td><td>0.5 mm high; ≥ 20 pt</td><td>Small features fill poorly and wear in the tool</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Tolerance</td><td>Steel plus resin; tighten only where needed</td><td>±0.25 mm standard; ±0.125 mm at cost; steel ±0.08 mm plus resin ±0.002 mm/mm</td><td>Two independent variation sources stack</td><td><a href="#ref-1">[1]</a>, <a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Shrinkage</td><td>Amorphous low, semi-crystalline high</td><td>ABS 0.4–0.7 %; PP 1–2 %; PA11 1–2.5 %</td><td>Crystalline packing on cooling; tool is cut to the datasheet</td><td><a href="#ref-7">[7]</a></td></tr>
+          <tr><td>Tool class</td><td>Match class to lifetime volume</td><td>101 ≥ 1,000,000 cycles; 103 ≤ 500,000; 104 ≤ 100,000; 105 ≤ 500</td><td>Steel, hardening, and cooling design scale with life</td><td><a href="#ref-8">[8]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: precision and pragmatism in two moulded parts</h2>
+    <p><strong>LEGO bricks.</strong> The LEGO Group's own history records that the 1963 change of material to ABS "permits a greater precision in molding to an accuracy of 1/200 mm", and that most elements are still moulded in ABS.<sup class="cite"><a href="#ref-10">[10]</a></sup> Two DFM points sit inside that sentence. First, the precision came from a material change, not only from tooling: ABS is amorphous, low-shrinkage, and dimensionally stable, which is what makes tight, repeatable clutch fits possible. Second, the product was designed for that process from the start, with uniform thin walls, tubes and studs that are small and evenly spaced, and no thick sections. The bricks are an argument that moulding tolerances are a system property of resin, tool, process, and part geometry together, which is exactly why a tolerance requested in isolation on a drawing is so expensive to promise.</p>
+    <p><strong>A coffee-maker tank.</strong> Ulrich and Pearson took apart eighteen automatic drip coffee makers to model their manufacturing cost. Among the design guidelines they drew from the sample: use inexpensive materials (polypropylene dominated; polycarbonate parts cost two to three times as much), minimise material by controlling wall thickness and overall dimensions, minimise the number of parts by consolidating mouldings, and concentrate high-quality finishes only where surfaces are visible.<sup class="cite"><a href="#ref-11">[11]</a></sup> The Braun tank described in the Wharton account of the same research shows the guidelines in action: the polypropylene showed sink lines at wall intersections, and the designers hid them with a ribbed pattern instead of paying for a more expensive resin.<sup class="cite"><a href="#ref-12">[12]</a></sup> The same authors also found that industrial-design complexity correlated with tooling cost and tooling lead time, though at coffee-maker volumes the tooling difference amounted to only a few cents per unit.<sup class="cite"><a href="#ref-11">[11]</a></sup> Whether that trade is worth it depends on your volume, which is the subject of Modules 2 and 15.</p>
+    <!-- AUTHOR: optional personal note here (e.g., a first-shot sink mark or steel-safe correction from your own experience, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Designing the part as a solid and thinning it later.</strong> Consequence: thick sections, sink, long cycles, and a redesign after the moulder's DFM review. Fix: start from a nominal wall and build every feature as a shell of that wall from the first sketch.</li>
+      <li><strong>Adding draft at the end.</strong> Consequence: mating parts no longer fit because outside and inside dimensions moved by H·tan θ. Fix: model draft with the first wall and design mates to the drafted geometry.</li>
+      <li><strong>Ribs as thick as the wall.</strong> Consequence: a sink mark on the show surface opposite every rib. Fix: rib at 0.5× wall with a small base fillet; hide unavoidable sink with texture or a pattern.</li>
+      <li><strong>Isolated bosses.</strong> Consequence: sink opposite the boss, and a boss that flexes or cracks under screw torque. Fix: gusset the boss to the nearest wall and core behind it.</li>
+      <li><strong>Sideways snaps and holes that create undercuts.</strong> Consequence: side actions in the tool for the life of the product. Fix: reorient the feature to the opening direction, use a pass-through core, or move the parting line.</li>
+      <li><strong>Tight tolerances by habit.</strong> Consequence: a tighter and slower tool, extra inspection, and a Cpk the moulder cannot hold. Fix: general tolerances everywhere except the few functional dimensions, and keep those in one mould half.</li>
+      <li><strong>Specifying a high polish on hidden surfaces.</strong> Consequence: hours of hand polishing that nobody sees. Fix: SPI A or B grades only on visible surfaces; C or D grades elsewhere.</li>
+      <li><strong>Changing resin after the tool is cut.</strong> Consequence: shrinkage changes, so every dimension moves and the tool needs rework. Fix: freeze the resin grade before steel is ordered, and involve the moulder in the choice.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: a housing redesign</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>An open-top ABS electronics housing measures 120 × 80 × 40 mm on the outside. The first CAD model has a 3.5 mm wall, four stiffening ribs 3.5 mm thick and 12 mm tall on the base, and a free-standing boss for an M3 thread-forming screw with a 9 mm outside diameter. Annual volume is 100,000. The moulder's first quote assumes a 30 s cycle, of which 60 % is cooling, and you may use an illustrative machine rate of €60 per hour and ABS at €2.50 per kg (density 1.04 g/cm³) for the cost estimate.</p>
+    <p><strong>Tasks.</strong> (a) Propose a new nominal wall inside the ABS range and redesign the ribs and boss to the Hubs ratios. (b) Estimate the change in cooling time and cycle time. (c) Estimate the annual machine-time and material savings. (d) State the minimum draft you would put on the 40 mm walls, plain and textured.</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a) Wall and features.</strong> ABS is quoted at 1.14 to 3.56 mm.<sup class="cite"><a href="#ref-1">[1]</a></sup> Choose 2.5 mm: comfortably inside the range, stiff enough for a housing this size, and enough for the boss. Redesign to the Hubs ratios:<sup class="cite"><a href="#ref-4">[4]</a></sup></p>
+      <ul>
+        <li>Rib thickness 0.5 × 2.5 = 1.25 mm. Rib height under 3 × 1.25 = 3.75 mm per the Hubs limit. The original 12 mm ribs would need to be either shortened, or (with the moulder's agreement) kept taller with a thicker base and 1° or more of draft per face. Spacing at least 4 × 1.25 = 5 mm between ribs and walls. Base fillet at least 0.25 × 1.25 = 0.31 mm; use 0.4 mm.</li>
+        <li>Boss for M3: outside diameter 2 × 3 = 6 mm, hole about 2.5 mm (the screw core diameter for a thread-forming screw; confirm with the fastener datasheet). Boss wall is then (6 − 2.5)/2 = 1.75 mm, which is 70 % of the 2.5 mm wall and above the 40 to 60 % range Protolabs gives for secondary features,<sup class="cite"><a href="#ref-2">[2]</a></sup> so expect a faint sink opposite the boss. Mitigate by adding a gusset to the nearest side wall and coring the base behind the boss, or by accepting the mark on a non-visible base.</li>
+        <li>Corners: internal radius 1.25 mm, external radius 3.75 mm.</li>
+      </ul>
+      <p><strong>(b) Cooling and cycle time.</strong> Cooling time scales with thickness squared.<sup class="cite"><a href="#ref-6">[6]</a></sup> Ratio = (2.5 / 3.5)² = 0.51. Original cooling time = 0.6 × 30 s = 18 s; new cooling time ≈ 0.51 × 18 = 9.2 s. The other 12 s of the cycle (fill, pack, open, eject) is assumed unchanged. New cycle ≈ 12 + 9.2 = 21.2 s, a saving of 8.8 s per shot (29 %). In practice the ribs were also thinned, so the thickest section really is the 2.5 mm wall; if the boss wall or a rib root remained thicker than 2.5 mm, that section would set the cooling time instead.</p>
+      <p><strong>(c) Annual savings.</strong> Machine time: 8.8 s × 100,000 = 880,000 s = 244 h per year. At €60/h that is about €14,700 per year in machine time alone (single cavity assumed).</p>
+      <p>Material: treat the housing as five faces of area 2 × (120 × 40) + 2 × (80 × 40) + 120 × 80 = 9,600 + 6,400 + 9,600 = 25,600 mm². Wall volume at 3.5 mm ≈ 89,600 mm³ = 89.6 cm³ → 93.2 g. At 2.5 mm ≈ 64,000 mm³ → 66.6 g. Saving about 26.6 g per part before ribs and boss are counted. Over 100,000 parts that is 2,660 kg, or about €6,650 per year at €2.50/kg. Combined saving roughly €21,000 per year for a redesign that also reduces sink and warp risk. (These rates are illustrative; use your moulder's quote.)</p>
+      <p><strong>(d) Draft.</strong> The walls are 40 mm deep. Protolabs' rule of thumb of about 1° per 25 mm gives roughly 1.6°, and its depth table puts a 38 mm feature with a wall over 2.5 mm at 1° minimum and 2° preferred;<sup class="cite"><a href="#ref-3">[3]</a></sup> Hubs' 2° minimum plus 1° per 25 mm suggests about 3.6°.<sup class="cite"><a href="#ref-4">[4]</a></sup> A defensible specification is 2° minimum on plain walls, moving to 3° for a light texture and 5° for a medium texture.<sup class="cite"><a href="#ref-1">[1]</a>,<a href="#ref-3">[3]</a></sup> At 2°, the top of the wall moves 40 × tan 2° = 1.4 mm relative to the base; at 5° it moves 3.5 mm. Whoever designs the lid must know which value was chosen.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device. Explanations appear after you check your answers.</p>
+
+    <form class="quiz" data-module="06">
+      <fieldset class="q" data-answer="b">
+        <legend>1. If the wall thickness of a part is doubled and nothing else changes, the cooling time is approximately</legend>
+        <label><input type="radio" name="q1" value="a"> unchanged</label>
+        <label><input type="radio" name="q1" value="b"> four times longer</label>
+        <label><input type="radio" name="q1" value="c"> twice as long</label>
+        <label><input type="radio" name="q1" value="d"> eight times longer</label>
+        <p class="explain" hidden>Cooling time is proportional to thickness squared in the conduction estimate, so 2² = 4.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>2. Per the Hubs guide, a stiffening rib should be about what fraction of the adjoining wall thickness?</legend>
+        <label><input type="radio" name="q2" value="a"> 0.5</label>
+        <label><input type="radio" name="q2" value="b"> 1.0</label>
+        <label><input type="radio" name="q2" value="c"> 1.5</label>
+        <label><input type="radio" name="q2" value="d"> 0.1</label>
+        <p class="explain" hidden>Half the wall limits the thick intersection at the rib root, which is what causes sink on the opposite face.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="1.0" data-tolerance="0.05">
+        <legend>3. For a 2.0 mm nominal wall, what rib thickness in mm does the 0.5× rule give?</legend>
+        <label>Answer (mm): <input type="number" name="q3" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>0.5 × 2.0 mm = 1.0 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>4. Protolabs' minimum draft for a light texture (PM-T1) is</legend>
+        <label><input type="radio" name="q4" value="a"> 0.5°</label>
+        <label><input type="radio" name="q4" value="b"> 1°</label>
+        <label><input type="radio" name="q4" value="c"> 3°</label>
+        <label><input type="radio" name="q4" value="d"> 10°</label>
+        <p class="explain" hidden>Texture acts as a field of micro-undercuts; Protolabs requires 3° for light texture and 5° or more for medium texture.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>5. Which of these resins typically shrinks the most on cooling?</legend>
+        <label><input type="radio" name="q5" value="a"> ABS</label>
+        <label><input type="radio" name="q5" value="b"> Polycarbonate</label>
+        <label><input type="radio" name="q5" value="c"> Polystyrene</label>
+        <label><input type="radio" name="q5" value="d"> Polypropylene</label>
+        <p class="explain" hidden>Polypropylene is semi-crystalline and shrinks about 1 to 2 %, versus roughly 0.4 to 0.7 % for amorphous ABS.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.12" data-tolerance="0.005">
+        <legend>6. Using a resin tolerance of ±0.002 mm per mm, what is the resin contribution (±, in mm) on a 60 mm dimension?</legend>
+        <label>Answer (mm): <input type="number" name="q6" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>0.002 × 60 = 0.12 mm, before the steel tolerance is added.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>7. A mould specified as SPI Class 101 is intended for</legend>
+        <label><input type="radio" name="q7" value="a"> one million cycles or more</label>
+        <label><input type="radio" name="q7" value="b"> up to 500 cycles (prototypes)</label>
+        <label><input type="radio" name="q7" value="c"> up to 100,000 cycles</label>
+        <label><input type="radio" name="q7" value="d"> a single production lot</label>
+        <p class="explain" hidden>Class 101 is the highest class, built for one million or more cycles; Class 105 is the prototype class.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>8. After first shots, which correction is the cheap, "steel-safe" direction?</legend>
+        <label><input type="radio" name="q8" value="a"> Making a hole in the part larger</label>
+        <label><input type="radio" name="q8" value="b"> Making a wall in the part thicker</label>
+        <label><input type="radio" name="q8" value="c"> Removing a rib from the part</label>
+        <label><input type="radio" name="q8" value="d"> Making a boss shorter</label>
+        <p class="explain" hidden>Adding plastic to the part means removing steel from the mould, which is a machining operation. The other three add steel, which means welding, inserts, or a new block.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>b. Cooling time scales with thickness squared.</li>
+        <li>a. Rib thickness about 0.5 × wall.</li>
+        <li>1.0 mm.</li>
+        <li>c. 3° for light texture.</li>
+        <li>d. Polypropylene, a semi-crystalline resin.</li>
+        <li>±0.12 mm.</li>
+        <li>a. One million cycles or more.</li>
+        <li>b. Thickening a wall removes steel from the mould.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>Pick a nominal wall inside the resin's range and build every feature as a shell of that wall. Uniformity matters more than the absolute value.</li>
+      <li>Cooling time goes with thickness squared. The thickest section, not the average, sets the cycle time.</li>
+      <li>Ribs at half the wall, bosses at twice the screw diameter tied to a wall, and constant-thickness corners are the sink and warp controls.</li>
+      <li>Draft is part of the design, not a finishing touch. Use at least 0.5° to 2° on plain walls, 3° on shut-offs and light texture, 5° on medium texture, and more for soft or high-temperature resins.</li>
+      <li>Every undercut costs a side action for the life of the tool. Reorient, core through, or move the parting line first.</li>
+      <li>A moulded tolerance is steel variation plus resin variation. Tighten only functional dimensions and keep them in one mould half.</li>
+      <li>Mould changes are cheap in one direction and expensive in the other. Design steel-safe and plan first-article corrections accordingly.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07. Sources marked "secondary" were not read in the original by the course author; the claim is taken from the source shown.</p>
+    <ol class="references">
+      <li id="ref-1">Protolabs. "Plastic Injection Molding Design Guidelines." Protolabs, n.d. <a href="https://www.protolabs.com/services/injection-molding/plastic-injection-molding/design-guidelines/">https://www.protolabs.com/services/injection-molding/plastic-injection-molding/design-guidelines/</a></li>
+      <li id="ref-2">Protolabs. "Injection Molding Wall Thickness Guidelines" (design tip). Protolabs, n.d. <a href="https://www.protolabs.com/resources/design-tips/improving-part-design-with-uniform-wall-thickness/">https://www.protolabs.com/resources/design-tips/improving-part-design-with-uniform-wall-thickness/</a></li>
+      <li id="ref-3">Protolabs. "Draft Angle Guidelines for Injection Molding" (design tip). Protolabs, n.d. <a href="https://www.protolabs.com/resources/design-tips/improving-part-moldability-with-draft/">https://www.protolabs.com/resources/design-tips/improving-part-moldability-with-draft/</a></li>
+      <li id="ref-4">Protolabs Network (formerly Hubs). "Injection molding design guide." Protolabs Network, n.d. <a href="https://www.hubs.com/guides/injection-molding/">https://www.hubs.com/guides/injection-molding/</a></li>
+      <li id="ref-5">Covestro (formerly Bayer MaterialScience). <em>Engineering Polymers: Part and Mold Design – A Design Guide.</em> Covestro, n.d. <a href="https://solutions.covestro.com/-/media/covestro/solution-center/brands/downloads/imported/1557222937.pdf">https://solutions.covestro.com/-/media/covestro/solution-center/brands/downloads/imported/1557222937.pdf</a></li>
+      <li id="ref-6">Toray Plastics. "Estimating molding cycle time" (AMILAN nylon technical information). Toray Industries, n.d. <a href="https://www.plastics.toray/technical/amilan/tec_012.html">https://www.plastics.toray/technical/amilan/tec_012.html</a></li>
+      <li id="ref-7">Rex Plastics. "Injection Molding Shrinkage Rates: ABS, Nylon, PP &amp; More." Rex Plastics, n.d. <a href="https://rexplastics.com/plastic-injection-molding/shrinkage-rates-injection-molding/">https://rexplastics.com/plastic-injection-molding/shrinkage-rates-injection-molding/</a> <span class="tag">(moulder's published ranges; check the datasheet for your grade)</span></li>
+      <li id="ref-8">Plastics Industry Association. <em>Customs and Practices of the Moldmaking Industry</em> (AR-101), 1996, revised May 2023. <a href="https://www.plasticsindustry.org/data-report/customs-and-practices-of-the-moldmaking-industry/">https://www.plasticsindustry.org/data-report/customs-and-practices-of-the-moldmaking-industry/</a> <span class="tag">Class cycle counts are secondary, from the summary at Kaysun, "The 5 Types of SPI Mold Classifications," <a href="https://www.kaysun.com/blog/the-types-of-spi-mold-classifications">https://www.kaysun.com/blog/the-types-of-spi-mold-classifications</a></span></li>
+      <li id="ref-9">American Precision Products. "SPI Mold Finish Standards." n.d. <a href="https://www.injection-moldings.com/groups/engineering-team/spi-mold-finish-standards">https://www.injection-moldings.com/groups/engineering-team/spi-mold-finish-standards</a> <span class="tag">(secondary summary of the SPI finish plaque set)</span></li>
+      <li id="ref-10">The LEGO Group. "The LEGO moulding philosophy." LEGO History, LEGO.com, n.d. <a href="https://www.lego.com/en-us/history/articles/e-the-lego-moulding-philosophy">https://www.lego.com/en-us/history/articles/e-the-lego-moulding-philosophy</a></li>
+      <li id="ref-11">Ulrich, K. T., and Pearson, S. A. "Does Product Design Really Determine 80% of Manufacturing Cost?" Working Paper 3601-93-MSA, MIT Sloan School of Management, August 1993. <a href="https://dspace.mit.edu/handle/1721.1/47202">https://dspace.mit.edu/handle/1721.1/47202</a></li>
+      <li id="ref-12">Wharton Magazine. "The Inside Story of Product Design." Summer 1997. <a href="https://magazine.wharton.upenn.edu/issues/summer-1997/the-inside-story-of-product-design/">https://magazine.wharton.upenn.edu/issues/summer-1997/the-inside-story-of-product-design/</a></li>
+      <li id="ref-13">Makrolar. "Tolerances for plastic moulded parts according to DIN ISO 20457 / DIN 16742." n.d. <a href="https://www.makrolar.eu/en/Software/PolTolerances">https://www.makrolar.eu/en/Software/PolTolerances</a> <span class="tag">(secondary summary of DIN 16742:2013 and ISO 20457:2018)</span></li>
+      <li id="ref-14">NIST/SEMATECH. <em>e-Handbook of Statistical Methods</em>, section 6.1.6, "What is Process Capability?" National Institute of Standards and Technology, 2012. <a href="https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm">https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Boothroyd, G., Dewhurst, P., Knight, W. A. <em>Product Design for Manufacture and Assembly</em>, 3rd ed. CRC Press, 2011. Chapter on design for injection moulding and its cost model.</li>
+      <li>Bralla, J. G. (ed.). <em>Design for Manufacturability Handbook</em>, 2nd ed. McGraw-Hill, 1999. Injection moulded parts chapter.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>

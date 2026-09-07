@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design for Manufacturing and Assembly: From Prototype to Production</title>
+<meta name="description" content="A free, practitioner-written online course on DFM, DFA, DFT, and DFS for junior and mid-level mechanical and manufacturing engineers.">
+<link rel="stylesheet" href="assets/css/course.css">
+</head>
+<body data-root="" data-page="index">
+
+<header class="site-header">
+  <a class="brand" href="index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Online course</p>
+    <h1>Design for Manufacturing and Assembly: From Prototype to Production</h1>
+    <p class="lead">A practical course on designing parts and products that can actually be made, assembled, tested, and serviced at the volume and cost you need. Written by a practising manufacturing engineer for engineers with roughly zero to five years of experience.</p>
+
+    <h2>Who this is for</h2>
+    <p>You know CAD. You know the basic processes. What you have probably not yet lived through is a supplier DFM review that rejects your part, a tolerance stack-up that fails at production validation, or a production ramp that stalls because a screw is hard to reach. This course is the set of rules and reasons that get you through those events with fewer surprises.</p>
+    <p>Every rule of thumb in the course comes with the physical reason behind it, so you can rebuild the rule when a supplier's numbers differ from ours. Every real-world example is cited to a source you can read yourself. Where a widely repeated claim could not be verified, the course says so instead of attaching false precision to it.</p>
+
+    <h2>Your progress</h2>
+    <div class="progress" data-progress></div>
+
+    <h2>Modules</h2>
+    <p>Modules are published one at a time. Titles without a link are written and in review; they will be linked as soon as they pass the verification checks described in the about page.</p>
+    <ol class="module-list" data-module-list></ol>
+
+    <div hidden>
+      <span data-module-desc="00">What DFM, DFA, DFT, and DFS mean; where cost is committed; the cost of late change; how to use this course.</span>
+      <span data-module-desc="01">Concept through mass production; EVT, DVT, PVT; phase-gate reviews; the DFM review as a deliverable.</span>
+      <span data-module-desc="02">Matching volume to process; tooling versus piece price; break-even; a process selection map.</span>
+      <span data-module-desc="03">ISO 2768, ISO 286 fits, GD&amp;T basics, worst-case and RSS stack-ups, Cp and Cpk.</span>
+      <span data-module-desc="04">Corner radii, depth ratios, thin walls, undercuts, setups, threads, finish, stock sizes, cost drivers.</span>
+      <span data-module-desc="05">Bend radius, K-factor, flange and hole clearances, relief, hems, flat patterns, hardware.</span>
+      <span data-module-desc="06">Wall thickness, draft, ribs and bosses, undercuts, gates and weld lines, sink and warp, tolerances, finish, tooling classes.</span>
+      <span data-module-desc="07">Die, investment, and sand casting; forging; machining allowances; when casting beats machining.</span>
+      <span data-module-desc="08">FDM, SLA, SLS, MJF, DMLS; orientation, supports, minimum features; AM for tooling; AM in production.</span>
+      <span data-module-desc="09">IPC standards, trace and space, annular rings, vias, panelisation, fiducials, reflow and wave, component lifecycle.</span>
+      <span data-module-desc="10">Boothroyd Dewhurst method, minimum part count, fastener reduction, poka-yoke, assembly sequence.</span>
+      <span data-module-desc="11">Test strategy by phase; ICT, functional test, boundary scan; test points and fixtures; leak and pressure test.</span>
+      <span data-module-desc="12">Serviceability, derating and reliability basics, and how UL, CE, RoHS, REACH, IP ratings, and NSF 61 constrain design.</span>
+      <span data-module-desc="13">Material selection by process; finishes and platings; welding, brazing, adhesives, press fits; galvanic compatibility.</span>
+      <span data-module-desc="14">The RFQ package, drawings versus MBD, reading supplier DFM feedback, FAI, PPAP, ECO discipline.</span>
+      <span data-module-desc="15">Bottom-up cost models for machined, moulded, and sheet metal parts; tooling amortisation; reading a quote.</span>
+      <span data-module-desc="16">One fully specified product taken through DFM, DFA, DFT, and DFS review with a scored findings list and redesigned BOM.</span>
+    </div>
+
+    <h2>How to use this course</h2>
+    <ol>
+      <li><strong>Work in order the first time.</strong> Modules 0 to 3 set up the vocabulary and the tolerancing and capability ideas that every process module leans on. After that, the process modules (4 to 9) can be read in any order.</li>
+      <li><strong>Do the worked exercise before opening the solution.</strong> Each exercise is a calculation you would do on the job: a stack-up, a break-even, a wall-thickness redesign, a part-count reduction. The full solution is in a collapsible block below it.</li>
+      <li><strong>Take the quiz.</strong> Six to ten questions per module. Score 70% or more and the module is marked complete on this device. Progress is stored only in your browser; nothing is sent anywhere.</li>
+      <li><strong>Use the design rules tables as a checklist.</strong> Every row has a source. When your supplier's numbers differ, trust the supplier for their process and use the reason column to understand why.</li>
+      <li><strong>Print a module as a handout.</strong> The print stylesheet removes navigation and expands the collapsible blocks.</li>
+    </ol>
+
+    <h2>Conventions</h2>
+    <ul>
+      <li>All dimensions are metric. Where a source gives inches or mils, the metric value is shown first and the original follows in parentheses.</li>
+      <li>Inline citations like [3] link to the References section at the end of each module. Sources marked "secondary" are credible but were not read in the original by the author of the course; everything else was.</li>
+      <li>Examples labelled "illustrative" use invented but realistic numbers and are not real programs. Real cases are named and cited.</li>
+      <li>"Suppliers vary on this; ask yours" appears often. It is the honest answer more often than a single number.</li>
+    </ul>
+
+    <h2>Prerequisites</h2>
+    <p>Basic statistics (mean, standard deviation), reading engineering drawings, and unit conversion. Every acronym is defined on first use and every standard is introduced the first time it appears.</p>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="assets/js/course.js"></script>
+</body>
+</html>
