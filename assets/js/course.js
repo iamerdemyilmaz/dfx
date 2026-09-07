@@ -9,7 +9,7 @@
      `built` controls whether the module is linked in navigation.
      Only finished modules are linked (no placeholder pages). */
   var MODULES = [
-    { num: "00", slug: "00-introduction", title: "Introduction: Why DFx", built: false },
+    { num: "00", slug: "00-introduction", title: "Introduction: Why DFx", built: true },
     { num: "01", slug: "01-npi-process", title: "The product development and NPI process", built: false },
     { num: "02", slug: "02-process-selection", title: "Process selection and cost drivers", built: false },
     { num: "03", slug: "03-tolerancing", title: "Tolerancing for manufacturability", built: false },

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 0: Introduction: Why DFx · DFx Course</title>
+<meta name="description" content="What DFM, DFA, DFT, and DFS mean, where product cost is really committed, what a late change costs, and how to use this course.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="00">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 0</p>
+    <h1>Introduction: Why DFx</h1>
+    <p class="lead">Every product you design will be made by someone else, on equipment you do not control, at a price somebody has already promised a customer. Design for X (DFx) is the discipline of making decisions early, while they are still cheap, that let that happen. This module defines the terms, tests the folklore about where cost is committed, and shows you how the rest of the course is organised.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Define</strong> DFM, DFA, DFT, and DFS, and state what each one asks of a design.</li>
+      <li><strong>Explain</strong> what the widely quoted "80 percent of cost is committed in design" claim actually means, where it came from, and what the one careful test of it found.</li>
+      <li><strong>Describe</strong> how the cost of a design change grows through concept, tooling, validation, and production, and where that rule of thumb comes from.</li>
+      <li><strong>Identify</strong> which decisions in a concept fix the material, process, part count, and tolerance budget of a product.</li>
+      <li><strong>Calculate</strong> the break-even between engineering time spent early and a per-unit cost avoided later.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>In June 2006, and again in October 2006, Airbus announced delays to the A380 programme. The company's stated root cause was that the three-dimensional digital mock-up used to design the installation of electrical harnesses "was implemented late", and that the people working on it were still on their learning curve when the aircraft was already being built.<sup class="cite"><a href="#ref-7">[7]</a></sup> Harnesses designed against one representation of the airframe did not fit the airframe as built, and installed wiring had to be reworked in the final assembly hall. EADS put the earnings impact of the October announcement at 2.8 billion euros over four years, on top of the 2 billion euros already announced in June, and first delivery slipped a full year to October 2007.<sup class="cite"><a href="#ref-7">[7]</a>,<a href="#ref-8">[8]</a></sup></p>
+    <p>Nothing in that story is about a bad wire or a bad bracket. It is about design information that arrived after the decisions it should have informed. That is the failure DFx exists to prevent, and it is why this course spends as much time on process, reviews, and supplier communication as on wall thickness and bend radii. The same shape of failure appears at every scale: a moulded housing whose draft was added after the mating lid was designed, a board whose test points were placed after the fixture was quoted, a bracket whose bend clearance was checked after the tool was cut. The part is rarely wrong in isolation. The order of decisions was wrong.</p>
+    <p>You will not be asked to prevent multi-billion-euro delays this year. You will be asked to release a part. The habit this course tries to build is to ask, before release, "who has to make this, assemble it, test it, and fix it, and have they seen it?"</p>
+
+    <h2 id="terms">The four letters</h2>
+    <p>DFx is an umbrella. The x stands for whatever downstream property you are designing for. Four of them carry most of the weight in mechanical and electromechanical products.</p>
+    <h3>DFM: design for manufacturing</h3>
+    <p>DFM asks whether each part can be made by its intended process, at the intended volume, at a cost and quality the program can live with. The consultancy that formalised the method describes it as optimising individual parts so they "can be made more easily, consistently, and cost-effectively at the target production volume" by modelling process choice, geometry, tolerances, and tooling.<sup class="cite"><a href="#ref-1">[1]</a></sup> In practice DFM is process-specific: the rules for a die casting have almost nothing in common with the rules for a printed circuit board. Modules 4 to 9 cover the processes one at a time.</p>
+    <h3>DFA: design for assembly</h3>
+    <p>DFA asks whether the parts can be put together quickly, correctly, and by the intended means, and whether every part deserves to exist. The Boothroyd Dewhurst description is that DFA "reduces the number of parts in a product and makes the remaining parts easier to assemble".<sup class="cite"><a href="#ref-1">[1]</a></sup> It is the most quantified of the four: it assigns times to handling and inserting each part and compares the total with a theoretical minimum. Module 10 covers the method.</p>
+    <h3>DFT: design for test</h3>
+    <p>DFT asks whether the product, and the assemblies inside it, can be checked for correctness at each stage of production without heroics. For electronics this means test points, fixture access, and boundary-scan chains. For mechanical assemblies it means leak ports, pressure test connections, and functional checks that can be run before the product is closed up. In the electronics industry the umbrella term is written DFX and codified in an IPC guideline whose stated aim is producible, compliant, and cost-effective board designs.<sup class="cite"><a href="#ref-2">[2]</a></sup> Module 11 covers DFT.</p>
+    <h3>DFS: design for service</h3>
+    <p>DFS asks what happens after the product ships: which parts will fail, whether they can be reached and replaced, whether the replacement can be done without specialised tools, and what the regulations in the destination market require. Module 12 covers service, reliability basics, and the compliance rules that reach back into early design.</p>
+    <p>Other letters exist (design for cost, for environment, for reliability, for logistics) and the course touches them where they change a design decision. The common thread is that each one is a question you can ask of a concept before it is detailed, and each one is far cheaper to answer then.</p>
+
+    <h2 id="cost">Where cost is committed</h2>
+    <p>You will hear, in almost every DFM presentation, that 70 to 80 percent of a product's cost is committed during design. It is worth knowing where that number comes from before you repeat it.</p>
+    <p>In 1993 Karl Ulrich and Scott Pearson at MIT set out to test the claim. Their working paper opens by noting that "the meaning of this assertion has not been well defined, nor has much empirical evidence been presented to support it", and traces the figure through textbooks back to trade-press tables from the late 1980s rather than to a study.<sup class="cite"><a href="#ref-3">[3]</a></sup> They then did the experiment. They bought eighteen automatic drip coffee makers, took them apart, modelled the manufacturing cost of each design, and separately modelled how the same designs would cost in different manufacturing systems (a well-run plant in a high-cost country, a poorly run plant in a low-cost country, and so on).<sup class="cite"><a href="#ref-3">[3]</a>,<a href="#ref-4">[4]</a></sup></p>
+    <p>Their result is more useful than the folklore. Under their assumptions, the range of cost explained by design differences was about 48 percent of the average manufacturing cost, and the range explained by manufacturing-system differences was about 31 percent.<sup class="cite"><a href="#ref-3">[3]</a></sup> Design mattered more than the factory, but not by the margin the slogan implies, and the two were of the same order. Their worked illustration makes the point concrete: the most expensive design in the sample, if made in a poorly run high-cost plant, was estimated at $14.54; moving to a well-run low-cost plant with the same design would reach $8.06; redesigning to the cheapest architecture in the sample while staying in the original plant would reach $9.72; doing both would reach $4.98.<sup class="cite"><a href="#ref-3">[3]</a></sup> Redesign was competitive with moving the factory, and the two compounded.</p>
+    <p>The honest way to teach the slogan, then, is this. Design commits the material, the process, the number of parts, the tolerances, and therefore the tooling and the assembly content. Those decisions bound what any factory can achieve. Manufacturing then decides how close to that bound you actually operate. Both matter, and the design half is the half you control. Ulrich and Pearson also found that 25 to 50 percent of a coffee maker's cost was purchased components,<sup class="cite"><a href="#ref-3">[3]</a></sup> which is a reminder that DFx includes the parts you did not draw.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 260" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">What design commits versus what manufacturing controls</title>
+        <desc id="fig1-desc">Two stacked horizontal bands. The upper band, labelled design decisions, lists material, process, part count, tolerances, tooling, and assembly content, and sets a floor for unit cost. The lower band, labelled manufacturing system, lists plant efficiency, labour rate, yield, and overhead, and sets how far above that floor the product actually costs. An arrow on the right shows unit cost rising from the design floor through the manufacturing range.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="40" y="40" width="440" height="80" class="diagram-soft"/>
+          <rect x="40" y="140" width="440" height="80"/>
+          <path d="M560 220 L560 40 M552 50 L560 40 L568 50"/>
+          <path d="M520 120 L600 120" stroke-dasharray="6 4" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="52" y="62" font-weight="600">Design decisions set the floor</text>
+          <text x="52" y="84">Material · process · part count · tolerances</text>
+          <text x="52" y="104">Tooling · assembly content · purchased parts</text>
+          <text x="52" y="162" font-weight="600">Manufacturing system sets the distance above it</text>
+          <text x="52" y="184">Plant efficiency · labour rate · yield</text>
+          <text x="52" y="204">Overhead · utilisation · inventory</text>
+          <text x="575" y="135">Cost floor</text>
+          <text x="572" y="235">Unit cost</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. Design decisions bound what any factory can achieve; the manufacturing system decides how close to that bound the product runs. Ulrich and Pearson measured both ranges on eighteen coffee makers and found them of the same order.<sup class="cite"><a href="#ref-3">[3]</a></sup></figcaption>
+    </figure>
+
+    <h2 id="change">The cost of change through the phases</h2>
+    <p>The second piece of folklore is the "rule of ten": each phase a defect survives multiplies the cost of fixing it by about ten. This one has a traceable origin, but it is not a manufacturing study. Barry Boehm published cost-to-fix data for software defects in 1976 and again in 1981, and in a 2001 summary with Victor Basili stated that finding and fixing a software problem after delivery is often 100 times more expensive than finding and fixing it during the requirements and design phase, while noting that for small non-critical systems the factor is closer to 5 to 1.<sup class="cite"><a href="#ref-5">[5]</a>,<a href="#ref-6">[6]</a></sup> Hardware engineers adopted the curve by analogy because the mechanism is the same: the later a change lands, the more artefacts it touches.</p>
+    <p>For a physical product the artefacts are concrete, and you can list them for your own program instead of trusting a multiplier.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. What a design change touches at each phase. Multipliers are not given because they depend on the product; the point is the growing list.</caption>
+        <thead><tr><th>Phase</th><th>What exists</th><th>What a change costs</th></tr></thead>
+        <tbody>
+          <tr><td>Concept</td><td>Sketches, a block model, a rough BOM</td><td>Engineering hours. Nothing else moves.</td></tr>
+          <tr><td>Detail design</td><td>CAD, drawings, analysis, supplier quotes in progress</td><td>Engineering hours plus re-quoting and re-analysis. Mating parts may need to follow.</td></tr>
+          <tr><td>Prototype and EVT</td><td>Soft tooling, machined or printed parts, first test data</td><td>New prototype parts, repeated tests, schedule days.</td></tr>
+          <tr><td>DVT and tooling</td><td>Production tools being cut, fixtures being built, certification tests booked</td><td>Tool rework (cheap in one direction, expensive in the other, see Module 6), fixture rework, re-test, possible re-certification.</td></tr>
+          <tr><td>PVT and ramp</td><td>Production line, trained operators, inventory of parts and packaging</td><td>All of the above plus scrap, line stoppage, obsolete inventory, and a formal engineering change through the supplier's quality system.</td></tr>
+          <tr><td>Field</td><td>Products with customers</td><td>All of the above plus service actions. A recall is the extreme: the 2016 recall of a top-load washing machine covered about 2.8 million units and offered in-home repair, rebate, or refund to every owner.<sup class="cite"><a href="#ref-9">[9]</a></sup></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Two things follow. First, the stage names you will meet in Module 1 (EVT, DVT, PVT) are not bureaucracy; they are the points where the list on the right grows, and where a review is cheapest relative to what it protects. Second, the multiplier is not uniform. The step from "tool being cut" to "tool cut and parts in inventory" is usually the largest single jump in a hardware program, which is why the design freeze before production tooling is treated as a real gate.</p>
+
+    <h2 id="decisions">The decisions that commit cost</h2>
+    <p>If design sets the floor, which decisions set it? Working through any product's BOM, the same handful appear.</p>
+    <ul>
+      <li><strong>Process and material, chosen together.</strong> A housing drawn as a die casting is a different product from the same housing drawn as a moulding or a sheet-metal weldment: different wall thickness, different draft, different tolerance capability, different tooling cost, different volume where it breaks even. Module 2 gives you a map; Modules 4 to 9 give you the rules for each destination.</li>
+      <li><strong>Part count.</strong> Every part is a drawing, a supplier, a purchase order, an inventory location, an inspection, and an assembly step. Published DFA results routinely report large reductions: one vendor case reduced a medical instrument door from 183 parts to 31 and from 63 fasteners to none,<sup class="cite"><a href="#ref-11">[11]</a></sup> and a well-documented aerospace example consolidated a fuel nozzle tip from about 20 welded and brazed pieces into one additively built part.<sup class="cite"><a href="#ref-12">[12]</a></sup> Module 10 shows how to find the parts that do not need to exist.</li>
+      <li><strong>Tolerances.</strong> A tolerance is a promise about process capability. Tight tolerances by habit cost money on every part forever; Module 3 gives you the arithmetic to spend them only where they buy function.</li>
+      <li><strong>Fastening and joining.</strong> Screws are cheap to buy and expensive to install, and every joint is a possible leak, a possible galvanic couple, and a possible service task. Modules 10 and 13 cover the choices.</li>
+      <li><strong>Test and service access.</strong> Where the test points, the leak port, and the field-replaceable unit sit is decided when the architecture is decided, whether or not anyone decides it deliberately. Modules 11 and 12 make it deliberate.</li>
+      <li><strong>Purchased parts.</strong> Motors, sensors, connectors, and fasteners are a quarter to a half of many BOMs.<sup class="cite"><a href="#ref-3">[3]</a></sup> Their lifecycle, lead time, and second-source status are design decisions too (Modules 9 and 14).</li>
+    </ul>
+
+    <h2 id="npi">Where DFx sits in the development process</h2>
+    <p>Hardware programs are commonly run through three validation builds with industry-standard names: engineering validation test (EVT), which asks whether the engineering approach and components work; design validation test (DVT), which asks whether the complete integrated design meets its requirements; and production validation test (PVT), which asks whether the production process can build it repeatably.<sup class="cite"><a href="#ref-10">[10]</a></sup> Typical build quantities quoted by one practitioner are tens of units at EVT, 50 to 100 at DVT, and 10 to 20 percent of the first production order at PVT.<sup class="cite"><a href="#ref-10">[10]</a></sup> Those numbers vary widely by industry; the structure does not.</p>
+    <p>DFx reviews belong before each build, not after. A DFM review before EVT catches process mismatches while the parts are still machined or printed. A DFM and DFA review before DVT is the last cheap chance, because DVT is normally built from production-intent tooling. A DFT review before DVT is what lets the DVT test fixtures be designed alongside the product. Module 1 lays out who owns each review and what a review deliverable looks like.</p>
+
+    <h2 id="mindset">The DFx mindset</h2>
+    <p>Four habits separate engineers whose parts sail through supplier review from those whose parts come back with a page of findings.</p>
+    <ol>
+      <li><strong>Know the reason behind every rule.</strong> "Minimum wall 1 mm" is useless when your supplier says 0.8 mm or 1.5 mm. "Thin walls will not fill before the melt freezes, and the limit depends on flow length and resin" lets you have the conversation. Every rule in this course comes with its reason so that you can rebuild it.</li>
+      <li><strong>Treat the supplier's numbers as the truth for their process.</strong> Published guides, including the ones this course cites, describe one supplier's equipment and habits. Your moulder, your machine shop, and your board house have their own. Ask early, and design to theirs.</li>
+      <li><strong>Design the test and the assembly, not just the part.</strong> A part that meets every DFM rule and cannot be probed, or cannot be reached with a screwdriver, has failed DFx.</li>
+      <li><strong>Write the finding down and give it an owner.</strong> A DFM review that produces a conversation and no list produces nothing. Module 1 gives a format; Module 16 uses it for a full review.</li>
+    </ol>
+
+    <h2 id="using">How to use this course</h2>
+    <p>Modules 0 to 3 build the shared vocabulary: process, phases, process selection, and tolerancing. Modules 4 to 9 are the process-specific DFM modules and can be read in any order once you have the first four. Modules 10 to 15 cover assembly, test, service, materials, suppliers, and cost. Module 16 is a full DFx review of one product and serves as the exam.</p>
+    <p>Each module has the same structure: objectives, a real example of what goes wrong, the core content, a design rules table with a source on every row, a case study, common mistakes, a worked exercise with a hidden solution, a quiz, takeaways, and references. Numbers are metric. Sources you can read are linked; the few marked "secondary" are credible but were not read in the original by the author, and books appear only as further reading. Where a claim could not be verified, the course tells you so rather than inventing a citation.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <p>This module has no process-specific rules. The table collects the quantitative reference points used in the introduction, so you can see where each one comes from and how much weight it can bear.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Reference points used in this module.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Share of cost set by design</td><td>"70 to 80 percent" (folklore)</td><td>Measured on 18 coffee makers: design range 48 %, manufacturing-system range 31 % of average cost</td><td>Design fixes material, process, part count, tolerances; manufacturing fixes efficiency, yield, overhead</td><td><a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Redesign versus relocation</td><td>Redesign can compete with moving the plant</td><td>$14.54 → $9.72 by redesign in place; $8.06 by relocation; $4.98 by both</td><td>The two levers compound</td><td><a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Purchased content</td><td>A large fraction of cost is bought, not made</td><td>25 to 50 % of coffee-maker cost</td><td>DFx includes supplier parts and their lifecycle</td><td><a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Cost to fix a defect by phase</td><td>"Rule of ten"</td><td>Software: up to 100:1 after delivery vs design; about 5:1 for small non-critical systems</td><td>Later changes touch more artefacts; hardware applies it by analogy</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Part-count reduction from DFA</td><td>Large reductions are common</td><td>Vendor-reported typical range 20 to 50 %; one case 183 → 31 parts, 63 → 0 fasteners</td><td>Every part is a drawing, a supplier, an inspection, and an assembly step</td><td><a href="#ref-1">[1]</a>, <a href="#ref-11">[11]</a></td></tr>
+          <tr><td>Part consolidation by process change</td><td>A new process can remove joints</td><td>Fuel nozzle tip: about 20 pieces → 1; 25 % lighter</td><td>Additive manufacturing removes the joints that welding and brazing required</td><td><a href="#ref-12">[12]</a></td></tr>
+          <tr><td>Validation build sizes</td><td>Tens at EVT, around a hundred at DVT, a production fraction at PVT</td><td>EVT 10 to 40; DVT 50 to 100; PVT 10 to 20 % of first order (one practitioner's figures)</td><td>Each build answers a different question</td><td><a href="#ref-10">[10]</a></td></tr>
+          <tr><td>Scale of a field fix</td><td>The field is the most expensive phase</td><td>One appliance recall: about 2.8 million units, in-home repair offered</td><td>Every unit shipped is a unit to find and fix</td><td><a href="#ref-9">[9]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: the A380 harness rework</h2>
+    <p>The Airbus A380 is a useful DFx case precisely because the parts were not defective. The wiring harnesses, hundreds of kilometres of them per aircraft, were designed against a three-dimensional digital mock-up of the airframe. Airbus's own explanation, reported at the time of the October 2006 announcement, was that this mock-up "was implemented late" for the harness installation work and that its users were still learning it.<sup class="cite"><a href="#ref-7">[7]</a></sup> Trade press attributed the underlying problem to incompatible CAD versions between design sites; that account is widely repeated but is press reporting rather than an Airbus statement, and the course does not rely on it.</p>
+    <p>The consequence was that harnesses arriving at final assembly did not match the structure they were meant to run through, and installed wiring had to be extended or replaced in place. The financial statement is what makes the case measurable: 2.8 billion euros of pre-tax earnings over four years from the October announcement alone, on top of 2 billion euros announced in June, and a delivery plan cut from nine aircraft in 2007 to one.<sup class="cite"><a href="#ref-7">[7]</a>,<a href="#ref-8">[8]</a></sup></p>
+    <p>Three lessons carry down to any program. The design data has to be the same data for everyone who designs against it. A change to the reference geometry has to reach every part that depends on it before those parts are built, which is a change-control problem (Module 14) as much as a CAD problem. And the cost of discovering the mismatch in final assembly, with structure built and harnesses made, is orders of magnitude above the cost of discovering it in a design review, which is the whole argument of this module.</p>
+    <!-- AUTHOR: optional personal note here (a design-data or late-change story from your own experience, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Treating DFM as the supplier's job.</strong> Consequence: findings arrive with the quote, after the architecture is frozen, and the cheap fixes are no longer available. Fix: run your own DFx review before the RFQ, using the rules in this course, and send the supplier a design that already respects their process.</li>
+      <li><strong>Designing for the prototype process.</strong> Consequence: a part that machines beautifully in EVT needs a full redesign for moulding before DVT. Fix: design for the production process from the first model, and treat prototype parts as approximations of it.</li>
+      <li><strong>Quoting the 80 percent slogan as data.</strong> Consequence: you lose credibility with the manufacturing engineer who knows it is folklore. Fix: cite what was measured and say what it means: design sets the floor, manufacturing sets the distance above it.</li>
+      <li><strong>Tight tolerances by habit.</strong> Consequence: cost on every part forever and a capability the supplier cannot hold. Fix: general tolerances everywhere except the dimensions that buy function (Module 3).</li>
+      <li><strong>Ignoring purchased parts.</strong> Consequence: a design that depends on a component with a short lifecycle or a single source. Fix: treat every purchased part as a design decision with lifecycle and second-source status (Modules 9 and 14).</li>
+      <li><strong>Reviews without owners.</strong> Consequence: the same finding reappears at every build. Fix: every finding gets an owner, a due phase, and a closure record (Module 1).</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: is the early hour worth it?</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>A design engineer estimates that reviewing a bracket for DFM before release will take eight hours at a fully loaded rate of 90 euros per hour. Without the review, the bracket is expected to ship with one avoidable feature (a hole too close to a bend) that the sheet-metal supplier will handle with an extra operation costing 0.20 euros per part. Planned volume is 60,000 parts per year for four years.</p>
+    <p><strong>Tasks.</strong> (a) Compute the cost of the early review and the four-year cost of the avoidable feature. (b) The same finding could instead be caught at three later points: at supplier quote (redesign cost 3 times the early review), at first article after the tool is cut (10 times, including tool rework), or after production start (30 times, including scrap and a formal change). Compute each. (c) The per-part penalty is uncertain. Find the per-part penalty below which the early review is not worth doing.</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a)</strong> Early review: 8 h × 90 €/h = 720 €. Avoidable feature: 0.20 € × 60,000 × 4 = 48,000 €. The early review costs 1.5 % of what it avoids.</p>
+      <p><strong>(b)</strong> Fixing at quote: 3 × 720 = 2,160 €. At first article: 10 × 720 = 7,200 €. After production start: 30 × 720 = 21,600 €. Every one of these is still far below the 48,000 € of living with the feature, which is the usual situation: the change is worth making at every phase, but each phase you wait costs more and, in the last two, also delays the schedule. The multipliers here are illustrative; Module 6 shows that for a moulded part the tooling step alone can be the dominant one.</p>
+      <p><strong>(c)</strong> Break-even per-part penalty p satisfies p × 240,000 = 720 €, so p = 0.003 €. Below three tenths of a cent per part, the review does not pay for itself in this bracket alone. Almost any real manufacturing penalty exceeds that, which is why the early review is the default rather than the exception. The realistic risk is not that the review costs too much but that it is skipped for schedule reasons and the finding arrives at first article.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Seven questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="00">
+      <fieldset class="q" data-answer="c">
+        <legend>1. Which statement best describes what Ulrich and Pearson found when they tested the "80 percent" claim on coffee makers?</legend>
+        <label><input type="radio" name="q1" value="a"> Design determined exactly 80 percent of cost.</label>
+        <label><input type="radio" name="q1" value="b"> Manufacturing system differences explained far more cost variation than design.</label>
+        <label><input type="radio" name="q1" value="c"> Design explained somewhat more cost variation than the manufacturing system, and the two were of the same order.</label>
+        <label><input type="radio" name="q1" value="d"> Design had no measurable effect on cost.</label>
+        <p class="explain" hidden>Under their assumptions the design range was about 48 % of average cost and the manufacturing-system range about 31 %.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>2. The "rule of ten" for cost of change originates in</legend>
+        <label><input type="radio" name="q2" value="a"> a NIST study of machined parts</label>
+        <label><input type="radio" name="q2" value="b"> Barry Boehm's software defect cost data</label>
+        <label><input type="radio" name="q2" value="c"> the Boothroyd Dewhurst DFA method</label>
+        <label><input type="radio" name="q2" value="d"> an Airbus internal report</label>
+        <p class="explain" hidden>Boehm's 1976 and 1981 data, summarised by Boehm and Basili in 2001, give up to 100:1 after delivery versus design; hardware borrows the curve by analogy.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>3. DFA, as described by Boothroyd Dewhurst, primarily</legend>
+        <label><input type="radio" name="q3" value="a"> reduces the number of parts and makes the remaining parts easier to assemble</label>
+        <label><input type="radio" name="q3" value="b"> selects the cheapest material for each part</label>
+        <label><input type="radio" name="q3" value="c"> specifies test points for in-circuit test</label>
+        <label><input type="radio" name="q3" value="d"> defines the regulatory approvals a product needs</label>
+        <p class="explain" hidden>Part count and ease of handling and insertion are the two levers of DFA.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>4. Airbus's own stated root cause for the 2006 A380 harness problem was</legend>
+        <label><input type="radio" name="q4" value="a"> defective wire insulation</label>
+        <label><input type="radio" name="q4" value="b"> a supplier that missed delivery dates</label>
+        <label><input type="radio" name="q4" value="c"> a change in aircraft certification rules</label>
+        <label><input type="radio" name="q4" value="d"> the 3D digital mock-up for harness installation was implemented late</label>
+        <p class="explain" hidden>EADS said the digital mock-up was implemented late and its users were on a learning curve; the CAD-version story is press reporting.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="4800" data-tolerance="1">
+        <legend>5. EADS announced 2.8 billion euros of earnings impact in October 2006 on top of 2 billion in June. What is the combined figure, in millions of euros?</legend>
+        <label>Answer (million €): <input type="number" name="q5" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>2,800 + 2,000 = 4,800 million euros.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="24000" data-tolerance="1">
+        <legend>6. A feature adds 0.10 € per part on 80,000 parts per year for three years. What does it cost over the three years, in euros?</legend>
+        <label>Answer (€): <input type="number" name="q6" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>0.10 × 80,000 × 3 = 24,000 €.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>7. Which build is normally the last one made before production-intent tooling is committed, and therefore the last cheap point for a DFM change?</legend>
+        <label><input type="radio" name="q7" value="a"> PVT</label>
+        <label><input type="radio" name="q7" value="b"> EVT</label>
+        <label><input type="radio" name="q7" value="c"> Mass production</label>
+        <label><input type="radio" name="q7" value="d"> Field service</label>
+        <p class="explain" hidden>DVT is normally built from production-intent tooling, so the review before DVT (that is, during and after EVT) is the last cheap point.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>c. Design range 48 %, manufacturing range 31 %, same order of magnitude.</li>
+        <li>b. Boehm's software defect data, applied to hardware by analogy.</li>
+        <li>a. Fewer parts, easier handling and insertion.</li>
+        <li>d. The digital mock-up was implemented late.</li>
+        <li>4,800 million euros.</li>
+        <li>24,000 euros.</li>
+        <li>b. EVT; DVT is built from production-intent tooling.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>DFM, DFA, DFT, and DFS are questions to ask of a concept: can it be made, assembled, tested, and serviced by the people and processes that will actually do it?</li>
+      <li>Design sets the cost floor by fixing material, process, part count, tolerances, and purchased content. Manufacturing sets how far above the floor you run. The one careful study found the two effects of the same order, with design somewhat larger.</li>
+      <li>The rule of ten is a software heuristic borrowed by analogy. Do not quote a multiplier; list what a change would touch at each phase of your own program.</li>
+      <li>The step into production tooling is usually the largest cost jump. The review before DVT is the last cheap one.</li>
+      <li>Purchased parts are a quarter to a half of many BOMs and are design decisions too.</li>
+      <li>Know the reason behind each rule, trust your supplier's numbers for their process, and give every finding an owner.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07. Sources marked "secondary" were not read in the original by the course author; the claim is taken from the source shown.</p>
+    <ol class="references">
+      <li id="ref-1">Boothroyd Dewhurst, Inc. "DFMA Explained: Design for Manufacture and Assembly." n.d. <a href="https://www.dfma.com/resources/what-is-dfma.asp">https://www.dfma.com/resources/what-is-dfma.asp</a> <span class="tag">(vendor description of the method; outcome ranges are vendor claims)</span></li>
+      <li id="ref-2">IPC. <em>IPC-2231 DFX Guidelines</em>, 2019 (current revision IPC-2231A). ANSI Webstore listing. <a href="https://webstore.ansi.org/standards/ipc/ipc22312019">https://webstore.ansi.org/standards/ipc/ipc22312019</a></li>
+      <li id="ref-3">Ulrich, K. T., and Pearson, S. A. "Does Product Design Really Determine 80% of Manufacturing Cost?" Working Paper 3601-93-MSA, MIT Sloan School of Management, August 1993. <a href="https://dspace.mit.edu/handle/1721.1/47202">https://dspace.mit.edu/handle/1721.1/47202</a></li>
+      <li id="ref-4">Wharton Magazine. "The Inside Story of Product Design." Summer 1997. <a href="https://magazine.wharton.upenn.edu/issues/summer-1997/the-inside-story-of-product-design/">https://magazine.wharton.upenn.edu/issues/summer-1997/the-inside-story-of-product-design/</a></li>
+      <li id="ref-5">Boehm, B., and Basili, V. R. "Software Defect Reduction Top 10 List." <em>IEEE Computer</em> 34(1):135 to 137, January 2001. <a href="https://dl.acm.org/doi/10.1109/2.962984">https://dl.acm.org/doi/10.1109/2.962984</a></li>
+      <li id="ref-6">Boehm, B. W. "Software Engineering." <em>IEEE Transactions on Computers</em> C-25(12):1226 to 1241, December 1976. <a href="https://dl.acm.org/doi/10.1109/TC.1976.1674590">https://dl.acm.org/doi/10.1109/TC.1976.1674590</a> <span class="tag">(secondary: origin of the cost-to-fix curve, cited via [5], which was read)</span></li>
+      <li id="ref-7">The Register. "Airbus admits A380 delay." 4 October 2006. <a href="https://www.theregister.com/2006/10/04/another_a380_delay/">https://www.theregister.com/2006/10/04/another_a380_delay/</a></li>
+      <li id="ref-8">FlightGlobal. "Airbus reveals latest A380 delay will cost EADS €2.8 billion in pre-tax earnings 2006-2010." October 2006. <a href="https://www.flightglobal.com/strategy/2006/10/airbus-reveals-latest-a380-delay-will-cost-eads-e2-8-billion-in-pre-tax-earnings-2006-2010/">https://www.flightglobal.com/strategy/2006/10/airbus-reveals-latest-a380-delay-will-cost-eads-e2-8-billion-in-pre-tax-earnings-2006-2010/</a> <span class="tag">(secondary: page blocked automated access; content confirmed against [7])</span></li>
+      <li id="ref-9">U.S. Consumer Product Safety Commission. "Samsung Recalls Top-Load Washing Machines Due to Risk of Impact Injury." Recall 17-028, 4 November 2016. <a href="https://www.cpsc.gov/Recalls/2017/samsung-recalls-top-load-washing-machines">https://www.cpsc.gov/Recalls/2017/samsung-recalls-top-load-washing-machines</a></li>
+      <li id="ref-10">Haw, J. "EVT vs DVT vs PVT: Understanding the Stages of Product Development." OpenBOM blog, 1 September 2023. <a href="https://www.openbom.com/blog/evt-vs-dvt-vs-pvt-understanding-the-stages-of-product-development">https://www.openbom.com/blog/evt-vs-dvt-vs-pvt-understanding-the-stages-of-product-development</a></li>
+      <li id="ref-11">Boothroyd Dewhurst, Inc. "What Is Design for Assembly (DFA)?" n.d. <a href="https://www.dfma.com/design-for-assembly.asp">https://www.dfma.com/design-for-assembly.asp</a> <span class="tag">(vendor-published case results)</span></li>
+      <li id="ref-12">Kellner, T. "Transformation In 3D: How A Walnut-Sized Part Changed The Way GE Aviation Builds Jet Engines." GE Reports, 19 November 2018. <a href="https://www.ge.com/news/reports/transformation-3d-walnut-sized-part-changed-way-ge-aviation-builds-jet-engines">https://www.ge.com/news/reports/transformation-3d-walnut-sized-part-changed-way-ge-aviation-builds-jet-engines</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Ulrich, K. T., Eppinger, S. D., Yang, M. C. <em>Product Design and Development</em>, 7th ed. McGraw-Hill, 2020. The standard textbook treatment of the development process and design for manufacturing.</li>
+      <li>Boothroyd, G., Dewhurst, P., Knight, W. A. <em>Product Design for Manufacture and Assembly</em>, 3rd ed. CRC Press, 2011. The method behind DFA and process cost modelling.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>

@@ -8,12 +8,23 @@ Spec: CLAUDE.md. Source register: SOURCES.md.
 | Phase | Status | Date |
 |-------|--------|------|
 | A – Research and outline | Complete, approved by author | 2026-09-07 |
-| B – Scaffold + reference module (06) | **Built, awaiting author browser review** | 2026-09-07 |
-| C – Remaining modules | Not started | |
+| B – Scaffold + reference module (06) | Complete, approved by author (4,900 words accepted) | 2026-09-07 |
+| C – Remaining modules | **In progress**: 00 done | 2026-09-07 |
 | D – Verification pass | Not started | |
 | E – Ship (README, final summary) | Not started | |
 
 Author decisions (2026-09-07): outlines and examples approved; Module 11 uses the Boeing 787 battery case (Ariane 5 kept as alternative); capstone product is the portable 12 V tyre inflator; books appear only in an unnumbered "Further reading" list, never as numbered references; licence text shown in footers as "proposed" until confirmed.
+
+## Phase C log
+
+Author instruction (2026-09-07): no em or en dashes anywhere in the course, including numeric ranges. `tools/checkdashes.py` enforces this; `tools/checkmodule.py` reports word count, citation cross-check, SVG accessibility, dashes, placeholders, and quiz count.
+
+| Module | Date | Body words | Refs | Diagrams | Quiz Qs | Link check | Notes |
+|---|---|---|---|---|---|---|---|
+| 00 Introduction | 2026-09-07 | 3,623 | 12 | 1 | 7 | 7 OK; 5 return 403 to automated requests (ACM ×2, ANSI webstore, CPSC, FlightGlobal) but were opened successfully during research | Boehm & Basili 2001 upgraded to verified after reading the UMD-hosted PDF. |
+| 06 Injection molding | 2026-09-07 | 4,904 | 14 | 3 | 8 | 14 OK | Length accepted by author. |
+
+Links that return 403 to scripts are recorded here rather than as dead; they will be re-checked by hand in Phase D.
 
 ## Phase B record (2026-09-07)
 
