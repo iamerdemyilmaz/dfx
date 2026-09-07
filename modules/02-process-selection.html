@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 2: Process selection and cost drivers · DFx Course</title>
+<meta name="description" content="Matching annual volume to manufacturing process: tooling cost versus piece price, break-even analysis, cycle time, material utilisation, secondary operations, and a process selection map.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="02">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 2</p>
+    <h1>Process selection and cost drivers</h1>
+    <p class="lead">The most expensive DFM mistake is not a thin wall or a missing radius. It is a part designed for the wrong process. This module gives you the cost structure that every process shares, the break-even arithmetic that decides between them, and a map that narrows the candidates before you draw anything.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Decompose</strong> a part's unit cost into fixed and variable components and write the unit cost as a function of volume.</li>
+      <li><strong>Calculate</strong> the break-even volume between two processes and interpret the result with tool life in mind.</li>
+      <li><strong>Identify</strong> the four variable-cost drivers (material, cycle time, secondary operations, yield) in any process.</li>
+      <li><strong>Match</strong> a part to candidate processes using volume, size, tolerance, and geometry, and know which candidates to quote.</li>
+      <li><strong>Explain</strong> why material and process must be selected together, with a documented example.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>In January 2014 Ford introduced a redesigned F-150 pickup with a body made from aluminium alloys instead of steel. The company said the new truck would weigh 500 to more than 700 pounds (roughly 230 to 320 kg) less than its predecessor, depending on model, and that the aluminium alloys used were "more ding and dent-resistant than conventional steel".<sup class="cite"><a href="#ref-6">[6]</a>,<a href="#ref-7">[7]</a></sup> The truck was, and is, one of the highest-volume vehicles sold in North America, so this was a material and process decision made at a scale where every design choice is multiplied by hundreds of thousands of units a year.</p>
+    <p>What makes it a process-selection case rather than a materials case is that you cannot change the body material of a mass-produced vehicle without changing how the body is made and joined. Aluminium sheet forms differently from steel, is joined differently, and is repaired differently. A decision that appears on the drawing as a material callout is in reality a decision about stamping dies, joining equipment, and the training of every body shop that will ever touch the vehicle. That is what "select the material and the process together" means in practice, and it is the theme of this module.</p>
+    <p>You will make the same decision at smaller scale every time you open a new part in CAD. A bracket drawn with a 0.5 mm wall is a sheet-metal bracket. Drawn with a 3 mm wall and fillets, it is a casting. Drawn with a 2 mm wall and draft, it is a moulding. The geometry follows the process, so the process has to be chosen first.</p>
+
+    <h2 id="structure">The cost structure every process shares</h2>
+    <p>Every manufacturing process produces a part at a cost with the same two components. Fixed costs are paid once regardless of how many parts follow: tooling (a mould, a die, a pattern), fixtures, programming, and first-article qualification. Variable costs are paid per part: material, machine time, labour, secondary operations, and the parts you scrap. If F is the total fixed cost, V the variable cost per part, and N the number of parts made over the life of the tool, the unit cost is</p>
+    <p><strong>C = V + F / N</strong></p>
+    <p>Everything in process selection follows from this expression. Processes with expensive tooling and cheap parts (injection moulding, die casting, stamping) have a large F and a small V, so their unit cost falls steeply with volume. Processes with no tooling (CNC machining, most additive manufacturing) have a small F and a large V, so their unit cost is nearly flat. Somewhere in between, the curves cross.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 320" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Unit cost versus lifetime volume for three processes</title>
+        <desc id="fig1-desc">A chart with lifetime volume on a logarithmic horizontal axis from 10 to 1,000,000 parts and unit cost on the vertical axis. A nearly flat line labelled CNC machining sits high. A curve labelled aluminium mould starts very high at low volume, falls steeply, and flattens at a medium level. A curve labelled steel mould starts higher still, falls more steeply, and flattens lowest. The crossing points are labelled break-even volumes.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M60 270 L600 270 M60 270 L60 30"/>
+          <path d="M60 90 L600 84" class="diagram-accent" stroke-dasharray="6 4"/>
+          <path d="M120 40 C 170 230, 260 250, 600 152" />
+          <path d="M220 40 C 260 240, 350 262, 600 258" stroke-width="3"/>
+          <!-- tick marks -->
+          <path d="M60 270 v8 M168 270 v8 M276 270 v8 M384 270 v8 M492 270 v8 M600 270 v8"/>
+        </g>
+        <g fill="currentColor" stroke="none">
+          <circle cx="182" cy="130" r="4" class="diagram-accent-fill"/>
+          <circle cx="330" cy="89" r="4" class="diagram-accent-fill"/>
+        </g>
+        <g class="diagram-text">
+          <text x="50" y="290">10</text>
+          <text x="156" y="290">100</text>
+          <text x="262" y="290">1,000</text>
+          <text x="366" y="290">10,000</text>
+          <text x="470" y="290">100,000</text>
+          <text x="570" y="290">1,000,000</text>
+          <text x="250" y="312">Lifetime volume N (log scale)</text>
+          <text x="20" y="150" transform="rotate(-90 20 150)">Unit cost C</text>
+          <text x="470" y="78">CNC machining: small F, large V</text>
+          <text x="440" y="140">Aluminium mould: medium F and V</text>
+          <text x="440" y="250">Steel mould: large F, small V</text>
+          <text x="190" y="125" class="diagram-text-muted">Break-even 1</text>
+          <text x="338" y="84" class="diagram-text-muted">Break-even 2</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. Unit cost C = V + F/N for three ways of making the same part. The break-even points move with every input, which is why they are computed for each part rather than remembered.</figcaption>
+    </figure>
+
+    <h2 id="breakeven">Break-even analysis</h2>
+    <p>Two processes with fixed costs F<sub>1</sub>, F<sub>2</sub> and variable costs V<sub>1</sub>, V<sub>2</sub> have the same unit cost at the volume where</p>
+    <p><strong>N* = (F<sub>2</sub> − F<sub>1</sub>) / (V<sub>1</sub> − V<sub>2</sub>)</strong></p>
+    <p>Above N*, the process with the higher fixed cost wins. The arithmetic is trivial; the judgement is in the inputs.</p>
+    <ul>
+      <li><strong>F must include everything paid once.</strong> Tooling, but also fixtures, test equipment, programming, first-article inspection, and any qualification testing that must be repeated if the process changes. Suppliers quote tooling; they rarely quote your own engineering time.</li>
+      <li><strong>V must include everything paid per part.</strong> The quoted piece price, plus secondary operations, plus inbound freight and inspection, plus the cost of scrap at the expected yield.</li>
+      <li><strong>N is lifetime volume, not annual volume,</strong> and it is bounded by tool life. One supplier's published guide gives aluminium moulds a life of roughly 5,000 to 10,000 cycles and tool-steel moulds 100,000 cycles or more.<sup class="cite"><a href="#ref-1">[1]</a></sup> If your lifetime volume exceeds the tool life, F includes a second tool.</li>
+      <li><strong>N is uncertain.</strong> Compute break-even for the pessimistic, expected, and optimistic volume and see whether the decision changes. If it does not, decide. If it does, that is the number to go and firm up.</li>
+    </ul>
+    <p>For orientation only, the same guide gives these bands for small injection-moulded parts: pilot-run aluminium moulds at about US$3,000 to 5,000 with parts at roughly US$1 to 5 each for runs of 500 to 10,000; and full production in steel moulds at 100,000 parts and above with parts at a few cents to about US$1.<sup class="cite"><a href="#ref-1">[1]</a></sup> These are one vendor's figures for one size class and should be replaced by your own quotes; the shape of the trade-off is what to keep.</p>
+
+    <h2 id="drivers">The variable-cost drivers</h2>
+    <p>Whatever the process, the per-part cost is driven by four things. Learning to see them in a design is the core skill of this module.</p>
+    <h3>Cycle time and machine rate</h3>
+    <p>Machine time is bought by the hour, so the per-part cost is cycle time multiplied by the hourly rate of the machine and its operator. In machining, one supplier states plainly that "machining time is often the primary cost driver", ahead of setup, material, and special features,<sup class="cite"><a href="#ref-2">[2]</a></sup> and another groups the cost of a machined part into raw material, manufacturing time (machining, fixtures, and setups), and fixed costs such as inspection, packaging, and quoting.<sup class="cite"><a href="#ref-4">[4]</a></sup> In injection moulding, cooling time dominates the cycle and scales with wall thickness squared (Module 6). In die casting, the alloy and the wall thickness set the cycle. Every design decision that removes material to be cut, thickness to be cooled, or a face to be re-fixtured shortens the cycle.</p>
+    <h3>Material and material utilisation</h3>
+    <p>You pay for the material you buy, not the material in the finished part. In machining, parts are cut from standard stock: one guide lists common metric plate thicknesses of 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, and 30 mm, then 10 mm steps, and notes that 0.3 to 1.5 mm is removed from each face of the blank during machining.<sup class="cite"><a href="#ref-3">[3]</a></sup> A part 26 mm thick is cut from 30 mm plate; a part 24.5 mm thick fits 25 mm plate with room to clean up. The ratio of bought to finished mass is sometimes called buy-to-fly, and for a pocketed machined housing it can be several to one. In sheet metal the equivalent is nesting efficiency on the sheet. In casting and moulding, material utilisation is high but runners, sprues, and flash are scrap unless regrind is allowed. In additive manufacturing, powder that is not fused is largely recovered but the supports are not.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 220" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Buy-to-fly: a machined part inside its stock blank</title>
+        <desc id="fig2-desc">A rectangular stock blank drawn 30 mm thick with a smaller pocketed part inside it, 26 mm thick with a deep pocket. Hatching indicates the material removed. Labels give blank thickness 30 mm, part thickness 26 mm, and clean-up allowance of 0.3 to 1.5 mm per face.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="80" y="40" width="420" height="120" class="diagram-soft"/>
+          <path d="M100 56 L480 56 L480 144 L100 144 Z" class="diagram-accent" stroke-width="3"/>
+          <path d="M150 56 L150 120 L430 120 L430 56" class="diagram-accent" stroke-width="3"/>
+          <!-- dimensions -->
+          <path d="M530 40 L530 160 M526 40 L534 40 M526 160 L534 160"/>
+          <path d="M40 56 L40 144 M36 56 L44 56 M36 144 L44 144"/>
+        </g>
+        <g class="diagram-text">
+          <text x="540" y="104">Blank 30</text>
+          <text x="5" y="104">Part 26</text>
+          <text x="200" y="95">Pocket: material bought, then cut away</text>
+          <text x="100" y="185">Removed per face: 0.3 to 1.5 mm clean-up plus everything in the pocket</text>
+          <text x="100" y="205" class="diagram-text-muted">Choose part thickness to leave clean-up inside a standard plate size. Dimensions in mm.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. The blank is what you pay for. Designing the finished thickness to sit just inside a standard stock size, with clean-up allowance, cuts both material cost and machining time.<sup class="cite"><a href="#ref-3">[3]</a></sup></figcaption>
+    </figure>
+
+    <h3>Secondary operations</h3>
+    <p>A process rarely delivers a finished part. Castings need machining on functional faces; one guide describes the machining allowance for investment castings as an additional dimension to be designed in, and sand-cast surfaces as typically 200 to 500 RMS as cast, so any sealing or locating face is machined afterwards.<sup class="cite"><a href="#ref-13">[13]</a>,<a href="#ref-16">[16]</a></sup> Sheet metal needs deburring, hardware insertion, and finishing. Machined parts need deburring, anodising or plating, and sometimes heat treatment between roughing and finishing. Each of these is a separate setup, a separate supplier or department, and a separate handling step. When comparing two processes, list the secondary operations each one needs to reach the finished drawing, not just the primary quote.</p>
+    <h3>Yield</h3>
+    <p>If a process yields 95 percent good parts, every good part carries the cost of 1/0.95 parts, plus the cost of finding the bad ones. Yield is where tolerance and process capability enter the cost model (Module 3): a tolerance the process holds at a capability index of 1.0 produces about 0.27 percent rejects; one it holds at 1.33 produces about 64 parts per million.<sup class="cite"><a href="#ref-15">[15]</a></sup> The difference is invisible in the quote and visible in the yield.</p>
+
+    <h2 id="capability">What each process can do</h2>
+    <p>Before volume, a process must be able to make the geometry at all. The table collects the headline capability numbers from the supplier guides used in the process modules. Each is one supplier's standard offering and will differ at yours.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Headline capability by process, from published supplier guides. Standard tolerances are the default without extra cost; tighter is usually possible at a price.</caption>
+        <thead><tr><th>Process</th><th>Standard tolerance</th><th>Typical minimum wall or feature</th><th>Tooling</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>CNC machining</td><td>±0.125 mm standard; ±0.025 mm feasible</td><td>Wall 0.8 mm metal, 1.5 mm plastic</td><td>None; fixtures and programming per part</td><td><a href="#ref-8">[8]</a></td></tr>
+          <tr><td>Sheet metal (laser cut and brake formed)</td><td>±0.13 mm single surface; ±0.76 to 1.0 mm across three or more bends</td><td>Thickness 0.61 to 6.35 mm; flange ≥ 4 × thickness</td><td>Little or none for prototype quantities; press tools for volume</td><td><a href="#ref-9">[9]</a></td></tr>
+          <tr><td>Injection moulding</td><td>±0.25 mm standard; ±0.125 mm at cost</td><td>Wall about 0.6 to 4 mm depending on resin</td><td>Aluminium 5,000 to 10,000 cycles; steel 100,000+</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>High-pressure die casting</td><td>±0.25 mm on first 25 mm plus ±0.025 mm per additional 25 mm (standard); ±0.05 mm first 25 mm (precision)</td><td>Wall 1.0 to 5.1 mm typical; 0.5 mm possible</td><td>Hardened steel dies; high volume</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Investment casting</td><td>±0.25 mm on first 25 mm plus ±0.08 to 0.13 mm per additional 25 mm</td><td>Wall tolerance ±0.51 mm; surface Ra about 1.6 to 3.2 µm</td><td>Wax pattern tooling; low to medium volume</td><td><a href="#ref-13">[13]</a></td></tr>
+          <tr><td>Sand casting</td><td>Generous; parting-line mismatch up to about 0.5 mm</td><td>Wall about 2.5 mm aluminium, 3.3 mm steel; finish 200 to 500 RMS</td><td>Patterns; low tooling cost</td><td><a href="#ref-16">[16]</a></td></tr>
+          <tr><td>Forging</td><td>Generous unless net-shape; net gear teeth to ±0.10 mm in special cases</td><td>Draft 5° or more for hammer work on steel</td><td>Impression dies; medium to high volume</td><td><a href="#ref-14">[14]</a></td></tr>
+          <tr><td>Selective laser sintering (polymer)</td><td>±0.3 % with ±0.3 mm floor</td><td>Wall 0.8 mm (PA12)</td><td>None</td><td><a href="#ref-10">[10]</a></td></tr>
+          <tr><td>Metal powder bed fusion (DMLS)</td><td>±0.1 mm</td><td>Wall 0.4 mm; feature 0.6 mm</td><td>None; supports and stress relief per build</td><td><a href="#ref-11">[11]</a></td></tr>
+          <tr><td>Multi Jet Fusion</td><td>±0.30 mm</td><td>Feature 0.51 mm</td><td>None</td><td><a href="#ref-12">[12]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="map">A process selection map</h2>
+    <p>With capability established, volume does most of the remaining work. The map below is a starting point for a metal or plastic part of hand-held to shoebox size. It is deliberately coarse. Its job is to tell you which two or three processes to quote, not which one to choose.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Process selection map by lifetime volume. Bands are approximate and overlap; quote across the boundary.</caption>
+        <thead><tr><th>Lifetime volume</th><th>Plastic part</th><th>Metal part</th><th>What decides between them</th></tr></thead>
+        <tbody>
+          <tr><td>1 to about 100</td><td>Additive (FDM, SLA, SLS, MJF); CNC from plastic stock</td><td>CNC machining; metal additive for complex internal geometry; laser-cut and formed sheet</td><td>Geometry complexity, material requirement, surface finish</td></tr>
+          <tr><td>About 100 to 10,000</td><td>Aluminium (soft) mould, life 5,000 to 10,000 cycles<sup class="cite"><a href="#ref-1">[1]</a></sup>; SLS or MJF for complex shapes</td><td>CNC with fixtures; investment casting for complex shapes at low volume<sup class="cite"><a href="#ref-5">[5]</a></sup>; sheet metal with soft tools</td><td>Break-even between machining and soft tooling; whether cast surfaces are acceptable</td></tr>
+          <tr><td>About 10,000 to 100,000</td><td>Steel mould, single or few cavities<sup class="cite"><a href="#ref-1">[1]</a></sup></td><td>Die casting (high volume) or investment casting (lower volume) depending on alloy and tolerance<sup class="cite"><a href="#ref-5">[5]</a></sup>; forging for loaded parts; progressive stamping for sheet</td><td>Tooling amortisation; secondary machining content; alloy</td></tr>
+          <tr><td>Above 100,000</td><td>Multi-cavity hardened steel mould; parts at cents to about US$1<sup class="cite"><a href="#ref-1">[1]</a></sup></td><td>Die casting at high cycle speed<sup class="cite"><a href="#ref-5">[5]</a></sup>; progressive stamping; forging; powder metal for small precise shapes</td><td>Cycle time and material utilisation dominate; tooling is small per part</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The die casting industry's own design standard makes the volume logic explicit for one comparison: at low volumes investment casting can reach precision tolerances economically, while "at higher volumes die casting would be the clear choice"; powder metal offers accuracy but not the thin walls or complex features of die casting; and injection-moulded plastics can match the geometry but may not meet rigidity, creep, or elevated-temperature requirements.<sup class="cite"><a href="#ref-5">[5]</a></sup> Every process has a competitor on each side of it, and each competitor wins in a band.</p>
+
+    <h2 id="material">Material and process together</h2>
+    <p>Materials and processes are not chosen in sequence; they are chosen as a pair, because most materials are only available through some processes and most processes only work with some materials. A thermoplastic housing is moulded. A stainless bracket is machined, cast, or formed from sheet, but not moulded. An aluminium housing can be machined, die cast, sand cast, extruded, or printed, and each pairing gives a different wall thickness, a different tolerance, a different finish, and a different cost curve.</p>
+    <p>Two documented cases show the pairing from opposite ends. In the coffee-maker study described in Module 0, the dominant material was polypropylene, and polycarbonate parts on some models cost two to three times as much; the recommendation was to use the inexpensive material and design around its weaknesses.<sup class="cite"><a href="#ref-17">[17]</a></sup> In the F-150, the material changed to aluminium alloys for weight, and the body-making and joining processes had to change with it.<sup class="cite"><a href="#ref-6">[6]</a></sup> In both cases the material decision was a process decision, made at the volume where the consequences were largest.</p>
+    <p>The formal method for making the pair is the one Ashby describes: screen materials and processes against the hard constraints (size, shape class, minimum section, tolerance, temperature), rank the survivors against an objective (usually cost or mass), then check the shortlist against supporting information such as availability and supplier experience. The book is in the further reading; the discipline it teaches is to write the constraints down before looking at candidates, so that the familiar process does not win by default.</p>
+
+    <h2 id="procedure">A decision procedure</h2>
+    <ol>
+      <li><strong>Write down volume as a range</strong> (pessimistic, expected, optimistic) for the life of the product, and the launch volume separately.</li>
+      <li><strong>Write down the hard constraints:</strong> envelope, minimum wall, critical tolerances and how many there are, material class, temperature, surface finish on visible faces, regulatory or food-contact requirements.</li>
+      <li><strong>Screen with Table 1 and Table 2</strong> to a shortlist of two or three processes. If only one survives, check the constraints again; one candidate usually means an over-constrained drawing.</li>
+      <li><strong>Quote all of them</strong> with the same drawing, including tooling, piece price at three volumes, tool life, lead time, and secondary operations.</li>
+      <li><strong>Build the C = V + F/N curves</strong> and find the break-even volumes. Include your own engineering and qualification effort in F.</li>
+      <li><strong>Decide, and record why.</strong> The record is what lets the next program reuse the decision instead of repeating the analysis.</li>
+    </ol>
+    <p>One more point from experience shared across the industry: the process chosen for the first prototype has a way of becoming the production process by inertia. Choose the production process at step 6 and treat the prototype process as a stand-in for it, never the other way round.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 3. Quantitative rules for process selection and cost.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Unit cost</td><td>Variable plus fixed over volume</td><td>C = V + F/N</td><td>Tooling is paid once; material and time are paid per part</td><td>Arithmetic</td></tr>
+          <tr><td>Break-even</td><td>Where two cost lines cross</td><td>N* = (F₂ − F₁) / (V₁ − V₂)</td><td>Above N*, the higher-tooling process wins</td><td>Arithmetic</td></tr>
+          <tr><td>Aluminium mould life</td><td>Suits pilot runs</td><td>5,000 to 10,000 cycles; about US$3,000 to 5,000</td><td>Soft steel wears; second tool needed beyond life</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Steel mould life</td><td>Suits production</td><td>100,000+ cycles; parts a few cents to about US$1 above 100,000 units</td><td>Hardened steel holds dimensions over the run</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Pilot-run moulding volume and price</td><td>Bridge between prototype and production</td><td>500 to 10,000 parts at about US$1 to 5 each</td><td>Tooling amortised over a short run</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Machining cost driver</td><td>Cycle time first</td><td>Machining time is often the primary driver, then setup, material, special features</td><td>Machine hours are the scarce resource</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Stock plate sizes</td><td>Design to standard thickness minus clean-up</td><td>3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30 mm, then 10 mm steps; 0.3 to 1.5 mm removed per face</td><td>Non-standard stock costs more and wastes material</td><td><a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Die casting versus investment casting</td><td>Investment at low volume, die at high</td><td>Qualitative in the NADCA standard</td><td>Die tooling cost versus per-part precision</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Die casting wall</td><td>Thin, uniform</td><td>1.0 to 5.1 mm typical; 0.5 mm possible with consultation</td><td>Fill and cycle speed</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Investment casting linear tolerance</td><td>Tight for a casting</td><td>±0.25 mm first 25 mm, ±0.08 to 0.13 mm each further 25 mm</td><td>Ceramic shell reproduces the wax closely</td><td><a href="#ref-13">[13]</a></td></tr>
+          <tr><td>Sand casting finish</td><td>Machine every functional face</td><td>200 to 500 RMS as cast; standard draft 2°</td><td>Sand surface texture</td><td><a href="#ref-16">[16]</a></td></tr>
+          <tr><td>Yield and capability</td><td>Tolerance is a yield decision</td><td>Cp 1.00 gives about 0.27 % rejects; 1.33 gives 64 ppm</td><td>Rejects are paid for by good parts</td><td><a href="#ref-15">[15]</a></td></tr>
+          <tr><td>Material price ratio</td><td>Cheap material plus clever design</td><td>Polycarbonate about 2 to 3 × polypropylene (1993 estimate)</td><td>Material is a large share of a moulded part's cost</td><td><a href="#ref-17">[17]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: the aluminium F-150</h2>
+    <p>The 2015 F-150 was introduced at the Detroit auto show on 13 January 2014 with an "aluminum-intensive design" that Ford said would cut 500 to more than 700 pounds (about 230 to 320 kg) depending on the model, using alloys described as more resistant to dings and dents than conventional steel.<sup class="cite"><a href="#ref-6">[6]</a></sup> Ford's stated motivation was capability and fuel economy: less mass to tow, haul, accelerate, and stop.<sup class="cite"><a href="#ref-7">[7]</a></sup></p>
+    <p>For a DFx student the interesting part is what the decision committed. A body material is not a line on a BOM; it is a manufacturing system. The stamping dies, the joining methods, the paint process, the repair procedures, and the supply of sheet all follow from it, and all of them had to be in place before the first truck could be built at rate. That is a process-selection decision of the kind described in this module, made with a very large N, where the fixed cost of changing the system could be amortised over hundreds of thousands of vehicles a year and the per-unit benefit (mass) was realised on every one.</p>
+    <p>The public record does not give the tooling or per-vehicle cost figures, and the course does not estimate them. What the case does show is the logic: at high enough volume, a large fixed investment in a new process is justified by a per-unit gain, and the material and the process cannot be chosen separately.</p>
+    <!-- AUTHOR: optional personal note here (a process-selection decision you have seen made well or badly, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Letting the prototype process become the production process.</strong> Consequence: a machined housing at 20,000 units a year, with a piece price several times what a moulding would cost. Fix: choose the production process before detail design and treat prototypes as stand-ins.</li>
+      <li><strong>Comparing quoted piece prices without tooling and secondary operations.</strong> Consequence: the cheaper-looking process is the more expensive one over the product life. Fix: build the full C = V + F/N for each candidate.</li>
+      <li><strong>Using annual volume as N.</strong> Consequence: break-even computed against one year's volume when the tool will run for five. Fix: use lifetime volume, bounded by tool life.</li>
+      <li><strong>Ignoring tool life.</strong> Consequence: an aluminium mould chosen for 30,000 parts needs replacing three to six times. Fix: check the supplier's tool-life figure against lifetime volume and add replacement tools to F.</li>
+      <li><strong>Designing thickness to the drawing instead of to stock.</strong> Consequence: a 26 mm part cut from 30 mm plate, paying for 4 mm of chips on every part. Fix: design finished dimensions to sit just inside standard stock with clean-up allowance.</li>
+      <li><strong>Specifying a tolerance the process cannot hold.</strong> Consequence: the quote assumes inspection and sorting, or the yield collapses in production. Fix: check the capability table before drawing the tolerance, and put general tolerances everywhere else.</li>
+      <li><strong>Choosing material before process, or process before material.</strong> Consequence: a material that is only available through a process the volume cannot justify. Fix: shortlist pairs, not materials.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: three ways to make a housing</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>A 90 × 60 × 30 mm ABS housing can be made three ways. Quotes:</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Quotes for the exercise. Currency is euros.</caption>
+        <thead><tr><th>Process</th><th>Fixed cost F</th><th>Variable cost V per part</th><th>Tool life</th></tr></thead>
+        <tbody>
+          <tr><td>A. CNC machined from ABS plate</td><td>350 (fixture and programme)</td><td>38.00</td><td>Not applicable</td></tr>
+          <tr><td>B. Aluminium mould</td><td>4,500</td><td>4.20</td><td>8,000 cycles</td></tr>
+          <tr><td>C. Hardened steel mould</td><td>38,000</td><td>1.10</td><td>Over 500,000 cycles</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Tasks.</strong> (a) Find the break-even volume between A and B, and between B and C, ignoring tool life. (b) Compute the total and unit cost of each option at lifetime volumes of 200, 2,000, 20,000, and 100,000 parts, accounting for aluminium tool replacement. (c) Recommend a process for each volume and state what would change your mind.</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a) Break-even volumes.</strong></p>
+      <p>A versus B: N* = (4,500 − 350) / (38.00 − 4.20) = 4,150 / 33.80 ≈ 123 parts. Above about 123 parts the aluminium mould is cheaper than machining.</p>
+      <p>B versus C: N* = (38,000 − 4,500) / (4.20 − 1.10) = 33,500 / 3.10 ≈ 10,806 parts. Above about 10,800 parts the steel mould is cheaper than the aluminium mould, before tool life is considered.</p>
+      <p><strong>(b) Totals with tool life.</strong> The aluminium mould lasts 8,000 cycles, so at 20,000 parts it needs 3 tools (ceil(20,000 / 8,000) = 3) and at 100,000 parts it needs 13 tools.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Lifetime N</th><th>A: total (unit)</th><th>B: tools, total (unit)</th><th>C: total (unit)</th></tr></thead>
+          <tbody>
+            <tr><td>200</td><td>350 + 200 × 38 = 7,950 (39.75)</td><td>1 tool: 4,500 + 200 × 4.20 = 5,340 (26.70)</td><td>38,000 + 220 = 38,220 (191.10)</td></tr>
+            <tr><td>2,000</td><td>350 + 76,000 = 76,350 (38.18)</td><td>1 tool: 4,500 + 8,400 = 12,900 (6.45)</td><td>38,000 + 2,200 = 40,200 (20.10)</td></tr>
+            <tr><td>20,000</td><td>350 + 760,000 = 760,350 (38.02)</td><td>3 tools: 13,500 + 84,000 = 97,500 (4.88)</td><td>38,000 + 22,000 = 60,000 (3.00)</td></tr>
+            <tr><td>100,000</td><td>350 + 3,800,000 = 3,800,350 (38.00)</td><td>13 tools: 58,500 + 420,000 = 478,500 (4.79)</td><td>38,000 + 110,000 = 148,000 (1.48)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>(c) Recommendations.</strong> At 200 parts, the aluminium mould already beats machining (break-even was 123), but only by about 2,600 euros; if the design is still changing, machining is worth the premium because a mould change costs more than a program change. At 2,000, the aluminium mould is clearly right. At 20,000, the steel mould wins (60,000 versus 97,500), and tool replacement has made the aluminium option worse than the simple break-even suggested; the real B-versus-C crossover with tool life falls below 10,800. At 100,000, steel is the only sensible choice.</p>
+      <p>What would change the answer: a resin that is abrasive (glass-filled), which shortens aluminium tool life further and pushes toward steel earlier; a design still in flux, which pushes toward machining or aluminium for longer; a lifetime volume that might reach 20,000 but might stall at 3,000, in which case the aluminium tool is the hedge and the steel tool is a bet. Compute with the pessimistic N before committing to C.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="02">
+      <fieldset class="q" data-type="numeric" data-answer="2500" data-tolerance="1">
+        <legend>1. Process X has fixed cost 500 € and variable cost 12 € per part. Process Y has fixed cost 8,000 € and variable cost 9 € per part. At what volume do their total costs cross?</legend>
+        <label>Answer (parts): <input type="number" name="q1" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>N* = (8,000 − 500) / (12 − 9) = 7,500 / 3 = 2,500 parts.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>2. In the unit cost expression C = V + F/N, which term does injection mould tooling belong to?</legend>
+        <label><input type="radio" name="q2" value="a"> V, because it is paid per part</label>
+        <label><input type="radio" name="q2" value="b"> F, because it is paid once regardless of volume</label>
+        <label><input type="radio" name="q2" value="c"> N, because it limits the number of parts</label>
+        <label><input type="radio" name="q2" value="d"> None; tooling is not a manufacturing cost</label>
+        <p class="explain" hidden>Tooling is a fixed cost, amortised over lifetime volume N. Tool life limits N but is not N.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>3. According to the Hubs guide, the approximate life of an aluminium injection mould is</legend>
+        <label><input type="radio" name="q3" value="a"> 100 to 500 cycles</label>
+        <label><input type="radio" name="q3" value="b"> 100,000 cycles or more</label>
+        <label><input type="radio" name="q3" value="c"> 5,000 to 10,000 cycles</label>
+        <label><input type="radio" name="q3" value="d"> Unlimited</label>
+        <p class="explain" hidden>Aluminium moulds are quoted at roughly 5,000 to 10,000 cycles; tool steel at 100,000 or more.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>4. Which of these is stated by a machining supplier to be "often the primary cost driver" in CNC machining?</legend>
+        <label><input type="radio" name="q4" value="a"> Machining (cycle) time</label>
+        <label><input type="radio" name="q4" value="b"> Packaging</label>
+        <label><input type="radio" name="q4" value="c"> Anodising</label>
+        <label><input type="radio" name="q4" value="d"> Shipping</label>
+        <p class="explain" hidden>Machine time, then setup, material, and special features such as tight tolerances.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="25" data-tolerance="0.1">
+        <legend>5. A machined plate part must finish at 23.8 mm thick with at least 0.5 mm clean-up per face. Using the standard metric plate list (3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30 mm), what plate thickness in mm should be specified?</legend>
+        <label>Answer (mm): <input type="number" name="q5" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>23.8 + 2 × 0.5 = 24.8 mm minimum, so 25 mm plate is the smallest standard size that works.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>6. The NADCA die casting standard says that, compared with die casting, investment casting is attractive</legend>
+        <label><input type="radio" name="q6" value="a"> at any volume because it is always cheaper</label>
+        <label><input type="radio" name="q6" value="b"> only for plastics</label>
+        <label><input type="radio" name="q6" value="c"> at very high volumes</label>
+        <label><input type="radio" name="q6" value="d"> at low volumes where precision tolerances are needed</label>
+        <p class="explain" hidden>At low volumes investment casting can achieve precision tolerances; at higher volumes die casting is the clear choice.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>7. Ford's stated weight saving for the 2015 aluminium-bodied F-150 was</legend>
+        <label><input type="radio" name="q7" value="a"> about 50 kg</label>
+        <label><input type="radio" name="q7" value="b"> 500 to more than 700 pounds (about 230 to 320 kg) depending on model</label>
+        <label><input type="radio" name="q7" value="c"> over 1,000 kg</label>
+        <label><input type="radio" name="q7" value="d"> no weight change; the goal was cost</label>
+        <p class="explain" hidden>Ford stated 500 to more than 700 pounds depending on the model.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>8. A break-even calculation gives 10,800 parts between an aluminium and a steel mould, ignoring tool life. Accounting for an aluminium tool life of 8,000 cycles will</legend>
+        <label><input type="radio" name="q8" value="a"> raise the break-even, favouring aluminium for longer</label>
+        <label><input type="radio" name="q8" value="b"> have no effect</label>
+        <label><input type="radio" name="q8" value="c"> lower the break-even, favouring steel earlier</label>
+        <label><input type="radio" name="q8" value="d"> make machining the best option</label>
+        <p class="explain" hidden>Above 8,000 parts the aluminium option needs a second tool, raising its fixed cost, so steel wins at a lower volume.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>2,500 parts.</li>
+        <li>b. Fixed cost F.</li>
+        <li>c. 5,000 to 10,000 cycles.</li>
+        <li>a. Machining time.</li>
+        <li>25 mm plate.</li>
+        <li>d. Low volumes needing precision.</li>
+        <li>b. 500 to more than 700 pounds.</li>
+        <li>c. Lowers the break-even toward steel.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>Every process has the same cost structure: C = V + F/N. Tooling-heavy processes win at high volume; toolless processes win at low volume; the crossing point is computed, not remembered.</li>
+      <li>Break-even uses lifetime volume bounded by tool life, and F must include your own engineering, fixtures, and qualification, not just the supplier's tooling line.</li>
+      <li>Per-part cost is driven by cycle time, material bought (not material kept), secondary operations, and yield. Learn to see all four in a drawing.</li>
+      <li>Check capability before volume: tolerance, minimum wall, and finish rule processes out before cost rules them in.</li>
+      <li>Material and process are chosen as a pair. A material callout is a process decision.</li>
+      <li>Quote two or three candidates with the same drawing and let the curves decide. Do not let the prototype process become the production process by inertia.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07.</p>
+    <ol class="references">
+      <li id="ref-1">Protolabs Network (formerly Hubs). "Injection molding design guide." n.d. <a href="https://www.hubs.com/guides/injection-molding/">https://www.hubs.com/guides/injection-molding/</a> <span class="tag">(tooling cost, tool life, and price bands are one supplier's published figures)</span></li>
+      <li id="ref-2">Protolabs Network (formerly Hubs). "14 proven design tips to reduce the cost of CNC machining." n.d. <a href="https://www.hubs.com/knowledge-base/reducing-cnc-machining-costs-design-tips/">https://www.hubs.com/knowledge-base/reducing-cnc-machining-costs-design-tips/</a></li>
+      <li id="ref-3">Protolabs Network (formerly Hubs). "Standard blank sizes for CNC machining (sheets &amp; rods)." n.d. <a href="https://www.hubs.com/knowledge-base/standard-blank-sizes-cnc-machining-sheets-rods/">https://www.hubs.com/knowledge-base/standard-blank-sizes-cnc-machining-sheets-rods/</a></li>
+      <li id="ref-4">Protolabs. "Understanding CNC manufacturing costs." n.d. <a href="https://www.protolabs.com/en-gb/resources/blog/understanding-cnc-manufacturing-costs/">https://www.protolabs.com/en-gb/resources/blog/understanding-cnc-manufacturing-costs/</a></li>
+      <li id="ref-5">North American Die Casting Association. <em>NADCA Product Specification Standards for Die Castings</em>, 2015, Section 4A, "Engineering &amp; Design: Coordinate Dimensioning." Public excerpt. <a href="https://www.abdiecasting.com/wp-content/uploads/2017/08/Section-04a-Coordinate-Dimensioning.pdf">https://www.abdiecasting.com/wp-content/uploads/2017/08/Section-04a-Coordinate-Dimensioning.pdf</a></li>
+      <li id="ref-6">NBC News. "Ford lightens all-new aluminum F-150." 13 January 2014. <a href="https://www.nbcnews.com/business/autos/ford-lightens-all-new-aluminum-f-150-n8386">https://www.nbcnews.com/business/autos/ford-lightens-all-new-aluminum-f-150-n8386</a></li>
+      <li id="ref-7">CBS News. "New aluminum-body Ford F-150 is 700 pounds lighter." January 2014. <a href="https://www.cbsnews.com/news/new-aluminum-body-ford-f-150-is-700-pounds-lighter/">https://www.cbsnews.com/news/new-aluminum-body-ford-f-150-is-700-pounds-lighter/</a> <span class="tag">(secondary: content confirmed from search excerpt and against [6])</span></li>
+      <li id="ref-8">Protolabs Network (formerly Hubs). "CNC machining design guide." n.d. <a href="https://www.hubs.com/guides/cnc-machining/">https://www.hubs.com/guides/cnc-machining/</a></li>
+      <li id="ref-9">Protolabs. "Sheet Metal Fabrication Design Guidelines." n.d. <a href="https://www.protolabs.com/services/sheet-metal-fabrication/design-guidelines/">https://www.protolabs.com/services/sheet-metal-fabrication/design-guidelines/</a></li>
+      <li id="ref-10">Protolabs Network (formerly Hubs). "How to design parts for SLS 3D printing." n.d. <a href="https://www.hubs.com/knowledge-base/how-design-parts-sls-3d-printing/">https://www.hubs.com/knowledge-base/how-design-parts-sls-3d-printing/</a></li>
+      <li id="ref-11">Protolabs Network (formerly Hubs). "How to design parts for metal 3D printing." n.d. <a href="https://www.hubs.com/knowledge-base/how-design-parts-metal-3d-printing/">https://www.hubs.com/knowledge-base/how-design-parts-metal-3d-printing/</a></li>
+      <li id="ref-12">Protolabs. "Basic Design Guidelines" (3D printing). n.d. <a href="https://www.protolabs.com/help-center/basic-design-guidelines/">https://www.protolabs.com/help-center/basic-design-guidelines/</a></li>
+      <li id="ref-13">Metal-Castings.com. "Investment Casting Tolerances." n.d. <a href="https://metal-castings.com/investment-casting-tolerances/">https://metal-castings.com/investment-casting-tolerances/</a> <span class="tag">(vendor page attributing its values to Investment Casting Institute guidelines)</span></li>
+      <li id="ref-14">Forging Industry Association. <em>Product Design Guide for Forging.</em> n.d. <a href="https://www.forging.org/Common/Uploaded%20files/Design%20Engineering%20Center/Product%20Design%20Guide%20for%20Forging.pdf">https://www.forging.org/Common/Uploaded%20files/Design%20Engineering%20Center/Product%20Design%20Guide%20for%20Forging.pdf</a></li>
+      <li id="ref-15">NIST/SEMATECH. <em>e-Handbook of Statistical Methods</em>, section 6.1.6, "What is Process Capability?" <a href="https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm">https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm</a></li>
+      <li id="ref-16">Engineers Edge. "Design for Sand Casting: Design Guide and Considerations." n.d. <a href="https://www.engineersedge.com/sand_cast.htm">https://www.engineersedge.com/sand_cast.htm</a> <span class="tag">(source values in inches; converted)</span></li>
+      <li id="ref-17">Ulrich, K. T., and Pearson, S. A. "Does Product Design Really Determine 80% of Manufacturing Cost?" Working Paper 3601-93-MSA, MIT Sloan School of Management, August 1993. <a href="https://dspace.mit.edu/handle/1721.1/47202">https://dspace.mit.edu/handle/1721.1/47202</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Ashby, M. F. <em>Materials Selection in Mechanical Design</em>, 5th ed. Butterworth-Heinemann, 2017. The screening-and-ranking method for materials and processes, with selection charts.</li>
+      <li>Swift, K. G., and Booker, J. D. <em>Manufacturing Process Selection Handbook.</em> Butterworth-Heinemann, 2013. One-page process information maps for 65 processes and cost estimation at component level.</li>
+      <li>Boothroyd, G., Dewhurst, P., Knight, W. A. <em>Product Design for Manufacture and Assembly</em>, 3rd ed. CRC Press, 2011. Early cost estimation models for machining, moulding, casting, and sheet metal.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>

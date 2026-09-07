@@ -9,7 +9,7 @@ Spec: CLAUDE.md. Source register: SOURCES.md.
 |-------|--------|------|
 | A – Research and outline | Complete, approved by author | 2026-09-07 |
 | B – Scaffold + reference module (06) | Complete, approved by author (4,900 words accepted) | 2026-09-07 |
-| C – Remaining modules | **In progress**: 00, 01 done | 2026-09-07 |
+| C – Remaining modules | **In progress**: 00, 01, 02 done | 2026-09-07 |
 | D – Verification pass | Not started | |
 | E – Ship (README, final summary) | Not started | |
 
@@ -23,6 +23,7 @@ Author instruction (2026-09-07): no em or en dashes anywhere in the course, incl
 |---|---|---|---|---|---|---|---|
 | 00 Introduction | 2026-09-07 | 3,623 | 12 | 1 | 7 | 7 OK; 5 return 403 to automated requests (ACM ×2, ANSI webstore, CPSC, FlightGlobal) but were opened successfully during research | Boehm & Basili 2001 upgraded to verified after reading the UMD-hosted PDF. |
 | 01 NPI process | 2026-09-07 | 3,125 | 7 | 1 | 7 | 8 OK | IPC-2231 description limited to what the readable trade-press source states. |
+| 02 Process selection | 2026-09-07 | 3,190 | 17 | 2 | 8 | 16 OK; CBS News returns 406 to scripts (opened during research; secondary) | Exercise arithmetic recomputed in Python. |
 | 06 Injection molding | 2026-09-07 | 4,904 | 14 | 3 | 8 | 14 OK | Length accepted by author. |
 
 Links that return 403 to scripts are recorded here rather than as dead; they will be re-checked by hand in Phase D.
