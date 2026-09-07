@@ -12,7 +12,7 @@
     { num: "00", slug: "00-introduction", title: "Introduction: Why DFx", built: true },
     { num: "01", slug: "01-npi-process", title: "The product development and NPI process", built: true },
     { num: "02", slug: "02-process-selection", title: "Process selection and cost drivers", built: true },
-    { num: "03", slug: "03-tolerancing", title: "Tolerancing for manufacturability", built: false },
+    { num: "03", slug: "03-tolerancing", title: "Tolerancing for manufacturability", built: true },
     { num: "04", slug: "04-cnc-machining", title: "DFM for CNC machining", built: false },
     { num: "05", slug: "05-sheet-metal", title: "DFM for sheet metal", built: false },
     { num: "06", slug: "06-injection-molding", title: "DFM for injection molding", built: true },

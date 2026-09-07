@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 3: Tolerancing for manufacturability · DFx Course</title>
+<meta name="description" content="General tolerances (ISO 2768), fits (ISO 286), an introduction to GD&T (ASME Y14.5-2018), worst-case and RSS stack-ups, process capability with Cp and Cpk, and why a tight tolerance is a cost decision.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="03">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 3</p>
+    <h1>Tolerancing for manufacturability</h1>
+    <p class="lead">A tolerance is a promise about a process you do not control, written on a drawing that somebody else has to meet. This module covers the standards that let you write that promise unambiguously, the arithmetic that tells you whether an assembly will work when every part is at its limit, and the statistics that turn a tolerance into a yield and a cost.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Apply</strong> ISO 2768 general tolerances to a drawing and choose the class a process holds by default.</li>
+      <li><strong>Select</strong> an ISO 286 fit for a shaft and hole and compute the resulting clearance or interference range.</li>
+      <li><strong>Interpret</strong> a feature control frame, a datum reference frame, and the position, profile, and flatness controls of ASME Y14.5-2018.</li>
+      <li><strong>Calculate</strong> a tolerance stack-up by worst case and by root sum square, and state the assumptions behind each.</li>
+      <li><strong>Compute</strong> Cp and Cpk from a tolerance and a process standard deviation, and convert them to an expected reject rate.</li>
+      <li><strong>Justify</strong> why a ±0.05 mm tolerance on a moulded part is a cost decision, with numbers.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>The primary mirror of the Hubble Space Telescope was ground to the wrong shape. The error was not carelessness at the polishing machine: the mirror matched its test instrument almost perfectly. The instrument was wrong. A device called the reflective null corrector had a field lens spaced about 1.3 mm from where it should have been, in an assembly whose spacings "need to be correct to 10 µm" for the mirror to meet its requirement.<sup class="cite"><a href="#ref-11">[11]</a></sup> The mirror was then polished until it agreed with the mis-spaced instrument, producing a shape that NASA describes as too flat toward the edge by "10 times larger than the specified tolerance".<sup class="cite"><a href="#ref-12">[12]</a></sup></p>
+    <p>Two other instruments, an inverse null corrector and a refractive null corrector, showed the discrepancy at the time. Both readings were "discounted" as being themselves in error, because the reflective null corrector was believed to be the more precise device.<sup class="cite"><a href="#ref-11">[11]</a></sup> The investigation board's findings read like a tolerancing lesson: complete reliance was placed on a single test; no independent measurement of the instrument's spacings was made after assembly; and the instrument had been designed so that its spacings could be re-checked without disassembly, but the implementation did not allow it.<sup class="cite"><a href="#ref-11">[11]</a></sup></p>
+    <p>The lesson for a part designer is not about telescopes. It is that a tolerance is only as good as the measurement that verifies it, that a measurement is only as good as its independent check, and that a tolerance specified without asking how it will be measured, and by what, is a number on a drawing and nothing more. Every tolerance in this module should prompt the same question the Hubble board asked afterwards: how do we know?</p>
+
+    <h2 id="what">What a tolerance is</h2>
+    <p>A dimension states what you want. A tolerance states how far from that the part may be and still work. Every tolerance therefore encodes three things: a functional requirement (the assembly must work at the limits), a process assumption (some process can hold this range at acceptable yield), and a measurement method (someone can tell whether a given part is inside). When one of the three is missing, the tolerance is either meaningless or expensive.</p>
+    <p>Two families of standards govern how tolerances are written. The ISO Geometrical Product Specifications (GPS) system, whose fundamental rules are set out in ISO 8015:2011, and the American ASME Y14.5, whose current edition is 2018 (reaffirmed 2024).<sup class="cite"><a href="#ref-1">[1]</a>,<a href="#ref-2">[2]</a></sup> They differ in one default that catches engineers who move between them. Under ISO 8015 the independency principle applies: each requirement on a feature is met independently unless a relationship is stated, so a size tolerance says nothing about form, and the envelope requirement must be invoked explicitly (ISO practice uses a circled E next to the size).<sup class="cite"><a href="#ref-2">[2]</a>,<a href="#ref-16">[16]</a></sup> Under ASME Y14.5 the default (Rule 1) is the envelope: the limits of size also bound the form of a feature of size, so a shaft at its maximum size must be perfectly straight.<sup class="cite"><a href="#ref-16">[16]</a></sup> State which standard a drawing follows in the title block, and know which default you are getting.</p>
+
+    <h2 id="general">General tolerances: ISO 2768</h2>
+    <p>Most dimensions on most drawings do not need an individual tolerance. ISO 2768-1:1989 provides general tolerances for linear and angular dimensions without individual indication, in four classes: f (fine), m (medium), c (coarse), and v (very coarse). It applies to dimensions produced by metal removal or formed from sheet metal, and it is invoked by a title-block note such as "ISO 2768-m".<sup class="cite"><a href="#ref-3">[3]</a></sup> ISO 2768-2 does the same for geometrical tolerances (straightness, flatness, perpendicularity, symmetry, run-out) in three classes H, K, and L, so a full note reads, for example, "ISO 2768-mK".<sup class="cite"><a href="#ref-6">[6]</a></sup></p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. ISO 2768-1 general tolerances for linear dimensions, mm. Values as reproduced in public tables; the standard itself is the authority.<sup class="cite"><a href="#ref-4">[4]</a></sup></caption>
+        <thead><tr><th>Nominal size, mm</th><th class="num">f (fine)</th><th class="num">m (medium)</th><th class="num">c (coarse)</th><th class="num">v (very coarse)</th></tr></thead>
+        <tbody>
+          <tr><td>0.5 to 3</td><td class="num">±0.05</td><td class="num">±0.1</td><td class="num">±0.2</td><td class="num">not defined</td></tr>
+          <tr><td>over 3 to 6</td><td class="num">±0.05</td><td class="num">±0.1</td><td class="num">±0.3</td><td class="num">±0.5</td></tr>
+          <tr><td>over 6 to 30</td><td class="num">±0.1</td><td class="num">±0.2</td><td class="num">±0.5</td><td class="num">±1.0</td></tr>
+          <tr><td>over 30 to 120</td><td class="num">±0.15</td><td class="num">±0.3</td><td class="num">±0.8</td><td class="num">±1.5</td></tr>
+          <tr><td>over 120 to 400</td><td class="num">±0.2</td><td class="num">±0.5</td><td class="num">±1.2</td><td class="num">±2.5</td></tr>
+          <tr><td>over 400 to 1000</td><td class="num">±0.3</td><td class="num">±0.8</td><td class="num">±2.0</td><td class="num">±4.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. ISO 2768-2 general tolerances for straightness and flatness, mm, by nominal length of the feature.<sup class="cite"><a href="#ref-6">[6]</a></sup></caption>
+        <thead><tr><th>Nominal length, mm</th><th class="num">H</th><th class="num">K</th><th class="num">L</th></tr></thead>
+        <tbody>
+          <tr><td>up to 10</td><td class="num">0.02</td><td class="num">0.05</td><td class="num">0.1</td></tr>
+          <tr><td>over 10 to 30</td><td class="num">0.05</td><td class="num">0.1</td><td class="num">0.2</td></tr>
+          <tr><td>over 30 to 100</td><td class="num">0.1</td><td class="num">0.2</td><td class="num">0.4</td></tr>
+          <tr><td>over 100 to 300</td><td class="num">0.2</td><td class="num">0.4</td><td class="num">0.8</td></tr>
+          <tr><td>over 300 to 1000</td><td class="num">0.3</td><td class="num">0.6</td><td class="num">1.2</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>Three habits make general tolerances work for you. First, choose the class your process holds without trying: medium for ordinary machining, coarse or very coarse for castings, forgings, and welded fabrications, and ask your supplier which class they quote against by default. Second, notice that the general tolerance widens with size; a 300 mm dimension at class m carries ±0.5 mm, and if your design cannot accept that, it needs a datum-based location tolerance, not a tighter general class. Third, remember that angular general tolerances (also in ISO 2768-1) are given by the length of the shorter side of the angle and are large: class m allows ±1° for sides up to 10 mm and ±0° 30′ for sides of 50 to 120 mm.<sup class="cite"><a href="#ref-5">[5]</a></sup> Over a 100 mm flange, ±0° 30′ is ±0.87 mm at the tip.</p>
+
+    <h2 id="fits">Fits: ISO 286</h2>
+    <p>Where a shaft goes into a hole, the tolerances of both decide whether the assembly slides, locates, or has to be pressed. ISO 286-1:2010 defines the code system: a tolerance grade IT01 to IT18 that fixes the width of the tolerance zone, and a letter (upper-case for holes, lower-case for shafts) that fixes where the zone sits relative to the nominal size. Part 2 tabulates the numbers.<sup class="cite"><a href="#ref-7">[7]</a></sup> The letter H means a hole whose zone starts at nominal and goes up; the letter h means a shaft whose zone starts at nominal and goes down. Everything else is offset from there.</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 3. Standard tolerance grades IT5 to IT11 in micrometres, selected size ranges, from public reproductions of ISO 286-1 Table 1.<sup class="cite"><a href="#ref-8">[8]</a></sup></caption>
+        <thead><tr><th>Nominal size, mm</th><th class="num">IT5</th><th class="num">IT6</th><th class="num">IT7</th><th class="num">IT8</th><th class="num">IT9</th><th class="num">IT10</th><th class="num">IT11</th></tr></thead>
+        <tbody>
+          <tr><td>over 3 to 6</td><td class="num">5</td><td class="num">8</td><td class="num">12</td><td class="num">18</td><td class="num">30</td><td class="num">48</td><td class="num">75</td></tr>
+          <tr><td>over 6 to 10</td><td class="num">6</td><td class="num">9</td><td class="num">15</td><td class="num">22</td><td class="num">36</td><td class="num">58</td><td class="num">90</td></tr>
+          <tr><td>over 10 to 18</td><td class="num">8</td><td class="num">11</td><td class="num">18</td><td class="num">27</td><td class="num">43</td><td class="num">70</td><td class="num">110</td></tr>
+          <tr><td>over 18 to 30</td><td class="num">9</td><td class="num">13</td><td class="num">21</td><td class="num">33</td><td class="num">52</td><td class="num">84</td><td class="num">130</td></tr>
+          <tr><td>over 30 to 50</td><td class="num">11</td><td class="num">16</td><td class="num">25</td><td class="num">39</td><td class="num">62</td><td class="num">100</td><td class="num">160</td></tr>
+          <tr><td>over 50 to 80</td><td class="num">13</td><td class="num">19</td><td class="num">30</td><td class="num">46</td><td class="num">74</td><td class="num">120</td><td class="num">190</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The grade tells you about the process. Roughly, IT11 and coarser are what rough turning and milling deliver without effort; IT7 to IT9 need careful machining or reaming; IT5 and IT6 usually mean grinding or honing. Each step down in grade is a step up in cost, and the table shows why: at 20 mm, IT7 is 21 µm and IT5 is 9 µm. Holding 9 µm is a different process from holding 21 µm, not a more careful version of the same one.</p>
+    <p>Designers rarely pick letters and grades from scratch. The hole-basis preferred fits cover most needs.<sup class="cite"><a href="#ref-9">[9]</a></sup></p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 4. ISO hole-basis preferred fits and their intended use.<sup class="cite"><a href="#ref-9">[9]</a></sup></caption>
+        <thead><tr><th>Fit</th><th>Type</th><th>Intended use</th></tr></thead>
+        <tbody>
+          <tr><td>H11/c11</td><td>Clearance</td><td>Loose running; wide commercial tolerances</td></tr>
+          <tr><td>H9/d9</td><td>Clearance</td><td>Free running; large temperature variation, high speed, heavy journal pressure</td></tr>
+          <tr><td>H8/f7</td><td>Clearance</td><td>Close running on accurate machines; accurate location at moderate speed</td></tr>
+          <tr><td>H7/g6</td><td>Clearance</td><td>Sliding; not intended to run freely but to move and locate accurately</td></tr>
+          <tr><td>H7/h6</td><td>Clearance</td><td>Locational clearance; snug fit for stationary parts, freely assembled</td></tr>
+          <tr><td>H7/k6</td><td>Transition</td><td>Locational transition; accurate location, compromise between clearance and interference</td></tr>
+          <tr><td>H7/n6</td><td>Transition</td><td>Locational transition with greater interference</td></tr>
+          <tr><td>H7/p6</td><td>Interference</td><td>Locational interference; rigidity and alignment without special bore pressure</td></tr>
+          <tr><td>H7/s6</td><td>Interference</td><td>Medium drive; ordinary steel parts or shrink fits on light sections</td></tr>
+          <tr><td>H7/u6</td><td>Interference</td><td>Force fit; highly stressed parts or shrink fits where pressing forces are impractical</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Worked example. A 20 mm shaft in an H7/g6 sliding fit. From the tables, H7 at 20 mm is 20.000 to 20.021 mm (IT7 is 21 µm in the 18 to 30 mm range) and g6 is 19.980 to 19.993 mm (deviations −7 to −20 µm).<sup class="cite"><a href="#ref-8">[8]</a>,<a href="#ref-15">[15]</a></sup> Minimum clearance is 20.000 − 19.993 = 0.007 mm; maximum is 20.021 − 19.980 = 0.041 mm. The fit will always slide and never rattle by more than 41 µm. If that range is wrong for the function, change the fit, not the tolerances by hand.</p>
+
+    <h2 id="gdt">An introduction to GD&amp;T</h2>
+    <p>Plus-and-minus tolerances on coordinate dimensions have two weaknesses that geometric dimensioning and tolerancing (GD&amp;T) was invented to fix. They do not say which surface the dimension is measured from, so two inspectors can get two answers. And for locating a hole, a ±T/2 tolerance in x and y describes a square zone, when the functional requirement (will the pin go in?) is round. ASME Y14.5-2018 establishes "symbols, rules, definitions, requirements, defaults, and recommended practices" for stating and interpreting these requirements on drawings and models.<sup class="cite"><a href="#ref-1">[1]</a></sup> The 2018 edition's changes emphasise datum references and degrees of freedom, and the use of profile tolerances for locating surfaces.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+
+    <h3>The feature control frame</h3>
+    <p>Every geometric tolerance is written in a feature control frame: a symbol for the characteristic, the tolerance zone (with a diameter symbol if the zone is cylindrical), optional material condition modifiers, and the datum references in order of precedence.</p>
+    <figure>
+      <svg viewBox="0 0 640 200" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Anatomy of a feature control frame</title>
+        <desc id="fig1-desc">A rectangular feature control frame divided into compartments reading, from left: position symbol (a circle with crosshairs), diameter symbol followed by 0.2 and the maximum material condition modifier M in a circle, then datum references A, B, and C. Callouts below name each compartment: geometric characteristic, tolerance zone shape and size, material condition modifier, primary, secondary, and tertiary datums.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="60" y="50" width="520" height="50"/>
+          <path d="M130 50 v50 M340 50 v50 M420 50 v50 M500 50 v50"/>
+          <!-- position symbol -->
+          <circle cx="95" cy="75" r="12"/>
+          <path d="M95 55 v40 M75 75 h40"/>
+          <!-- MMC circle -->
+          <circle cx="300" cy="75" r="13"/>
+          <!-- leaders -->
+          <path d="M95 100 v25 M235 100 v25 M300 100 v25 M380 100 v25 M460 100 v25 M540 100 v25" stroke-dasharray="3 3"/>
+        </g>
+        <g class="diagram-text">
+          <text x="145" y="82" font-size="20">⌀ 0.2</text>
+          <text x="293" y="81" font-size="16">M</text>
+          <text x="372" y="82" font-size="20">A</text>
+          <text x="452" y="82" font-size="20">B</text>
+          <text x="532" y="82" font-size="20">C</text>
+          <text x="45" y="145" class="diagram-text-muted">Characteristic</text>
+          <text x="45" y="160" class="diagram-text-muted">(position)</text>
+          <text x="180" y="145" class="diagram-text-muted">Zone: cylinder</text>
+          <text x="180" y="160" class="diagram-text-muted">0.2 mm diameter</text>
+          <text x="275" y="180" class="diagram-text-muted">At MMC</text>
+          <text x="350" y="145" class="diagram-text-muted">Primary</text>
+          <text x="430" y="145" class="diagram-text-muted">Secondary</text>
+          <text x="515" y="145" class="diagram-text-muted">Tertiary</text>
+          <text x="350" y="160" class="diagram-text-muted">datum reference frame, in order of precedence</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. A feature control frame for the position of a hole: the hole axis must lie within a 0.2 mm diameter cylinder, located from datums A, B, and C, with a bonus tolerance when the hole is larger than its maximum material condition.</figcaption>
+    </figure>
+
+    <h3>The datum reference frame</h3>
+    <p>A datum is a theoretically exact plane, axis, or point established from a real feature on the part. Three mutually perpendicular datum planes make a datum reference frame that locks all six degrees of freedom of a rigid body (three translations, three rotations). The primary datum, usually the largest mounting face, removes three (one translation, two rotations); the secondary, usually a long edge or a locating hole, removes two more; the tertiary removes the last one. This is why the order of datums in the frame matters: the part is set on A first, then pushed against B, then against C, and the inspector, the fixture, and the mating part all do it the same way.</p>
+    <p>The DFM consequence is direct. Datums should be the surfaces the part is actually located by in assembly and in the fixture, because that is what makes the inspection result predict the fit. A datum on a cosmetic surface that never touches anything produces beautiful inspection reports and assemblies that do not go together.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 260" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">A datum reference frame on a rectangular block</title>
+        <desc id="fig2-desc">An isometric block resting on a large horizontal plane labelled datum A, pushed against a vertical plane on the left labelled datum B, and against a smaller vertical plane at the back labelled datum C. Labels note that A removes three degrees of freedom, B two, and C one. A hole in the top face is shown with its position toleranced relative to A, B, and C.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- datum planes -->
+          <path d="M120 200 L520 200 L600 150 L200 150 Z" class="diagram-soft"/>
+          <path d="M120 200 L120 60 L200 20 L200 150" class="diagram-soft"/>
+          <path d="M200 150 L600 150 L600 40 L200 40 Z" class="diagram-soft" stroke-dasharray="4 3"/>
+          <!-- block -->
+          <path d="M160 190 L400 190 L400 110 L160 110 Z" class="diagram-accent" stroke-width="3"/>
+          <path d="M160 110 L220 75 L460 75 L400 110" class="diagram-accent" stroke-width="3"/>
+          <path d="M400 190 L460 155 L460 75" class="diagram-accent" stroke-width="3"/>
+          <!-- hole on top -->
+          <ellipse cx="330" cy="93" rx="22" ry="9" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="440" y="222" font-weight="600">A: primary (3 DoF)</text>
+          <text x="20" y="45" font-weight="600">B: secondary (2 DoF)</text>
+          <text x="470" y="35" font-weight="600">C: tertiary (1 DoF)</text>
+          <text x="250" y="240" class="diagram-text-muted">Part seated on A, pushed to B, then to C. Hole position is measured in this frame.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. Three datum planes lock six degrees of freedom. The order of precedence is the order in which the part is seated, and it should match the assembly.</figcaption>
+    </figure>
+
+    <h3>The controls you will use most</h3>
+    <ul>
+      <li><strong>Flatness</strong> controls a single surface without a datum: all points must lie between two parallel planes a stated distance apart. Use it on the primary datum face itself, because a datum face that rocks makes every other measurement move. ISO 2768-2 supplies a default flatness if you do not (Table 2).</li>
+      <li><strong>Position</strong> controls the location of a feature of size (a hole, a pin, a slot) relative to a datum reference frame. The zone is usually a cylinder of the stated diameter around the true position. Compared with a ±T/2 coordinate tolerance, a cylindrical zone whose diameter equals the diagonal of the square zone accepts 57 percent more area (π/2 times the square), which is real, free yield.</li>
+      <li><strong>Position at MMC</strong> adds a bonus: as a hole departs from its maximum material condition (its smallest size) toward its largest, the position tolerance grows by the same amount, because a bigger hole will still accept the pin at a worse location. This is the modifier in Figure 1, and it is the most direct way GD&amp;T converts a functional requirement into yield.</li>
+      <li><strong>Profile of a surface</strong> controls the form and, with datums, the location and orientation of a surface of any shape relative to its true profile. The 2018 edition of Y14.5 emphasises profile as the way to locate surfaces,<sup class="cite"><a href="#ref-1">[1]</a></sup> and it is the natural control for moulded and cast surfaces that a coordinate dimension cannot describe.</li>
+    </ul>
+
+    <h2 id="stackup">Tolerance stack-up</h2>
+    <p>An assembly works or fails on gaps and interferences that are sums of several toleranced dimensions. Stack-up analysis asks: when every contributing dimension is somewhere in its range, what range does the gap take? Two methods are used, and you should be able to do both by hand.</p>
+    <h3>Worst case</h3>
+    <p>Add the nominal dimensions with their signs to get the nominal gap. Add all the tolerances, regardless of sign, to get the worst-case variation: if the gap G = Σ(±d<sub>i</sub>) then the worst-case half-range is T<sub>WC</sub> = Σ t<sub>i</sub>, where t<sub>i</sub> is the half-tolerance of each dimension. Worst case guarantees the assembly works if every part is in tolerance. It makes no statistical assumption, so it is the right method for safety-critical fits, for small production quantities, and whenever the parts come from processes you cannot characterise.</p>
+    <h3>Root sum square (RSS)</h3>
+    <p>If each dimension varies independently and roughly normally about its nominal, with its tolerance representing the same number of standard deviations for every part, then the variation of the sum is the root of the sum of the squares: T<sub>RSS</sub> = √(Σ t<sub>i</sub>²). RSS gives a smaller range than worst case, and the difference grows with the number of contributors. It is honest only when its assumptions are: independent processes, centred distributions, and tolerances that each represent the same capability. A supplier who runs a dimension deliberately at one end of its tolerance (to be steel-safe, for instance, as in Module 6) breaks the centring assumption, and RSS will then under-predict the variation. The methods, their variants, and how to handle GD&amp;T contributors are the subject of Fischer's textbook in the further reading.</p>
+    <p>Practical rule: compute both. If the worst case fits, stop. If only RSS fits, you are relying on statistics, and you owe the assembly a capability requirement on each contributor (next section) and an inspection plan that would catch a supplier drifting off centre.</p>
+
+    <h2 id="capability">Process capability: Cp and Cpk</h2>
+    <p>A tolerance becomes a yield when you know the process spread. The NIST Engineering Statistics Handbook defines the capability indices as follows.<sup class="cite"><a href="#ref-10">[10]</a></sup></p>
+    <p><strong>C<sub>p</sub> = (USL − LSL) / 6σ</strong>, the ratio of the tolerance width to six standard deviations of the process. It measures potential capability, assuming the process is centred.</p>
+    <p><strong>C<sub>pk</sub> = min[(USL − μ) / 3σ, (μ − LSL) / 3σ]</strong>, the distance from the process mean to the nearer specification limit in units of three standard deviations. It measures actual capability, penalising an off-centre process.</p>
+    <p>When the process is centred, C<sub>p</sub> = C<sub>pk</sub>, and the reject rate follows from the normal distribution:<sup class="cite"><a href="#ref-10">[10]</a></sup></p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 5. Reject rate for a centred normal process by C<sub>p</sub>.<sup class="cite"><a href="#ref-10">[10]</a></sup></caption>
+        <thead><tr><th class="num">C<sub>p</sub></th><th>Tolerance width in σ</th><th>Rejects</th><th>Share of tolerance used</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1.00</td><td>6σ</td><td>0.27 % (2,700 ppm)</td><td>100 %</td></tr>
+          <tr><td class="num">1.33</td><td>8σ</td><td>64 ppm</td><td>75 %</td></tr>
+          <tr><td class="num">1.66</td><td>10σ</td><td>0.6 ppm</td><td>60 %</td></tr>
+          <tr><td class="num">2.00</td><td>12σ</td><td>2 ppb</td><td>50 %</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Two conventions you will meet. A C<sub>pk</sub> of 1.33 is the common minimum for an established process in general industry. In the automotive supply chain, the AIAG PPAP manual's default acceptance criterion for an initial process study is an index of 1.67 or higher, with 1.33 to 1.67 conditionally acceptable subject to customer review.<sup class="cite"><a href="#ref-14">[14]</a></sup> Your customer's requirement overrides both.</p>
+    <p>Turn the formula around and it becomes a design tool. For a required C<sub>p</sub>, the process must have σ ≤ (USL − LSL) / (6 C<sub>p</sub>). A ±0.1 mm tolerance (width 0.2 mm) at C<sub>p</sub> = 1.33 needs a process with σ ≤ 0.2 / 8 = 0.025 mm. If your supplier's process has σ = 0.04 mm on that feature, the tolerance is a 4 percent reject rate, not a specification.</p>
+
+    <h2 id="molded">Why ±0.05 mm on a moulded part is a cost decision</h2>
+    <p>Put the pieces together on a moulded dimension. One moulder's published guidelines give a tool machining tolerance of ±0.08 mm plus a resin tolerance of at least ±0.002 mm per mm of dimension.<sup class="cite"><a href="#ref-13">[13]</a></sup> On a 50 mm feature the resin term alone is ±0.10 mm; the two together, treated as independent, give an RSS half-range of √(0.08² + 0.10²) ≈ ±0.13 mm before any process drift. A drawing that asks for ±0.05 mm on that feature is asking for a tolerance zone less than half what the standard process produces.</p>
+    <p>To hold it, the moulder must cut the steel tighter than standard (more expensive tooling), choose a resin with lower and more stable shrinkage (more expensive material, and it may not be the one you wanted), run a narrower process window (longer cycle, more scrap), and inspect more. Even then the capability will be marginal. Module 6 covered the general-tolerance groups for moulded parts in DIN 16742 and ISO 20457, which exist precisely so that designers ask for what the process gives. The right question on a moulded drawing is never "how tight can I make this?" but "which two or three dimensions carry the function, and what does the moulder say they can hold on those?"</p>
+
+    <h2 id="habits">Tolerancing habits that save money</h2>
+    <ol>
+      <li><strong>Dimension for function, from datums that match assembly.</strong> Locate features from the surfaces that locate the part, so that a good inspection means a good fit.</li>
+      <li><strong>Use general tolerances for everything that does not carry function.</strong> Then tolerance the few dimensions that do, individually, and justify each one with a stack-up.</li>
+      <li><strong>Prefer a standard fit to hand-picked limits.</strong> H7/g6 is understood by every machine shop; 19.985 to 19.995 has to be interpreted.</li>
+      <li><strong>Keep functional dimensions in one process step and one tool half.</strong> Dimensions across a parting line, a mould shut-off, or two machining setups carry extra variation (Modules 6 and 7).</li>
+      <li><strong>Ask how it will be measured before you write it.</strong> A position tolerance of 0.05 mm on a feature that can only be checked with calipers is a wish.</li>
+      <li><strong>Convert every tight tolerance into a capability requirement</strong> (σ ≤ T / 6C<sub>p</sub>) and ask the supplier whether their process meets it. The answer is the cost of the tolerance.</li>
+    </ol>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 6. Quantitative rules for tolerancing.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range (metric)</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>General linear tolerance, class m</td><td>Use for ordinary machining without individual tolerances</td><td>±0.1 mm (over 3 to 6); ±0.2 mm (6 to 30); ±0.3 mm (30 to 120); ±0.5 mm (120 to 400)</td><td>Reflects what standard workshop practice holds</td><td><a href="#ref-3">[3]</a>, <a href="#ref-4">[4]</a></td></tr>
+          <tr><td>General linear tolerance, class c</td><td>Use for castings, forgings, fabrications</td><td>±0.5 mm (6 to 30); ±0.8 mm (30 to 120); ±1.2 mm (120 to 400)</td><td>Coarser processes</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>General angular tolerance, class m</td><td>Large; check the tip displacement</td><td>±1° (shorter side up to 10 mm); ±0° 30′ (50 to 120 mm)</td><td>Angle error grows into length error at the tip</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>General flatness, class K</td><td>Default when no flatness is stated</td><td>0.1 mm (10 to 30 mm); 0.2 mm (30 to 100); 0.4 mm (100 to 300)</td><td>A datum face that rocks moves every measurement</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>IT grade by process</td><td>IT11 rough machining; IT7 to IT9 careful machining; IT5 to IT6 grinding</td><td>At 18 to 30 mm: IT5 9 µm, IT7 21 µm, IT9 52 µm, IT11 130 µm</td><td>Each grade step is a process step, not extra care</td><td><a href="#ref-8">[8]</a></td></tr>
+          <tr><td>Sliding fit</td><td>H7/g6</td><td>20 mm: clearance 0.007 to 0.041 mm</td><td>Accurate location, free movement</td><td><a href="#ref-9">[9]</a>, <a href="#ref-15">[15]</a></td></tr>
+          <tr><td>Locational clearance</td><td>H7/h6</td><td>Zero minimum clearance</td><td>Snug, freely assembled</td><td><a href="#ref-9">[9]</a></td></tr>
+          <tr><td>Press fit</td><td>H7/p6</td><td>Locational interference</td><td>Rigidity without bore pressure</td><td><a href="#ref-9">[9]</a></td></tr>
+          <tr><td>Position versus coordinate zone</td><td>Cylindrical zone accepts more parts</td><td>π/2 ≈ 1.57 × the area of the inscribed square zone</td><td>The functional requirement is round</td><td>Geometry</td></tr>
+          <tr><td>Worst-case stack</td><td>Sum of half-tolerances</td><td>T<sub>WC</sub> = Σ t<sub>i</sub></td><td>Guarantees fit if all parts in tolerance</td><td>Arithmetic</td></tr>
+          <tr><td>RSS stack</td><td>Root of sum of squares</td><td>T<sub>RSS</sub> = √Σ t<sub>i</sub>²</td><td>Valid for independent, centred, equally capable processes</td><td>Statistics</td></tr>
+          <tr><td>Capability index</td><td>Tolerance over six sigma</td><td>C<sub>p</sub> = (USL − LSL)/6σ; C<sub>pk</sub> = min[(USL − μ), (μ − LSL)]/3σ</td><td>Converts tolerance to yield</td><td><a href="#ref-10">[10]</a></td></tr>
+          <tr><td>Reject rate</td><td>Centred process</td><td>C<sub>p</sub> 1.00: 0.27 %; 1.33: 64 ppm; 1.66: 0.6 ppm; 2.00: 2 ppb</td><td>Normal distribution tails</td><td><a href="#ref-10">[10]</a></td></tr>
+          <tr><td>Automotive initial capability</td><td>PPAP default</td><td>Index ≥ 1.67 acceptable; 1.33 to 1.67 conditional</td><td>Initial studies use short-run data</td><td><a href="#ref-14">[14]</a> (secondary)</td></tr>
+          <tr><td>Moulded dimension variation</td><td>Steel plus resin</td><td>±0.08 mm tool plus ±0.002 mm/mm resin; ≈ ±0.13 mm RSS at 50 mm</td><td>Two independent sources stack</td><td><a href="#ref-13">[13]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: the Hubble null corrector</h2>
+    <p>The Hubble Space Telescope Optical Systems Board of Investigation, chaired by Lew Allen, reported in November 1990. Its central finding was that the field lens of the reflective null corrector, the instrument used to guide polishing of the primary mirror, was "approximately 1.3 mm too far" from the lower mirror of the instrument, and that this spacing error "accounts in detail for the amount and character of the observed image blurring".<sup class="cite"><a href="#ref-11">[11]</a></sup> The spacing had been set with a metering rod and an interferometer; the board concluded that during measurement the operator most likely obtained a reflection from a field cap fitted over the rod end, where a non-reflective coating was locally missing, rather than from the rod end itself, producing the 1.3 mm error.<sup class="cite"><a href="#ref-11">[11]</a></sup> Spacers were then added to make the instrument agree with the wrong measurement.</p>
+    <p>The board's list of why the error was not caught before launch is a checklist for anyone who writes tolerances.<sup class="cite"><a href="#ref-11">[11]</a></sup></p>
+    <ul>
+      <li>Complete reliance was placed on one instrument, and the instrument was never independently certified; no independent measurement of its element spacings was made after assembly.</li>
+      <li>The instrument had been designed so the spacings could be re-checked without disassembly, but the implementation did not permit it.</li>
+      <li>Two other tests showed spherical aberration consistent with the error. Both were dismissed because the instruments were believed less precise than the one that was wrong, when in fact both were "easily accurate enough" to detect the error.</li>
+      <li>A range of feasible tests to verify the mirror shape were considered but not carried out, and no end-to-end test of the assembled telescope was planned.</li>
+    </ul>
+    <p>The engineering translation: a tolerance of 10 µm on a spacing is only real if the measurement system can resolve it, if that measurement is independently checked, and if a disagreement between two measurements is treated as a finding rather than an inconvenience. The same is true of a ±0.05 mm dimension on a bracket. If you cannot say how it will be measured, by what, and what you will do when two measurements disagree, the tolerance is not yet a specification.</p>
+    <!-- AUTHOR: optional personal note here (a stack-up or inspection surprise from your own experience, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Tight tolerances by habit.</strong> Consequence: cost on every part and a capability the supplier cannot hold. Fix: general tolerances by default; individual tolerances only where a stack-up demands them.</li>
+      <li><strong>Datums that do not match assembly.</strong> Consequence: parts pass inspection and do not fit. Fix: choose datums from the locating features and put them in the order the part is seated.</li>
+      <li><strong>Coordinate tolerances on hole patterns.</strong> Consequence: square zones reject good parts and let stack-ups accumulate from an arbitrary corner. Fix: position tolerances to a datum reference frame, at MMC where the function is a clearance hole.</li>
+      <li><strong>RSS on a stack whose contributors are not centred.</strong> Consequence: real variation exceeds the prediction, and the assembly fails at PVT. Fix: check centring assumptions; use worst case for safety-critical fits and small volumes.</li>
+      <li><strong>Forgetting the angle.</strong> Consequence: a general angular tolerance of ±0° 30′ over 100 mm moves a tip 0.87 mm, more than the linear tolerance on the same feature. Fix: check angular general tolerances at the far end of the feature.</li>
+      <li><strong>Specifying a tolerance without a measurement method.</strong> Consequence: disputes at first article and an inspection cost nobody quoted. Fix: agree the gauge or CMM method for every individual tolerance before release.</li>
+      <li><strong>Mixing ISO and ASME defaults.</strong> Consequence: a shaft accepted under independency that would fail the envelope, or a drawing that means different things to two suppliers. Fix: state the standard in the title block and understand the default it brings.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: a bearing stack</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>A shaft runs in two bearings inside a housing bore. The bore depth between the shoulder and the retaining-ring face is 40.0 ± 0.10 mm. Each bearing is 12.0 ± 0.05 mm wide. A spacer between the bearings is 15.0 ± 0.10 mm. The remaining gap G between the outer bearing and the retaining ring is taken up by a wave washer that needs a gap between 0.60 and 1.40 mm to work.</p>
+    <p><strong>Tasks.</strong> (a) Compute the nominal gap and the worst-case range. (b) Compute the RSS range. (c) Does the assembly work? (d) The spacer is machined on a process with σ = 0.025 mm. Compute its C<sub>p</sub> and the reject rate for the ±0.10 mm tolerance. (e) If the spacer tolerance were tightened to ±0.05 mm to help the stack, what σ would the process need for C<sub>p</sub> = 1.33?</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a) Nominal and worst case.</strong> G = 40.0 − (12.0 + 15.0 + 12.0) = 1.00 mm. Worst-case half-range T<sub>WC</sub> = 0.10 + 0.05 + 0.10 + 0.05 = 0.30 mm. Range 0.70 to 1.30 mm.</p>
+      <p><strong>(b) RSS.</strong> T<sub>RSS</sub> = √(0.10² + 0.05² + 0.10² + 0.05²) = √(0.010 + 0.0025 + 0.010 + 0.0025) = √0.025 = 0.158 mm. Range 0.84 to 1.16 mm.</p>
+      <p><strong>(c) Does it work?</strong> The washer needs 0.60 to 1.40 mm. Worst case gives 0.70 to 1.30 mm, inside the requirement with 0.10 mm to spare at each end. The assembly works even by worst case, so no statistical assumption is needed. Stop here; do not tighten anything.</p>
+      <p><strong>(d) Spacer capability.</strong> Tolerance width = 0.20 mm. C<sub>p</sub> = 0.20 / (6 × 0.025) = 1.33. From the NIST table, a centred process at C<sub>p</sub> 1.33 rejects about 64 parts per million. Acceptable for most industries; an automotive customer applying the 1.67 initial-study default would ask for evidence or a process improvement.</p>
+      <p><strong>(e) If tightened to ±0.05 mm.</strong> Width 0.10 mm. For C<sub>p</sub> = 1.33, σ ≤ 0.10 / (6 × 1.33) = 0.0125 mm. The current process (σ = 0.025 mm) would run at C<sub>p</sub> = 0.67, roughly 4.5 percent rejects. Halving the tolerance means halving the process spread, which is a different machine or a grinding operation, for a stack that already worked at worst case in part (c). This is the pattern to recognise: tolerances get tightened to fix a stack-up that was never failing.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="03">
+      <fieldset class="q" data-type="numeric" data-answer="0.3" data-tolerance="0.005">
+        <legend>1. Under ISO 2768-1 class m, what is the general tolerance (±, mm) on a 75 mm dimension?</legend>
+        <label>Answer (± mm): <input type="number" name="q1" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>75 mm falls in the "over 30 to 120" range; class m gives ±0.3 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>2. In the fit designation H7/g6, the upper-case H tells you</legend>
+        <label><input type="radio" name="q2" value="a"> the shaft is slightly undersize</label>
+        <label><input type="radio" name="q2" value="b"> the fit is an interference fit</label>
+        <label><input type="radio" name="q2" value="c"> the hole tolerance zone starts at nominal and extends upward, with grade IT7</label>
+        <label><input type="radio" name="q2" value="d"> the hole is hardened</label>
+        <p class="explain" hidden>Upper-case letters are holes; H has zero fundamental deviation; 7 is the IT grade.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.041" data-tolerance="0.0005">
+        <legend>3. For a 20 mm H7/g6 fit (hole 20.000 to 20.021, shaft 19.980 to 19.993), what is the maximum clearance in mm?</legend>
+        <label>Answer (mm): <input type="number" name="q3" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>20.021 − 19.980 = 0.041 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>4. In a datum reference frame, the primary datum plane removes how many degrees of freedom?</legend>
+        <label><input type="radio" name="q4" value="a"> One</label>
+        <label><input type="radio" name="q4" value="b"> Three</label>
+        <label><input type="radio" name="q4" value="c"> Six</label>
+        <label><input type="radio" name="q4" value="d"> None; datums only define measurement direction</label>
+        <p class="explain" hidden>A plane removes one translation and two rotations. The secondary removes two more, the tertiary one.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.212" data-tolerance="0.01">
+        <legend>5. Four dimensions each toleranced ±0.10 mm, ±0.10 mm, ±0.15 mm, and ±0.05 mm contribute to a gap. What is the RSS half-range in mm?</legend>
+        <label>Answer (mm): <input type="number" name="q5" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>√(0.01 + 0.01 + 0.0225 + 0.0025) = √0.045 = 0.212 mm. The worst case would be 0.40 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="1.11" data-tolerance="0.02">
+        <legend>6. A dimension is toleranced ±0.10 mm and the centred process has σ = 0.030 mm. What is C<sub>p</sub>?</legend>
+        <label>Answer: <input type="number" name="q6" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>C<sub>p</sub> = 0.20 / (6 × 0.030) = 1.11.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>7. The Hubble investigation found that two independent tests had shown the mirror error before launch. Why did they not prevent it?</legend>
+        <label><input type="radio" name="q7" value="a"> Their results were discounted because the instruments were believed less precise than the one that was wrong</label>
+        <label><input type="radio" name="q7" value="b"> The tests were never performed</label>
+        <label><input type="radio" name="q7" value="c"> The tests agreed with the faulty instrument</label>
+        <label><input type="radio" name="q7" value="d"> The results were lost</label>
+        <p class="explain" hidden>Both indicators were dismissed as themselves flawed, although the board later found they were accurate enough to detect the error.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>8. Under ASME Y14.5, the default relationship between a size tolerance and the form of a feature of size is</legend>
+        <label><input type="radio" name="q8" value="a"> independency: size says nothing about form</label>
+        <label><input type="radio" name="q8" value="b"> form is always controlled by ISO 2768-2</label>
+        <label><input type="radio" name="q8" value="c"> there is no default; every drawing must state it</label>
+        <label><input type="radio" name="q8" value="d"> the envelope: limits of size also bound form (Rule 1)</label>
+        <p class="explain" hidden>ASME defaults to the envelope requirement; ISO 8015 defaults to independency and requires a circled E to invoke the envelope.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>±0.3 mm.</li>
+        <li>c. Hole zone from nominal upward, grade IT7.</li>
+        <li>0.041 mm.</li>
+        <li>b. Three.</li>
+        <li>0.212 mm (the checker accepts 0.20 to 0.22).</li>
+        <li>1.11.</li>
+        <li>a. Discounted as less precise.</li>
+        <li>d. The envelope, Rule 1.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>A tolerance is a functional requirement, a process assumption, and a measurement method. Missing any one makes it meaningless or expensive.</li>
+      <li>Use ISO 2768 general tolerances for everything that does not carry function, and pick the class your process holds by default.</li>
+      <li>Choose fits from the ISO 286 preferred list. IT grades are process steps: IT11 rough machining, IT7 careful machining, IT5 grinding.</li>
+      <li>GD&amp;T locates features from datums that match assembly. Position with a cylindrical zone at MMC turns the functional requirement into yield.</li>
+      <li>Compute stack-ups by worst case first. Use RSS only when contributors are independent and centred, and then require capability evidence.</li>
+      <li>C<sub>p</sub> and C<sub>pk</sub> turn a tolerance into a reject rate. A ±0.05 mm moulded tolerance asks for less than half the standard process variation and is paid for in tooling, resin, cycle, and inspection.</li>
+      <li>Ask how it will be measured, and what you will do when two measurements disagree. Hubble did not.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07. Standards are cited from their publishers' catalogue pages; numeric tables are quoted from public reproductions and marked as such.</p>
+    <ol class="references">
+      <li id="ref-1">ASME. <em>ASME Y14.5-2018 Dimensioning and Tolerancing</em> (reaffirmed 2024). ASME catalogue page. <a href="https://www.asme.org/codes-standards/find-codes-standards/y14-5-dimensioning-tolerancing/2018">https://www.asme.org/codes-standards/find-codes-standards/y14-5-dimensioning-tolerancing/2018</a></li>
+      <li id="ref-2">ISO. <em>ISO 8015:2011 Geometrical product specifications (GPS): Fundamentals: Concepts, principles and rules.</em> ISO Online Browsing Platform. <a href="https://www.iso.org/obp/ui#iso:std:iso:8015:en">https://www.iso.org/obp/ui#iso:std:iso:8015:en</a></li>
+      <li id="ref-3">ISO. <em>ISO 2768-1:1989 General tolerances: Part 1: Tolerances for linear and angular dimensions without individual tolerance indications.</em> <a href="https://www.iso.org/standard/7748.html">https://www.iso.org/standard/7748.html</a></li>
+      <li id="ref-4">AmesWeb. "ISO 2768-1 Linear Dimensions Tolerance Table." n.d. <a href="https://amesweb.info/fits-tolerances/iso-2768-linear-dimensions-tolerances.aspx">https://amesweb.info/fits-tolerances/iso-2768-linear-dimensions-tolerances.aspx</a> <span class="tag">(secondary: public reproduction of the standard's table)</span></li>
+      <li id="ref-5">AmesWeb. "Angular Dimensions Tolerances (ISO 2768-1)." n.d. <a href="https://amesweb.info/fits-tolerances/iso-2768-angular-dimensions-tolerances.aspx">https://amesweb.info/fits-tolerances/iso-2768-angular-dimensions-tolerances.aspx</a> <span class="tag">(secondary: public reproduction)</span></li>
+      <li id="ref-6">AmesWeb. "Straightness &amp; Flatness Tolerances Chart (ISO 2768-2)." n.d. <a href="https://amesweb.info/fits-tolerances/straightness-flatness-tolerances.aspx">https://amesweb.info/fits-tolerances/straightness-flatness-tolerances.aspx</a> <span class="tag">(secondary: public reproduction)</span></li>
+      <li id="ref-7">ISO. <em>ISO 286-1:2010 GPS: ISO code system for tolerances on linear sizes: Part 1: Basis of tolerances, deviations and fits.</em> <a href="https://www.iso.org/standard/45975.html">https://www.iso.org/standard/45975.html</a></li>
+      <li id="ref-8">Engineers Edge. "International Tolerance (IT) Grades ISO 286-1-2010 Table Chart." n.d. <a href="https://www.engineersedge.com/international_tol.htm">https://www.engineersedge.com/international_tol.htm</a> <span class="tag">(secondary: public reproduction)</span></li>
+      <li id="ref-9">AmesWeb. "Preferred Fits and Tolerances Charts (ISO &amp; ANSI Metric Standards)." n.d. <a href="https://amesweb.info/fits-tolerances/preferred-tolerances-table.aspx">https://amesweb.info/fits-tolerances/preferred-tolerances-table.aspx</a> <span class="tag">(secondary: public reproduction)</span></li>
+      <li id="ref-10">NIST/SEMATECH. <em>e-Handbook of Statistical Methods</em>, section 6.1.6, "What is Process Capability?" National Institute of Standards and Technology. <a href="https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm">https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm</a></li>
+      <li id="ref-11">NASA. <em>The Hubble Space Telescope Optical Systems Failure Report</em> (Allen, L., chair). November 1990. NTRS 19910003124. <a href="https://ntrs.nasa.gov/api/citations/19910003124/downloads/19910003124.pdf">https://ntrs.nasa.gov/api/citations/19910003124/downloads/19910003124.pdf</a></li>
+      <li id="ref-12">NASA Science. "Hubble's Mirror Flaw." n.d. <a href="https://science.nasa.gov/mission/hubble/observatory/design/optics/hubbles-mirror-flaw/">https://science.nasa.gov/mission/hubble/observatory/design/optics/hubbles-mirror-flaw/</a></li>
+      <li id="ref-13">Protolabs. "Plastic Injection Molding Design Guidelines." n.d. <a href="https://www.protolabs.com/services/injection-molding/plastic-injection-molding/design-guidelines/">https://www.protolabs.com/services/injection-molding/plastic-injection-molding/design-guidelines/</a></li>
+      <li id="ref-14">Quality-One International. "PPAP: Production Part Approval Process." n.d. <a href="https://quality-one.com/ppap/">https://quality-one.com/ppap/</a> <span class="tag">(secondary for the capability acceptance criteria, which are summarised from the AIAG PPAP manual, 4th ed., 2006, in multiple industry summaries)</span></li>
+      <li id="ref-15">Simply Bearings Ltd. "ISO 286 Limits and Fits reference." n.d. <a href="https://simplybearings.co.uk/shop/Info-Pages-ISO-Limits/c4746_4779/index.html">https://simplybearings.co.uk/shop/Info-Pages-ISO-Limits/c4746_4779/index.html</a> <span class="tag">(secondary: public reproduction of ISO 286-2 shaft limit deviations; used here for g6, h6, k6, p6 in the 18 to 30 mm range)</span></li>
+      <li id="ref-16">GD&amp;T Basics. "A Comparison of GD&amp;T Standards: ISO GPS vs. ASME Y14.5." n.d. <a href="https://www.gdandtbasics.com/iso-vs-asme-standards/">https://www.gdandtbasics.com/iso-vs-asme-standards/</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Fischer, B. R. <em>Mechanical Tolerance Stackup and Analysis</em>, 2nd ed. CRC Press, 2011. Step-by-step worst-case and statistical stack-ups, including GD&amp;T contributors, by a member of the Y14.5 committee.</li>
+      <li>ASME. <em>ASME Y14.5-2018 Dimensioning and Tolerancing.</em> The standard itself; the only authoritative source for the rules summarised here.</li>
+      <li>ISO. <em>ISO 286-2:2010.</em> Tables of standard tolerance classes and limit deviations for holes and shafts.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>
