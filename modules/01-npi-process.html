@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 1: The product development and NPI process · DFx Course</title>
+<meta name="description" content="Concept through mass production: EVT, DVT, PVT, phase-gate reviews, who owns DFM at each stage, and the DFM review as a formal deliverable.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="01">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 1</p>
+    <h1>The product development and NPI process</h1>
+    <p class="lead">New product introduction (NPI) is the sequence of builds and reviews that turns a concept into something a factory can make every day. The names differ between industries, but the questions asked at each step do not. This module gives you the map, tells you who owns the DFM work at each point, and shows what a DFM review has to produce to count as done.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Describe</strong> the sequence from concept to mass production and the question each validation build answers.</li>
+      <li><strong>Map</strong> the hardware-industry stage names (EVT, DVT, PVT) onto formal phase-gate frameworks used in aerospace and in general product development.</li>
+      <li><strong>State</strong> entry and exit criteria for each build, including what tooling maturity is expected.</li>
+      <li><strong>Assign</strong> ownership of DFM, DFA, and DFT activities to the right function at each stage.</li>
+      <li><strong>Produce</strong> a DFM review findings list with the fields that make it actionable.</li>
+      <li><strong>Calculate</strong> the schedule and cost effect of catching a finding one build later.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>In late July 2017 Tesla handed over the first thirty Model 3 sedans and announced a target of about 5,000 cars per week by the end of the year. The day after the event, Elon Musk told journalists the company was about to go through "at least six months of manufacturing hell".<sup class="cite"><a href="#ref-5">[5]</a></sup> By April 2018 the line had still not reached a reduced target of 2,500 per week. Musk's own diagnosis, in a post on 13 April 2018, was blunt: "Yes, excessive automation at Tesla was a mistake. To be precise, my mistake. Humans are underrated."<sup class="cite"><a href="#ref-4">[4]</a></sup> In a television interview the same week he said the company had dismantled an overly complex automated conveyor system because "it was not working".<sup class="cite"><a href="#ref-4">[4]</a></sup></p>
+    <p>Strip out the celebrity and the story is an NPI lesson. The product had been validated; the production process had not, at the rate it was asked to run. Production validation is a build phase with its own exit criteria for exactly this reason. A line that has never run at rate has not been tested, and a line that has not been tested is a prototype, however much it cost.</p>
+    <p>You will meet this pattern at smaller scale in every program: a fixture that works for ten units and jams at a hundred, an assembly step that one skilled technician can do and three shifts cannot, a supplier who delivered fifty perfect parts and cannot deliver five thousand. The phases in this module exist to make those discoveries on purpose, early, and cheaply.</p>
+
+    <h2 id="sequence">From concept to mass production</h2>
+    <p>Most hardware programs, whatever they call the steps, pass through the same sequence. Concept work defines what the product must do and roughly how. Architecture fixes the major subsystems, the interfaces between them, and, whether anyone says so or not, most of the manufacturing processes. Detail design produces the drawings, models, and bill of materials (BOM). Then come three validation builds, each answering one question, before production begins.</p>
+
+    <figure>
+      <svg viewBox="0 0 680 230" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Hardware development sequence with validation builds and DFx review points</title>
+        <desc id="fig1-desc">A left-to-right timeline of six boxes: concept, architecture and detail design, EVT, DVT, PVT, and mass production. Under each build box is the question it answers: does the engineering work, does the design meet requirements, can the process build it. Diamonds between boxes mark gates. Arrows above show where DFM, DFA, and DFT reviews are cheapest: before EVT and before DVT.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="10" y="80" width="90" height="50" rx="4"/>
+          <rect x="120" y="80" width="110" height="50" rx="4"/>
+          <rect x="250" y="80" width="90" height="50" rx="4" class="diagram-soft"/>
+          <rect x="360" y="80" width="90" height="50" rx="4" class="diagram-soft"/>
+          <rect x="470" y="80" width="90" height="50" rx="4" class="diagram-soft"/>
+          <rect x="580" y="80" width="90" height="50" rx="4"/>
+          <!-- gates -->
+          <path d="M110 105 l-5 -7 l5 -7 l5 7 z M240 105 l-5 -7 l5 -7 l5 7 z M350 105 l-5 -7 l5 -7 l5 7 z M460 105 l-5 -7 l5 -7 l5 7 z M570 105 l-5 -7 l5 -7 l5 7 z" class="diagram-accent"/>
+          <!-- review arrows -->
+          <path d="M175 60 L240 60 L240 82 M235 76 L240 82 L245 76" class="diagram-accent"/>
+          <path d="M290 60 L350 60 L350 82 M345 76 L350 82 L355 76" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="24" y="110">Concept</text>
+          <text x="126" y="103">Architecture,</text>
+          <text x="126" y="119">detail design</text>
+          <text x="280" y="110">EVT</text>
+          <text x="390" y="110">DVT</text>
+          <text x="500" y="110">PVT</text>
+          <text x="590" y="103">Mass</text>
+          <text x="590" y="119">production</text>
+          <text x="250" y="155">Does the</text>
+          <text x="250" y="170">engineering work?</text>
+          <text x="360" y="155">Does the design</text>
+          <text x="360" y="170">meet requirements?</text>
+          <text x="470" y="155">Can the process</text>
+          <text x="470" y="170">build it at rate?</text>
+          <text x="130" y="45">DFM, DFA, DFT review</text>
+          <text x="130" y="30">Cheapest here</text>
+          <text x="262" y="45">Last cheap review</text>
+          <text x="20" y="210" class="diagram-text-muted">Diamonds are gates: a review with explicit exit criteria and a go, hold, or recycle decision.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. The three validation builds each answer one question. DFx reviews are cheapest before EVT, and the review before DVT is the last one that happens before production-intent tooling is cut.</figcaption>
+    </figure>
+
+    <h3>EVT: engineering validation test</h3>
+    <p>EVT asks "does the engineering concept work?" It validates core functions, the chosen components, and technical feasibility. One practitioner's account gives typical quantities of 10 to 40 units and an exit criterion that "components and engineering approach are ready for complete-design testing".<sup class="cite"><a href="#ref-1">[1]</a></sup> EVT units are usually built from prototype processes: machined, printed, or soft-tooled parts, hand-assembled boards, and off-the-shelf enclosures where the real one is not ready. That is exactly why EVT is the last point at which changing a process, a material, or an architecture costs only engineering time.</p>
+    <h3>DVT: design validation test</h3>
+    <p>DVT asks "does the complete design meet requirements?" The whole product is built and tested against its specification: performance, durability, environmental, regulatory pre-compliance, and usability. Typical quantities in the same account are 50 to 100 units, and the exit criterion is that "the product design is approved for production-process validation".<sup class="cite"><a href="#ref-1">[1]</a></sup> In most programs DVT is the first build from production-intent tooling, because the tests are only meaningful on parts made the way production parts will be made. Companies vary on this; some run a DVT from soft tools and a second DVT from hard tools, and the naming varies with them. Ask, on every program, which build is the first from production tooling. That build is your DFM deadline.</p>
+    <h3>PVT: production validation test</h3>
+    <p>PVT asks "can the approved design be produced reliably?" The question moves from the product to the process: the production line, fixtures, test stations, operator instructions, incoming inspection, and packaging are exercised at or near production rate. Typical quantities are given as 10 to 20 percent of the first purchase order.<sup class="cite"><a href="#ref-1">[1]</a></sup> The exit criterion is that "the production process is ready for mass production".<sup class="cite"><a href="#ref-1">[1]</a></sup> Design changes at PVT are expensive and should be rare; process changes are the point.</p>
+    <p>Those quantities are one source's typical figures for consumer electronics. An aerospace program may build three EVT units and an appliance program three hundred PVT units. The structure is what transfers, not the numbers.</p>
+
+    <h2 id="frameworks">Formal phase-gate frameworks</h2>
+    <p>EVT, DVT, and PVT are industry shorthand. Two formal frameworks are worth knowing because your customers and suppliers may speak them.</p>
+    <h3>Stage-Gate</h3>
+    <p>Robert Cooper's Stage-Gate model, whose name first appeared in print in 1988, divides development into stages where work happens and gates where governance happens.<sup class="cite"><a href="#ref-3">[3]</a></sup> For major products the stages are: discovery and ideation; Stage 1, a quick concept assessment; Stage 2, building the business case; Stage 3, development, which includes detailed design, prototyping, and process development; Stage 4, testing and validation; and Stage 5, launch, including manufacturing ramp-up.<sup class="cite"><a href="#ref-3">[3]</a></sup> Each gate has three components: deliverables from the previous stage, criteria against which they are judged, and outputs, which are a decision (go, kill, hold, or recycle) plus confirmed resources and timing. Gates are held by "gatekeepers", senior managers from the functions that control the required resources.<sup class="cite"><a href="#ref-3">[3]</a></sup> In Stage-Gate terms, EVT and DVT live inside Stages 3 and 4, and PVT straddles Stages 4 and 5.</p>
+    <h3>The NASA project life cycle</h3>
+    <p>NASA's systems engineering life cycle is the most fully specified public example of a review-driven process. Its phases run from Pre-Phase A (concept studies) through Phase A (concept and technology development), Phase B (preliminary design), Phase C (final design and fabrication), Phase D (assembly, integration, test, and launch), Phase E (operations), and Phase F (closeout). Each phase ends in named reviews: the System Requirements Review (SRR) and System Definition Review (SDR) in Phase A, the Preliminary Design Review (PDR) in Phase B, the Critical Design Review (CDR), Production Readiness Review (PRR), and System Integration Review (SIR) in Phase C, and the Test Readiness Review (TRR), System Acceptance Review (SAR), and Operational Readiness Review (ORR) in Phase D.<sup class="cite"><a href="#ref-2">[2]</a></sup></p>
+    <p>You will not run a consumer product like a spacecraft. But the NASA vocabulary is useful because it names the two reviews that matter most for DFx. The PDR is where the architecture, and therefore the processes, get locked; a DFM finding that changes a process belongs before PDR. The CDR is where detail design is declared complete and fabrication begins; a DFM finding that changes a drawing belongs before CDR. The PRR exists precisely to ask the PVT question about the production system.</p>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Rough correspondence between the three vocabularies. Boundaries differ by company; use this to translate, not to legislate.</caption>
+        <thead><tr><th>Hardware build</th><th>Stage-Gate</th><th>NASA reviews</th><th>DFx activity that belongs here</th></tr></thead>
+        <tbody>
+          <tr><td>Concept and architecture</td><td>Stages 1 and 2</td><td>SRR, SDR, PDR</td><td>Process selection (Module 2); part-count architecture (Module 10); test and service access decided (Modules 11, 12)</td></tr>
+          <tr><td>Detail design, EVT</td><td>Stage 3</td><td>CDR</td><td>Process-specific DFM on every part (Modules 4 to 9); tolerance budgets (Module 3); DFT fixture concept</td></tr>
+          <tr><td>DVT</td><td>Stage 4</td><td>TRR, SAR</td><td>Verification that production-intent parts meet drawings (first article); test fixtures built and correlated</td></tr>
+          <tr><td>PVT</td><td>Stages 4 to 5</td><td>PRR, ORR</td><td>Process capability studies; control plans; PPAP or equivalent approval (Module 14)</td></tr>
+          <tr><td>Mass production</td><td>Post-launch review</td><td>Phase E</td><td>Engineering change control; yield and field data feeding the next program</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="tooling">Tooling maturity by build</h2>
+    <p>The single most useful thing to know about any build is what made the parts. The table below describes common practice; individual companies and suppliers vary, and you should confirm the plan for your program rather than assume it.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Typical part sources by build. Common practice, not a standard.</caption>
+        <thead><tr><th>Build</th><th>Plastics</th><th>Metal parts</th><th>Electronics</th><th>Assembly</th></tr></thead>
+        <tbody>
+          <tr><td>EVT</td><td>Machined, printed, or aluminium soft tool</td><td>Machined from stock; laser-cut and brake-formed sheet</td><td>Prototype boards, hand or small-batch assembled</td><td>Engineers and technicians, no fixtures</td></tr>
+          <tr><td>DVT</td><td>Production-intent steel tool, often first shots, textures and finishes may be incomplete</td><td>Production process (casting, stamping) from production or bridge tooling</td><td>Production fab and assembly house, production stencil and profile</td><td>Pilot line or production line at low rate, first fixtures</td></tr>
+          <tr><td>PVT</td><td>Production tool, final texture, approved first article</td><td>Production tooling, approved first article</td><td>Production line, in-circuit and functional test running</td><td>Production line, production fixtures, trained operators, at or near rate</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The consequences for DFM follow directly. Anything that needs the mould cavity changed, the stamping die reworked, or the casting pattern altered must be found before the DVT tools are cut. That is the review before DVT, which in calendar terms often means during EVT testing, before EVT results are even complete. The DFM review cannot wait for the test report.</p>
+
+    <h2 id="owners">Who owns DFM at each stage</h2>
+    <p>DFM fails most often not because nobody knows the rules but because nobody owns the finding. A workable division of labour, which you should adapt to your organisation:</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 3. Ownership of DFx work by stage. R is responsible for doing the work, A is accountable for the decision, C is consulted.</caption>
+        <thead><tr><th>Activity</th><th>Design engineering</th><th>Manufacturing or process engineering</th><th>Supplier</th><th>Quality</th><th>Test engineering</th></tr></thead>
+        <tbody>
+          <tr><td>Process and material selection (concept)</td><td>A</td><td>R</td><td>C</td><td>C</td><td></td></tr>
+          <tr><td>Part-level DFM against the process rules (detail design)</td><td>R</td><td>A</td><td>C</td><td></td><td></td></tr>
+          <tr><td>DFA review of the assembly (detail design)</td><td>R</td><td>A</td><td></td><td>C</td><td>C</td></tr>
+          <tr><td>DFT: test points, fixture access, coverage (detail design)</td><td>C</td><td>C</td><td></td><td></td><td>R, A</td></tr>
+          <tr><td>Supplier DFM review of the RFQ package (before DVT tooling)</td><td>A</td><td>R</td><td>R</td><td></td><td></td></tr>
+          <tr><td>First article inspection (DVT)</td><td>C</td><td>C</td><td>R</td><td>A</td><td></td></tr>
+          <tr><td>Process capability and control plan (PVT)</td><td></td><td>R</td><td>R</td><td>A</td><td>C</td></tr>
+          <tr><td>Engineering change control (all stages)</td><td>R</td><td>C</td><td>C</td><td>A</td><td>C</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Two points deserve emphasis. The design engineer is responsible for part-level DFM, not the supplier; the supplier's review is a check, and a design that arrives at the supplier already respecting their rules gets a faster quote and a better price (Module 14). And test engineering owns DFT from detail design, not from DVT; a fixture designed after the board is laid out is a fixture designed around obstacles.</p>
+
+    <h2 id="deliverable">The DFM review as a formal deliverable</h2>
+    <p>A review that produces a conversation produces nothing. A DFM review is done when it has produced a findings list that someone can act on and someone else can audit. The electronics industry has formalised this: the IPC DFX guideline, IPC-2231, establishes a "best practice methodology for use in developing a formal design for excellence (DFX) process" for board layout, and is intended as a compendium from which a team builds its own review practice.<sup class="cite"><a href="#ref-6">[6]</a></sup> The same discipline applies to mechanical parts.</p>
+    <h3>Inputs</h3>
+    <ul>
+      <li>The current CAD model and drawing, with revision numbers.</li>
+      <li>The BOM with intended process and material for every part, and the annual and lifetime volume.</li>
+      <li>The target unit cost and, if known, the target tooling budget.</li>
+      <li>The process-specific rule set (Modules 4 to 9 give you a starting set; your supplier's design guide overrides it).</li>
+      <li>The assembly sequence, even a rough one, and the test plan.</li>
+    </ul>
+    <h3>Output: the findings list</h3>
+    <p>Each finding carries the fields below. The format is deliberately boring. Boring formats get filled in.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 4. Fields of a DFM finding, with an illustrative entry.</caption>
+        <thead><tr><th>Field</th><th>Purpose</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td>ID</td><td>Stable reference for tracking</td><td>DFM-014</td></tr>
+          <tr><td>Part and revision</td><td>What was reviewed</td><td>Housing, P/N 1042, rev B</td></tr>
+          <tr><td>Finding</td><td>What was observed, in measurable terms</td><td>Rib thickness 2.5 mm equals nominal wall 2.5 mm</td></tr>
+          <tr><td>Rule and reason</td><td>The rule violated and why it exists</td><td>Rib at 0.5 × wall; thicker ribs cause sink on the opposite face</td></tr>
+          <tr><td>Severity</td><td>How the program decides what blocks a gate</td><td>Major: cosmetic surface affected</td></tr>
+          <tr><td>Recommendation</td><td>A specific change, not "review"</td><td>Reduce rib to 1.25 mm; add 0.4 mm base fillet</td></tr>
+          <tr><td>Owner and due phase</td><td>Who closes it and by which gate</td><td>Design engineer; before DVT tool release</td></tr>
+          <tr><td>Status and closure evidence</td><td>Open, accepted risk, or closed, with the revision that closed it</td><td>Closed in rev C, confirmed on first shots</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Severity needs a definition the program agrees on before the first review. A common three-level scheme: <strong>critical</strong> means the part cannot be made or assembled as drawn, or a safety or compliance requirement is violated; <strong>major</strong> means it can be made but with a cost, yield, or cosmetic penalty the program has not accepted; <strong>minor</strong> means an improvement with no gate impact. Critical findings block the next gate. Major findings block it unless the program explicitly accepts the risk in writing. Module 16 uses this scheme to score a full review.</p>
+    <h3>The end state: approved parts and a controlled process</h3>
+    <p>In regulated and automotive supply chains, the NPI sequence ends in a formal approval package. The automotive Production Part Approval Process (PPAP) defines eighteen elements, from design records and process flow diagrams through control plans, measurement system studies, initial process capability studies, and dimensional results, to the Part Submission Warrant that the supplier signs, and five submission levels that decide how much of that evidence the customer sees.<sup class="cite"><a href="#ref-7">[7]</a></sup> Even outside automotive, that list is a good description of what PVT should leave behind. Module 14 covers it in detail.</p>
+
+    <h2 id="freeze">Design freeze and change control</h2>
+    <p>A gate is only real if something is frozen behind it. Before production tooling is released, the program should freeze the interfaces and the drawings that drive tooling, and every change after that point should go through a documented engineering change (ECO) with an impact assessment covering tools, fixtures, inventory, test, and certification. The reason is the asymmetry described in Module 6: a mould can be changed cheaply in one direction and expensively in the other, and after parts are in inventory every change also has a scrap and effectivity question. Freezing does not mean no changes; it means every change is priced before it is approved.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 5. Quantitative reference points for the NPI process. Build sizes are one practitioner's typical values and vary widely by industry.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>EVT build size</td><td>Tens of units</td><td>10 to 40 units; about 5 weeks</td><td>Enough to test functions and components, few enough to hand-build</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>DVT build size</td><td>Around a hundred</td><td>50 to 100 units; 6 to 8 weeks</td><td>Enough for reliability, environmental, and pre-compliance testing on production-intent parts</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>PVT build size</td><td>A production fraction</td><td>10 to 20 % of first purchase order; about 3 weeks</td><td>Exercises the line, fixtures, and suppliers at rate</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Stage-Gate structure</td><td>Five stages after discovery, a gate before each</td><td>Gate outputs: go, kill, hold, recycle</td><td>Governance separated from work; decisions made with deliverables in hand</td><td><a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Formal design reviews</td><td>Lock architecture at PDR, drawings at CDR</td><td>NASA: SRR, SDR, PDR, CDR, PRR, SIR, TRR, SAR, ORR</td><td>Each review has defined entrance and success criteria</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Production approval package</td><td>Evidence, not assertion</td><td>PPAP: 18 elements, 5 submission levels</td><td>The customer sees proof the process is capable before volume</td><td><a href="#ref-7">[7]</a></td></tr>
+          <tr><td>Rate target versus achieved</td><td>Validate the process at the rate you will run</td><td>Model 3: 5,000 per week targeted for end 2017; 2,500 per week still missed in April 2018</td><td>An unvalidated line is a prototype</td><td><a href="#ref-4">[4]</a>, <a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Finding severity</td><td>Three levels, defined before the first review</td><td>Critical blocks the gate; major blocks unless risk accepted in writing; minor does not block</td><td>Consistent gate decisions</td><td>Course convention</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: the Model 3 ramp</h2>
+    <p>The Model 3 program is unusual in having its production problems narrated publicly by the chief executive, which is what makes it citable. The sequence in the record: a 28 July 2017 delivery event for the first 30 cars and a stated goal of roughly 5,000 cars per week by year end; a warning the next day of "at least six months of manufacturing hell";<sup class="cite"><a href="#ref-5">[5]</a></sup> and, in April 2018, a missed 2,500-per-week target, a statement that "excessive automation at Tesla was a mistake", and the removal of an automated conveyor system that "was not working".<sup class="cite"><a href="#ref-4">[4]</a></sup></p>
+    <p>The DFx reading is about sequence, not about automation as such. Automation that is designed into the process before the process has been proven by hand is a design decision made without validation data. The equivalent at your scale is a custom fixture built before anyone has assembled ten units on the bench, or a pallet designed before the wave-solder profile has been run. PVT exists to run the process, at rate, with the real people, before the volume commitment is made. When PVT is compressed or skipped, the ramp becomes the PVT, and the customers become the test units.</p>
+    <p>The record does not tell us what internal reviews Tesla held or skipped, and the course does not speculate. What it does show is the cost of learning about a process at rate rather than at PVT scale, measured in months of missed targets, and the value of a chief executive willing to say so in public.</p>
+    <!-- AUTHOR: optional personal note here (a ramp or fixture lesson from your own experience, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Waiting for EVT test results before starting the DFM review.</strong> Consequence: DVT tooling is ordered before the findings exist, and the findings become tool rework. Fix: run part-level DFM during EVT build, in parallel with test.</li>
+      <li><strong>Calling a build DVT when the parts are not from production-intent tooling.</strong> Consequence: reliability and compliance tests validate parts that will never ship. Fix: name the first hard-tooled build explicitly and treat it as the DFM deadline.</li>
+      <li><strong>No agreed severity scheme.</strong> Consequence: every gate becomes an argument about which findings matter. Fix: define critical, major, and minor before the first review and write it into the gate criteria.</li>
+      <li><strong>Findings without owners or due phases.</strong> Consequence: the same finding is raised at EVT, DVT, and PVT. Fix: every finding gets an owner and a gate by which it closes or is formally accepted.</li>
+      <li><strong>Automating or fixturing a process nobody has run by hand.</strong> Consequence: the fixture encodes assumptions the parts do not meet. Fix: build the first units manually, record the steps and the problems, then design the fixture.</li>
+      <li><strong>Treating the freeze as the end of change.</strong> Consequence: necessary changes go around the process and reach the line unpriced. Fix: freeze means every change is assessed for tool, fixture, inventory, test, and certification impact before approval.</li>
+      <li><strong>Skipping or compressing PVT to hold a launch date.</strong> Consequence: the ramp becomes the process test and customers receive the escapes. Fix: hold PVT exit criteria; if the date cannot move, reduce launch volume rather than skip the build.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: what one build later costs</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>A moulded housing is on a program with the following plan: EVT, 30 units from machined parts; DVT, 80 units from a production steel tool with a 10-week lead time from release; PVT, 500 units. A DFM finding exists: a boss stands alone in the middle of a cosmetic wall and will sink. Fixing it means adding a gusset rib and coring the wall behind the boss. Two scenarios:</p>
+    <ul>
+      <li><strong>Caught at EVT review:</strong> 2 days of design engineering at 90 euros per hour (8 hours per day), no other impact.</li>
+      <li><strong>Caught at DVT first shots:</strong> adding a gusset and a core means adding steel in one place and removing it in another. The moulder quotes 3 weeks of tool rework plus 1 week to re-sample, and 4,500 euros. The 80 DVT units already moulded are usable for tests except cosmetic evaluation, so a further 30 units are moulded after rework at 6 euros each. Two engineers spend 3 days each managing the change. The program's cost of schedule delay is estimated at 15,000 euros per week (illustrative burn rate of the team waiting on parts).</li>
+    </ul>
+    <p><strong>Tasks.</strong> (a) Compute the cost of each scenario. (b) Compute the ratio. (c) Which single assumption dominates the answer, and what does that tell you about where to argue for review time?</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a) EVT scenario.</strong> 2 days × 8 h × 90 €/h = 1,440 €. No schedule impact because the tool has not been released.</p>
+      <p><strong>DVT scenario.</strong> Tool rework 4,500 €. Extra samples 30 × 6 = 180 €. Engineering 2 × 3 days × 8 h × 90 €/h = 4,320 €. Schedule: 3 + 1 = 4 weeks × 15,000 €/week = 60,000 €. Total ≈ 69,000 €.</p>
+      <p><strong>(b)</strong> 69,000 / 1,440 ≈ 48 times. Even excluding the schedule cost, 9,000 / 1,440 ≈ 6 times.</p>
+      <p><strong>(c)</strong> The schedule cost dominates: it is 87 % of the DVT-scenario total. The tool rework itself is only about three times the EVT fix. That is the general shape of hardware change cost: the direct cost of rework is real but bounded; the cost of a team and a launch waiting four weeks for parts is what makes late findings expensive. It follows that the argument for review time is a schedule argument, not a cost-of-engineering argument, and should be made to whoever owns the launch date.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Seven questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="01">
+      <fieldset class="q" data-answer="b">
+        <legend>1. Which validation build asks "can the production process build the approved design reliably?"</legend>
+        <label><input type="radio" name="q1" value="a"> EVT</label>
+        <label><input type="radio" name="q1" value="b"> PVT</label>
+        <label><input type="radio" name="q1" value="c"> DVT</label>
+        <label><input type="radio" name="q1" value="d"> Concept review</label>
+        <p class="explain" hidden>PVT moves the question from the product to the process.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>2. In most programs, the DFM deadline for changes that affect a mould cavity is</legend>
+        <label><input type="radio" name="q2" value="a"> the PVT exit gate</label>
+        <label><input type="radio" name="q2" value="b"> the start of mass production</label>
+        <label><input type="radio" name="q2" value="c"> the release of production-intent tooling for the DVT build</label>
+        <label><input type="radio" name="q2" value="d"> the end of DVT testing</label>
+        <p class="explain" hidden>DVT is normally the first build from production-intent tooling, so the tool release before it is the deadline.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>3. In Cooper's Stage-Gate model, the three components of a gate are</legend>
+        <label><input type="radio" name="q3" value="a"> deliverables, criteria, and outputs</label>
+        <label><input type="radio" name="q3" value="b"> cost, schedule, and scope</label>
+        <label><input type="radio" name="q3" value="c"> design, build, and test</label>
+        <label><input type="radio" name="q3" value="d"> supplier, customer, and regulator</label>
+        <p class="explain" hidden>Deliverables from the previous stage are judged against criteria to produce outputs: a go, kill, hold, or recycle decision with resources.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>4. In the NASA life cycle, the review at which detailed design is declared complete and fabrication begins is the</legend>
+        <label><input type="radio" name="q4" value="a"> System Requirements Review (SRR)</label>
+        <label><input type="radio" name="q4" value="b"> Preliminary Design Review (PDR)</label>
+        <label><input type="radio" name="q4" value="c"> Operational Readiness Review (ORR)</label>
+        <label><input type="radio" name="q4" value="d"> Critical Design Review (CDR)</label>
+        <p class="explain" hidden>CDR closes Phase C detail design; PDR locks the preliminary design and architecture in Phase B.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="60" data-tolerance="0.5">
+        <legend>5. Following the guideline that PVT builds 10 to 20 percent of the first purchase order, a program sets PVT at 15 percent of a first order of 400 units. How many PVT units are built?</legend>
+        <label>Answer (units): <input type="number" name="q5" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>0.15 × 400 = 60 units.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>6. Musk's April 2018 statement attributed the Model 3 ramp problems to</legend>
+        <label><input type="radio" name="q6" value="a"> a shortage of battery cells</label>
+        <label><input type="radio" name="q6" value="b"> excessive automation, which he called his mistake</label>
+        <label><input type="radio" name="q6" value="c"> supplier quality problems</label>
+        <label><input type="radio" name="q6" value="d"> regulatory delays</label>
+        <p class="explain" hidden>"Yes, excessive automation at Tesla was a mistake. To be precise, my mistake. Humans are underrated."</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="18" data-tolerance="0.5">
+        <legend>7. How many elements does the automotive PPAP define?</legend>
+        <label>Answer: <input type="number" name="q7" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>PPAP has 18 elements and 5 submission levels.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>b. PVT.</li>
+        <li>c. Release of production-intent tooling for DVT.</li>
+        <li>a. Deliverables, criteria, outputs.</li>
+        <li>d. CDR.</li>
+        <li>60 units.</li>
+        <li>b. Excessive automation.</li>
+        <li>18 elements.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>EVT asks whether the engineering works, DVT whether the design meets requirements, PVT whether the process can build it at rate. Each has exit criteria; hold them.</li>
+      <li>Find out which build is the first from production-intent tooling. The review before it is your DFM deadline, and it usually falls during EVT testing, not after.</li>
+      <li>Stage-Gate and the NASA life cycle are the same idea with different names: work in stages, decide at gates with deliverables and criteria in hand.</li>
+      <li>The design engineer owns part-level DFM; the supplier checks it. Test engineering owns DFT from detail design, not from DVT.</li>
+      <li>A DFM review is complete when it produces a findings list with rule, reason, severity, recommendation, owner, due phase, and closure evidence.</li>
+      <li>Late findings are expensive mainly because of schedule, not rework. Argue for review time with whoever owns the launch date.</li>
+      <li>Run the process by hand before you fixture or automate it, and run it at rate before you commit volume.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07.</p>
+    <ol class="references">
+      <li id="ref-1">Haw, J. "EVT vs DVT vs PVT: Understanding the Stages of Product Development." OpenBOM blog, 1 September 2023. <a href="https://www.openbom.com/blog/evt-vs-dvt-vs-pvt-understanding-the-stages-of-product-development">https://www.openbom.com/blog/evt-vs-dvt-vs-pvt-understanding-the-stages-of-product-development</a> <span class="tag">(one practitioner's typical quantities and durations)</span></li>
+      <li id="ref-2">NASA. "3.0 NASA Program/Project Life Cycle." <em>NASA Systems Engineering Handbook</em>, NASA/SP-2016-6105 Rev 2, online edition. <a href="https://www.nasa.gov/reference/3-0-nasa-program-project-life-cycle/">https://www.nasa.gov/reference/3-0-nasa-program-project-life-cycle/</a></li>
+      <li id="ref-3">Stage-Gate International. "The Stage-Gate Model: An Overview." n.d. <a href="https://www.stage-gate.com/blog/the-stage-gate-model-an-overview/">https://www.stage-gate.com/blog/the-stage-gate-model-an-overview/</a></li>
+      <li id="ref-4">Etherington, D. "Elon Musk says 'humans are underrated,' calls Tesla's 'excessive automation' a 'mistake'." TechCrunch, 13 April 2018. <a href="https://techcrunch.com/2018/04/13/elon-musk-says-humans-are-underrated-calls-teslas-excessive-automation-a-mistake/">https://techcrunch.com/2018/04/13/elon-musk-says-humans-are-underrated-calls-teslas-excessive-automation-a-mistake/</a> (original post: <a href="https://x.com/elonmusk/status/984882630947753984">https://x.com/elonmusk/status/984882630947753984</a>)</li>
+      <li id="ref-5">NBC News. "Elon Musk Warns of 'Manufacturing Hell' for Model 3." 1 August 2017. <a href="https://www.nbcnews.com/business/autos/elon-musk-warns-manufacturing-hell-model-3-n788561">https://www.nbcnews.com/business/autos/elon-musk-warns-manufacturing-hell-model-3-n788561</a></li>
+      <li id="ref-6">IPC. <em>IPC-2231 DFX Guidelines</em>, 2019 (current revision IPC-2231A). Described in I-Connect007, "Design Circuit: IPC-2231 Captures Board Design Best Practices." <a href="https://iconnect007.com/index.php/article/124698/design-circuit-ipc-2231-captures-board-design-best-practices/124701">https://iconnect007.com/index.php/article/124698/design-circuit-ipc-2231-captures-board-design-best-practices/124701</a> <span class="tag">(the guideline itself is a paid document; description taken from Crawford, P., I-Connect007, 30 September 2020)</span></li>
+      <li id="ref-7">Quality-One International. "PPAP: Production Part Approval Process." n.d. <a href="https://quality-one.com/ppap/">https://quality-one.com/ppap/</a> <span class="tag">(summary of the AIAG PPAP manual, 4th ed., 2006)</span></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Cooper, R. G. <em>Winning at New Products: Creating Value Through Innovation</em>, 5th ed. Basic Books, 2017. The Stage-Gate source text.</li>
+      <li>Ulrich, K. T., Eppinger, S. D., Yang, M. C. <em>Product Design and Development</em>, 7th ed. McGraw-Hill, 2020. Generic development process, including a chapter on design for manufacturing.</li>
+      <li>NASA. <em>NASA Systems Engineering Handbook</em>, NASA/SP-2016-6105 Rev 2, 2016. Full text of the life cycle and review criteria.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>

@@ -10,7 +10,7 @@
      Only finished modules are linked (no placeholder pages). */
   var MODULES = [
     { num: "00", slug: "00-introduction", title: "Introduction: Why DFx", built: true },
-    { num: "01", slug: "01-npi-process", title: "The product development and NPI process", built: false },
+    { num: "01", slug: "01-npi-process", title: "The product development and NPI process", built: true },
     { num: "02", slug: "02-process-selection", title: "Process selection and cost drivers", built: false },
     { num: "03", slug: "03-tolerancing", title: "Tolerancing for manufacturability", built: false },
     { num: "04", slug: "04-cnc-machining", title: "DFM for CNC machining", built: false },
