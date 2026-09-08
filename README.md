@@ -37,7 +37,7 @@ The site is static. Copy the files to any web host, or use one of these.
 
 1. Push the repository to GitHub.
 2. In the repository settings, open **Pages**, choose **Deploy from a branch**, select the `main` branch and the `/ (root)` folder, and save.
-3. The site appears at `https://<user>.github.io/<repository>/` within a minute or two. Paths in the site are relative, so it works in a subfolder.
+3. The site appears at `https://<user>.github.io/<repository>/` within a minute or two. Paths in the site are relative, so it works in a subfolder. If the user site `<user>.github.io` carries a custom domain, this project site is served under it as well; the course is published as the repository `dfx`, so it appears at `https://erdemyilmaz.me/dfx/`.
 
 For a custom domain, add a `CNAME` file containing the domain name and configure DNS as GitHub's Pages documentation describes.
 
