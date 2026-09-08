@@ -9,11 +9,43 @@ Spec: CLAUDE.md. Source register: SOURCES.md.
 |-------|--------|------|
 | A – Research and outline | Complete, approved by author | 2026-09-07 |
 | B – Scaffold + reference module (06) | Complete, approved by author (4,900 words accepted) | 2026-09-07 |
-| C – Remaining modules | **Done**: modules 00 to 16 built; supporting pages next | 2026-09-07 |
-| D – Verification pass | Not started | |
-| E – Ship (README, final summary) | Not started | |
+| C – Remaining modules | Complete: modules 00 to 16, glossary, references, about | 2026-09-07 |
+| D – Verification pass | Complete (see Phase D record) | 2026-09-07 |
+| E – Ship (README, final summary) | Complete (see Phase E record) | 2026-09-07 |
 
 Author decisions (2026-09-07): outlines and examples approved; Module 11 uses the Boeing 787 battery case (Ariane 5 kept as alternative); capstone product is the portable 12 V tyre inflator; books appear only in an unnumbered "Further reading" list, never as numbered references; licence text shown in footers as "proposed" until confirmed.
+
+## Phase D record (2026-09-07)
+
+Checks run over every module with `tools/verify_all.py`, `tools/checkmodule.py`, `tools/checkdashes.py`, and `tools/checklinks.py`, plus a browser pass on each module (quiz submitted with the answer key, SVG text bounds measured, mobile width 375 px checked for horizontal scroll).
+
+| Check | Result |
+|---|---|
+| Every citation `[n]` resolves to a `ref-n` entry, and every entry is cited | Pass, all 17 modules (checkmodule "cites missing []; uncited []") |
+| Every References URL appears in `SOURCES.md` | Pass after adding S-162 (I-Connect007 IPC-2231 article, cited in Modules 1 and 9, which had been read but not registered) |
+| Every References entry has a year or "n.d." | Pass after adding years or "n.d." to 15 entries (NIST e-Handbook, Fabricator, TIGER TDS, Formlabs, IPC-7351B, NASA PD-ED-1201, NAVSEA SD-18, ASTM B633 and B117, ASME Y14.41) |
+| Every design rules table row cites a source | Pass (checked when each module was built; capstone Table 12 re-checked) |
+| Secondary sources labelled in References | Pass; 32 of 162 register entries are secondary and each carries a `(secondary: ...)` tag where cited |
+| Imperial units only after a metric value | Pass. Two flagged strings reviewed: Module 6 "25 mm (1 inch)" and Module 15 "2.2046 lb/kg" conversion note, both metric-first |
+| No employer-specific content | Pass; all cases are public and cited, all examples labelled illustrative; 17 `<!-- AUTHOR -->` placeholders left for optional personal notes and the bio/licence/contact |
+| No placeholder text | Pass. "TBD" appears three times in Module 14 as deliberate content (an example of a defective BOM line), not as a placeholder |
+| No em or en dashes | Pass, all pages (checkdashes) |
+| Quiz scores correctly | Pass; every module's quiz submitted with the answer key in the browser scores 100 % and marks the module complete; index shows 17 of 17 |
+| Exercise arithmetic recomputed | Pass; recomputed in Python when each module was built (Module 3 Q5 and Module 5 Q2 corrected then; Module 15 and 16 recomputed 2026-09-07 with results in the Phase C log) |
+| SVG accessibility | Pass; 33 inline diagrams, each with `<title>` and `<desc>`, no text outside the viewBox |
+| Section structure | Pass; every module has objectives, why, rules, case, mistakes, exercise, quiz, takeaways, references, pager, footer |
+| Mobile layout | Pass at 375 px (no horizontal scroll) |
+
+**External links (2026-09-07).** 221 module reference entries, 148 distinct URLs. All return 200 to a scripted request except the following, which return 403 or 406 to scripts but open normally in a browser (confirmed for each during the build): ACM Digital Library (2), ANSI webstore (6), ISO (4), CPSC, FlightGlobal, The Fabricator, GlobalSpec, Keysight, NAVSEA, NSF, CBS News (406, opened in browser 2026-09-07), and acqnotes.com (TLS handshake fails for the script; opened in browser 2026-09-07). No dead links remain: the copper.org Statue of Liberty pages (404) were replaced in Module 13, and the USTRANSCOM Better Buying Power PDF (404) was replaced in Module 15.
+
+## Phase E record (2026-09-07)
+
+- `README.md` written: local viewing, GitHub Pages and Netlify deployment, how to edit a module, the authoring checks, proposed licences.
+- Word count: about 89,800 words of module text including tables (body prose per module in the Phase C log; every module between 3,100 and 4,900 prose words except the capstone, which is table-heavy by design).
+- Sources: 162 register entries (130 verified, 32 secondary); 148 distinct URLs cited across 221 module reference entries; consolidated on `references.html`.
+- Diagrams: 33 inline SVGs. Quizzes: 134 questions across 17 modules.
+- Claims not verified and therefore removed or relabelled (details in the Phase A record and Phase C log): the "70 to 80 percent of cost committed in design" figure (taught as folklore, with Ulrich and Pearson's measurement instead); the "rule of ten" cost-of-change curve (attributed to Boehm, labelled as a rule of thumb); IBM Proprinter part-count figures (omitted; only the fact of the comparison is cited); a "40:1" additive claim (removed); the copper.org "rivets pulled through the skin" and "1,800 bars" Statue of Liberty details (removed when the page disappeared); Boothroyd Dewhurst outcome ranges (presented as vendor claims); mould class cycle counts, SPI finish grades, PPAP capability thresholds, and ASTM B633 class values (from public reproductions, labelled secondary); IEC 60529 digit meanings (from the IEC's own page, verified).
+- Open items for the author: confirm the licences (CC BY-NC-SA 4.0 content, MIT code) shown as "proposed" in every footer, on `about.html`, and in `README.md`; replace the bio, add a contact method, and decide on the 17 optional personal-note placeholders; decide whether to keep the working title.
 
 ## Phase C log
 
