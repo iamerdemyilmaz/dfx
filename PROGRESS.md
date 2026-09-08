@@ -9,7 +9,7 @@ Spec: CLAUDE.md. Source register: SOURCES.md.
 |-------|--------|------|
 | A – Research and outline | Complete, approved by author | 2026-09-07 |
 | B – Scaffold + reference module (06) | Complete, approved by author (4,900 words accepted) | 2026-09-07 |
-| C – Remaining modules | **In progress**: 00 to 15 done | 2026-09-07 |
+| C – Remaining modules | **Done**: modules 00 to 16 built; supporting pages next | 2026-09-07 |
 | D – Verification pass | Not started | |
 | E – Ship (README, final summary) | Not started | |
 
@@ -37,6 +37,7 @@ Author instruction (2026-09-07): no em or en dashes anywhere in the course, incl
 | 13 Materials, finishes, joining | 2026-09-07 | 4,313 | 18 | 2 | 8 | 18 OK | The copper.org "Reclothing the First Lady of Metals" pages are gone (404); ref-2 replaced with the live CDA press release (1,500 saddles, 300,000 rivets, verified). The "rivets pulled through the skin" and "1,800 bars replaced" claims, which rested only on search excerpts of the dead page, were removed. Brazing clearance wording aligned to Lucas-Milhaupt. |
 | 14 Suppliers and CMs | 2026-09-07 | 3,870 | 11 | 2 | 8 | 10 OK; ANSI webstore (APQP listing) 403 to scripts, page known to exist | AS9102 Rev. C (June 2023) via High QA summary; ASME page lists Y14.41-2026 as current, course says 2019 edition in wide use and notes 2026. "TBD" appears three times as deliberate content (an example of a bad BOM line), not as a placeholder; the placeholder checker flags it. Hyatt facts from the TAMU ethics PDF (NBS quotes, dates, hearing findings) and the NIST page (113 dead, 186 injured, probable cause). |
 | 15 Cost modeling and should-cost | 2026-09-07 | 4,166 | 12 | 2 | 8 | 11 OK; acqnotes.com rejects scripted fetches (TLS/anti-bot) but was read in the browser | Ulrich & Pearson PDF re-read for the Krups scenario, 48 %/31 % ranges, price-versus-cost pairs, and purchased-parts share. Hubs CNC rate table and moulding cost bands read on the live pages. Boothroyd Dewhurst sheet metal costing page used for imperial reference values, converted to metric in Table 1. FAR 15.407-4 read and upgraded to verified. BBP 2.0 memo PDFs (USTRANSCOM 404, OSD 403) replaced by the AcqNotes BBP 3.0 list and a DoD News article for the 2010 origin. Exercise arithmetic recomputed in Python (component rounding gives $10.48 sheet metal, exact $10.47; break-evens 528/349/3,168 with rounded figures). |
+| 16 Capstone | 2026-09-07 | about 2,800 prose words plus 12 tables | 19 | 3 | 8 | 18 OK; Keysight 403 to scripts (known) | Body prose is below the 2,500 to 4,500 target by design: the module is the exam and its content is the specification, baseline BOM, four findings tables, the consolidated scored list, and the redesigned BOM (12 tables, about 2,600 words of table text). Product, dimensions, allowances, and costs are labelled illustrative. All rules cite the module and source that introduced them; no new sources. Arithmetic (IPC-2221 trace width, NADCA draft, DFA indices, part and fastener counts) recomputed in Python. |
 
 Links that return 403 to scripts are recorded here rather than as dead; they will be re-checked by hand in Phase D.
 

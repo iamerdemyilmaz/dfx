@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 16: Capstone: a full DFx review · DFx Course</title>
+<meta name="description" content="A complete DFM, DFA, DFT, and DFS review of a fully specified portable 12 V tyre inflator, producing a scored findings list and a redesigned bill of materials. This module is the course exam.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="16">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 16</p>
+    <h1>Capstone: a full DFx review</h1>
+    <p class="lead">This module is the exam. It specifies one product completely, a portable 12 V DC tyre inflator, and takes it through the four reviews this course has taught: design for manufacturing, for assembly, for test, and for service. The output is what a real review produces: a scored findings list with dispositions, and a redesigned bill of materials with the part count, fastener count, and assembly time before and after. Read the baseline design first, write your own findings, then compare them with the review below. The worked exercise and quiz ask you to finish the parts the review leaves open.</p>
+    <p><em>The product, its parts list, its dimensions, and every cost and time figure in this module are illustrative. This is not a real program. Every design rule applied is cited to the module and source that introduced it.</em></p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Conduct</strong> a DFM review of moulded, die-cast, machined, sheet metal, and PCB parts against cited quantitative rules.</li>
+      <li><strong>Apply</strong> the Boothroyd Dewhurst minimum-part questions to a full assembly and compute a DFA index before and after redesign.</li>
+      <li><strong>Specify</strong> the test access, test points, and test sequence a product needs before its housing closes.</li>
+      <li><strong>Identify</strong> field-replaceable units, wear parts, and the compliance constraints that reach into material and finish choices.</li>
+      <li><strong>Score</strong> findings by severity and likelihood, disposition each one, and produce a redesigned BOM with quantified changes.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>A DFx review is where the course's rules stop being rules and start being decisions. The results that Boothroyd Dewhurst publishes for its customers show the scale a complete review can reach on a real product: an IDEXX Laboratories analyser door went from 183 parts to 31, from 63 fasteners to none, and from 45 minutes of assembly to 11, its DFA index rising from 3.8 to 35.8.<sup class="cite"><a href="#ref-1">[1]</a></sup> Those are vendor-published figures and should be read as such, but the mechanism behind them is public and reproducible: ask of every part whether it must move, must be a different material, or must be separate for assembly or service, and remove what fails all three.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>A smaller, fully worked case shows what a review looks like at the scale of a single enclosure. An L3Harris engineer's DFMA Forum walkthrough analysed an electronics enclosure of 11 parts with a theoretical minimum of 3, an estimated assembly time of 87.6 seconds, and a DFA index of 11.76; replacing four cover screws with a snap-fit cover raised the index to 17.63 and removed about 29 seconds and $0.95 of process cost per unit.<sup class="cite"><a href="#ref-2">[2]</a></sup> The inflator below is a bigger version of that enclosure: more processes, more fasteners, a PCBA, a pressurised subassembly, and a service story. The method is the same.</p>
+    <p>The order matters. DFM findings change parts; DFA findings remove them; DFT findings add access; DFS findings decide which joints must reopen. Run them in that order and each review works on a design that the previous one has already simplified.</p>
+
+    <h2 id="product">The product</h2>
+    <p>A portable tyre inflator powered from a vehicle's 12 V accessory socket. It is sold with a car, kept in the boot, and used a few times a year, sometimes at the roadside in rain.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Product specification (illustrative).</caption>
+        <thead><tr><th>Attribute</th><th>Requirement</th></tr></thead>
+        <tbody>
+          <tr><td>Supply</td><td>12 V DC nominal (10 to 15 V), 10 A maximum, 15 A fuse in plug, 3 m cord</td></tr>
+          <tr><td>Pressure range</td><td>0 to 700 kPa gauge (0 to 7 bar), digital display resolution 5 kPa, auto-stop at set pressure ±10 kPa</td></tr>
+          <tr><td>Performance</td><td>Inflate a 195/65 R15 tyre from 150 to 250 kPa in under 3 minutes; free-air flow about 25 L/min</td></tr>
+          <tr><td>Duty cycle</td><td>10 minutes on, 10 minutes off; thermal cut-out on the motor</td></tr>
+          <tr><td>Compressor</td><td>Single-cylinder oil-free piston, 30 mm bore, 16 mm stroke, crank driven by a brushed 12 V DC motor</td></tr>
+          <tr><td>Environment</td><td>−10 to 50 °C ambient; splash resistant in use (IPX4 target); vehicle vibration in storage</td></tr>
+          <tr><td>Features</td><td>Backlit LCD, three-button keypad (unit, set, start/stop), LED work light, 0.6 m hose with screw-on chuck, adaptor nozzles</td></tr>
+          <tr><td>Volume and cost</td><td>20,000 units per year for five years; target factory cost US$18.00; target assembly time under 5 minutes</td></tr>
+          <tr><td>Compliance</td><td>RoHS materials declaration for all parts; CE marking (EMC, electrical safety by the relevant standards for vehicle accessories); user-serviceable fuse</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 640 330" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Section through the baseline inflator</title>
+        <desc id="fig1-desc">A side cross-section of the inflator. Two moulded housing halves enclose, from left to right, a brushed DC motor on a sheet metal bracket, a crank and connecting rod, a machined cylinder with piston, and a die-cast cylinder head with a hose fitting exiting the housing on the right. A heat shield sits between the head and the upper housing. Above the motor, a PCBA with an LCD and a membrane keypad sits under a display window in the upper housing. A power cord exits on the left through a grommet. Numbered callouts match the baseline bill of materials.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M40 90 Q40 60 70 60 H570 Q600 60 600 90 V250 Q600 280 570 280 H70 Q40 280 40 250 Z"/>
+          <path d="M40 170 H600" class="diagram-soft" stroke-dasharray="6 4"/>
+          <rect x="90" y="150" width="120" height="100" rx="4"/>
+          <path d="M90 250 H210 V262 H80 V180 H90" class="diagram-soft"/>
+          <circle cx="250" cy="200" r="22"/>
+          <circle cx="250" cy="200" r="4"/>
+          <path d="M262 188 L330 205"/>
+          <rect x="320" y="185" width="110" height="40"/>
+          <rect x="325" y="190" width="24" height="30" class="diagram-accent-fill"/>
+          <path d="M430 175 H520 V235 H430 Z" class="diagram-accent"/>
+          <path d="M520 195 H600 M520 215 H600" class="diagram-accent"/>
+          <path d="M425 165 H530" stroke-dasharray="3 3"/>
+          <rect x="120" y="85" width="220" height="14"/>
+          <rect x="140" y="70" width="120" height="16" class="diagram-soft"/>
+          <path d="M290 70 H330 V85" class="diagram-soft"/>
+          <path d="M40 210 H10" stroke-width="4"/>
+          <circle cx="40" cy="210" r="8" class="diagram-soft"/>
+          <path d="M100 150 V125 M300 150 V99" class="diagram-soft" stroke-dasharray="3 3"/>
+        </g>
+        <g class="diagram-text">
+          <text x="60" y="52" class="diagram-text-muted">1, 2 housing halves (ABS), 8 screws at the parting line</text>
+          <text x="110" y="205">10 motor</text>
+          <text x="86" y="275" class="diagram-text-muted">11 bracket (2 mm steel)</text>
+          <text x="228" y="245" class="diagram-text-muted">8 crank, 7 rod</text>
+          <text x="332" y="245" class="diagram-text-muted">4 cylinder, 5 piston</text>
+          <text x="436" y="255" class="diagram-text-muted">3 die-cast head, 13 valves</text>
+          <text x="440" y="158" class="diagram-text-muted">12 heat shield</text>
+          <text x="530" y="188" class="diagram-text-muted">22 fitting, 21 hose</text>
+          <text x="150" y="82" class="diagram-text-muted">16 LCD, 17 keypad, 18 window</text>
+          <text x="150" y="115" class="diagram-text-muted">15 PCBA</text>
+          <text x="8" y="235" class="diagram-text-muted">20 cord</text>
+          <text x="440" y="300" class="diagram-text-muted">Overall about 200 × 90 × 150 mm</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. Baseline design in section. Numbers refer to the bill of materials in Table 2.</figcaption>
+    </figure>
+
+    <h2 id="bom">Baseline bill of materials</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Baseline BOM as received for review. Quantities per unit. "Process" is the intended production process at 20,000 per year.</caption>
+        <thead><tr><th>No.</th><th>Part</th><th>Qty</th><th>Material</th><th>Process</th><th>Notes as drawn</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Housing, upper</td><td>1</td><td>ABS, textured</td><td>Injection moulding</td><td>2.0 mm wall, 4.0 mm under handle; 0.5° draft; side snap hooks; ribs 2.0 mm; bosses OD 5.0 mm for M3</td></tr>
+          <tr><td>2</td><td>Housing, lower</td><td>1</td><td>ABS, textured</td><td>Injection moulding</td><td>As above; mating lip toleranced ±0.05 mm</td></tr>
+          <tr><td>3</td><td>Cylinder head</td><td>1</td><td>A380 aluminium</td><td>Die casting, then machining</td><td>8 mm walls around ports; 16 mm deep pocket with R1 corners; no draft called out; M4 tapped 15 mm deep</td></tr>
+          <tr><td>4</td><td>Cylinder</td><td>1</td><td>6061 aluminium</td><td>CNC from bar, honed bore</td><td>30 mm bore, 60 mm long, flange with 4 holes</td></tr>
+          <tr><td>5</td><td>Piston</td><td>1</td><td>6061 aluminium</td><td>CNC</td><td>Diameter toleranced ±0.01 mm</td></tr>
+          <tr><td>6</td><td>Piston cup seal</td><td>1</td><td>PTFE compound</td><td>Purchased</td><td>Retained by a snap ring and washer (2 parts)</td></tr>
+          <tr><td>7</td><td>Connecting rod</td><td>1</td><td>Steel</td><td>CNC</td><td>Pressed pin to piston</td></tr>
+          <tr><td>8</td><td>Crank eccentric</td><td>1</td><td>Steel</td><td>CNC</td><td>Fixed to motor shaft by a slotted set screw (1 part)</td></tr>
+          <tr><td>9</td><td>Ball bearing 608</td><td>1</td><td>Steel</td><td>Purchased</td><td>In connecting rod big end</td></tr>
+          <tr><td>10</td><td>Motor, 12 V brushed DC</td><td>1</td><td>Purchased</td><td>Purchased</td><td>Thermal cut-out included; solder tabs</td></tr>
+          <tr><td>11</td><td>Motor bracket</td><td>1</td><td>CRS 2.0 mm</td><td>Sheet metal, zinc plated</td><td>4.5 mm holes 3 mm from bend; 6 mm flange; 0.5 mm bend radius; plating "zinc"</td></tr>
+          <tr><td>12</td><td>Heat shield</td><td>1</td><td>CRS 0.8 mm</td><td>Sheet metal, zinc plated</td><td>Six bends, two bend radii; 2 screws</td></tr>
+          <tr><td>13</td><td>Reed valves</td><td>2</td><td>Spring steel</td><td>Purchased (stamped)</td><td>Inlet and outlet</td></tr>
+          <tr><td>14</td><td>Valve plate</td><td>1</td><td>Steel</td><td>CNC</td><td>Between cylinder and head; 2 gaskets</td></tr>
+          <tr><td>15</td><td>PCBA</td><td>1</td><td>FR-4, 2 layers, 1 oz</td><td>SMT</td><td>0.09 mm trace/space; 2 mm wide 10 A trace; copper 0.25 mm from V-cut; no fiducials; no test points; annular ring 0.15 mm</td></tr>
+          <tr><td>16</td><td>LCD module</td><td>1</td><td>Purchased</td><td>Purchased</td><td>FPC to PCBA connector, unkeyed</td></tr>
+          <tr><td>17</td><td>Membrane keypad</td><td>1</td><td>Purchased</td><td>Purchased</td><td>Adhesive backed; FPC tail</td></tr>
+          <tr><td>18</td><td>Display window</td><td>1</td><td>PC, clear</td><td>Injection moulding</td><td>0.8 mm wall, no draft, glued</td></tr>
+          <tr><td>19</td><td>LED lens</td><td>1</td><td>PC, clear</td><td>Injection moulding</td><td>Glued</td></tr>
+          <tr><td>20</td><td>Power cord with plug and fuse</td><td>1</td><td>Purchased</td><td>Purchased</td><td>Soldered to PCBA; grommet (1 part); cable clip (1 screw)</td></tr>
+          <tr><td>21</td><td>Hose with chuck</td><td>1</td><td>Purchased</td><td>Purchased</td><td>Screws onto fitting</td></tr>
+          <tr><td>22</td><td>Hose fitting</td><td>1</td><td>Brass</td><td>CNC</td><td>1/8 BSP into head; PTFE tape</td></tr>
+          <tr><td>23</td><td>Motor harness</td><td>1</td><td>Wire, terminals</td><td>Assembly</td><td>Two wires soldered both ends</td></tr>
+          <tr><td>24</td><td>Rubber feet</td><td>4</td><td>Elastomer</td><td>Purchased</td><td>Adhesive</td></tr>
+          <tr><td>25</td><td>Rating label</td><td>1</td><td>Polyester</td><td>Purchased</td><td>Adhesive</td></tr>
+          <tr><td>26</td><td>Screws, housing M3 × 12 self-tapping</td><td>8</td><td>Steel, zinc</td><td>Purchased</td><td>Phillips</td></tr>
+          <tr><td>27</td><td>Screws, bracket to housing M4</td><td>4</td><td>Steel, zinc</td><td>Purchased</td><td>Hex socket</td></tr>
+          <tr><td>28</td><td>Screws, motor to bracket M3</td><td>2</td><td>Steel</td><td>Purchased</td><td>Phillips</td></tr>
+          <tr><td>29</td><td>Screws, head and cylinder to bracket M4</td><td>4</td><td>Steel, zinc</td><td>Purchased</td><td>Torx</td></tr>
+          <tr><td>30</td><td>Screws, PCBA M3</td><td>4</td><td>Steel</td><td>Purchased</td><td>Phillips</td></tr>
+          <tr><td>31</td><td>Screws, heat shield and cable clip</td><td>3</td><td>Steel</td><td>Purchased</td><td>Phillips</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Count before review: 31 line items, 61 parts including 26 threaded fasteners (25 screws and one set screw), 8 adhesive joints, 4 hand-soldered joints, and 4 fastener drive types. The compressor subassembly cannot be pressure tested until the head, cylinder, valve plate, and fitting are bolted to the bracket, which is bolted into the lower housing.</p>
+
+    <h2 id="method">Scoring method</h2>
+    <p>Each finding gets a severity from 1 to 3 and a likelihood from 1 to 3; the score is their product. Severity 3 means the part cannot be made as drawn, or a safety or compliance failure; 2 means a yield, quality, or field-return risk; 1 means cost only. Likelihood 3 means it will happen on every part; 2 on a meaningful fraction; 1 rarely. Scores of 6 and above are fixed before tooling is cut. Scores of 3 and 4 are fixed if the change costs nothing at this stage. Scores of 1 and 2 are recorded and revisited at the next cost-down. Every finding gets a disposition (accept, negotiate, reject) and an owner, as in Module 14.</p>
+
+    <h2 id="dfm">DFM review</h2>
+    <p>Take the parts in BOM order and check each one against the rules table of the module for its process. The moulded housings get the Module 6 checks (wall, draft, ribs, bosses, undercuts, tolerances, material); the die-cast head gets Module 7 (wall, draft, corner radii, machining allowance); the machined parts get Module 4 (tolerances, thread depth, corner radii); the sheet metal gets Module 5 (bend radius, flange, hole-to-bend); the PCBA gets Module 9 (fabrication tier rules, current capacity, fiducials); and every part gets Module 13 (finish specified completely, galvanic pairs, service temperature). Write the finding, cite the rule, score it, and propose a fix. Do not stop at the first finding on a part; the housings alone produced six.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 3. DFM findings. S = severity, L = likelihood, Score = S × L. Rule citations refer to this module's references and the module that introduced the rule.</caption>
+        <thead><tr><th>ID</th><th>Part</th><th>Finding</th><th>Rule and source</th><th>S</th><th>L</th><th>Score</th><th>Recommendation and disposition</th></tr></thead>
+        <tbody>
+          <tr><td>DFM-01</td><td>1, 2 housings</td><td>Wall 2.0 mm nominal with 4.0 mm solid section under the handle: sink and warp on the textured cosmetic face; long cooling time</td><td>ABS recommended wall 1.14 to 3.56 mm; uniform walls (Module 6)<sup class="cite"><a href="#ref-3">[3]</a></sup></td><td>2</td><td>3</td><td>6</td><td>Accept. Core out the handle to a 2.2 mm shell with 1.1 mm ribs.</td></tr>
+          <tr><td>DFM-02</td><td>1, 2 housings</td><td>0.5° draft on a textured outer surface: scuffing on ejection</td><td>Light texture needs 3°, medium 5° (Module 6)<sup class="cite"><a href="#ref-3">[3]</a></sup><sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>2</td><td>3</td><td>6</td><td>Accept. 3° on textured walls; specify texture depth with the moulder.</td></tr>
+          <tr><td>DFM-03</td><td>1 upper housing</td><td>Snap hooks on the side wall create an undercut requiring a side action</td><td>Side action adds 15 to 30 % to tool cost, at least $1,000 to 1,500 (Modules 6, 15)<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>1</td><td>3</td><td>3</td><td>Accept. Reorient hooks to the pull direction using a pass-through core from the lower half.</td></tr>
+          <tr><td>DFM-04</td><td>1, 2 housings</td><td>Screw bosses OD 5.0 mm for M3 self-tapping screws, free-standing</td><td>Boss OD 2 × screw nominal (6 mm for M3); tie to wall with gusset (Module 6)<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>2</td><td>2</td><td>4</td><td>Accept. OD 6.0 mm, ID 2.5 mm, gusseted to the wall.</td></tr>
+          <tr><td>DFM-05</td><td>1, 2 housings</td><td>Ribs 2.0 mm thick, equal to the wall</td><td>Rib 0.5 × wall, height under 3 × rib thickness (Module 6)<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>2</td><td>3</td><td>6</td><td>Accept. Ribs 1.1 mm at a 2.2 mm wall.</td></tr>
+          <tr><td>DFM-06</td><td>2 lower housing</td><td>Mating lip toleranced ±0.05 mm</td><td>Standard moulding tolerance about ±0.25 mm; tighter is a cost decision (Modules 3, 6)<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>1</td><td>3</td><td>3</td><td>Accept. Lip and groove with 0.3 mm clearance; ±0.2 mm on the lip; datum both halves on the same pins.</td></tr>
+          <tr><td>DFM-07</td><td>3 head</td><td>8 mm walls around ports: porosity in thick sections; 16 mm deep pocket with R1 corners and no draft</td><td>Die-cast wall 1.0 to 5.1 mm typical; draft D = √L / C, inside C = 6.00 (mm units), so a 16 mm pocket needs about 0.67°, and NADCA's general note is 2° inside for 25 mm and deeper (Module 7)<sup class="cite"><a href="#ref-5">[5]</a></sup></td><td>2</td><td>3</td><td>6</td><td>Accept. 3.5 mm walls with ribs; 1° inside draft; R3 pocket corners; machining allowance 0.5 mm on the sealing face only.</td></tr>
+          <tr><td>DFM-08</td><td>3 head</td><td>M4 tapped 15 mm deep into aluminium</td><td>Thread engagement over 3 × diameter adds no strength (Module 4)<sup class="cite"><a href="#ref-6">[6]</a></sup></td><td>1</td><td>3</td><td>3</td><td>Accept. 10 mm deep, drilled 12 mm.</td></tr>
+          <tr><td>DFM-09</td><td>4, 5 cylinder and piston</td><td>Piston diameter ±0.01 mm; separate machined cylinder honed from bar</td><td>Standard machining ±0.125 mm, feasible ±0.025 mm at cost (Modules 3, 4)<sup class="cite"><a href="#ref-6">[6]</a></sup>; the PTFE cup seal, not the piston, seals the bore</td><td>2</td><td>3</td><td>6</td><td>Accept. Piston ±0.05 mm; cast the cylinder integral with the head and hone the bore (see DFA-02).</td></tr>
+          <tr><td>DFM-10</td><td>11 motor bracket</td><td>4.5 mm holes 3.0 mm from the bend; 6 mm flange; 0.5 mm inside bend radius in 2.0 mm steel</td><td>Hole to bend ≥ 2.5 t = 5.0 mm; flange ≥ 4 t = 8 mm; bend radius ≥ 1 t = 2.0 mm (Module 5)<sup class="cite"><a href="#ref-7">[7]</a></sup></td><td>2</td><td>3</td><td>6</td><td>Superseded by DFA-03, which removes the bracket. If retained: move holes to 5.5 mm, flange 9 mm, radius 2.0 mm.</td></tr>
+          <tr><td>DFM-11</td><td>11, 12 steel parts</td><td>Plating specified as "zinc"</td><td>Specify class and finish: ASTM B633 SC2 (8 µm) for moderate service, with the passivate type stated (Module 13)<sup class="cite"><a href="#ref-8">[8]</a></sup>; hexavalent chromate passivates conflict with RoHS Cr(VI) limit (Module 12)<sup class="cite"><a href="#ref-9">[9]</a></sup></td><td>3</td><td>3</td><td>9</td><td>Accept. "ASTM B633 SC2, trivalent passivate, RoHS compliant" on every steel part drawing.</td></tr>
+          <tr><td>DFM-12</td><td>12 heat shield</td><td>Six bends, two bend radii, two screws</td><td>Each bend is 15 to 45 s of press-brake time; one radius per part (Modules 5, 15)<sup class="cite"><a href="#ref-7">[7]</a></sup><sup class="cite"><a href="#ref-10">[10]</a></sup></td><td>1</td><td>3</td><td>3</td><td>Negotiate. Three bends, one radius, located by two tabs into slots in the lower housing, no screws (see DFA-05).</td></tr>
+          <tr><td>DFM-13</td><td>15 PCBA</td><td>0.09 mm trace and space on a 2-layer 1 oz board; annular ring 0.15 mm; copper 0.25 mm from the V-cut edge; no fiducials</td><td>Standard tier 0.10 / 0.10 mm; ring ≥ 0.20 mm; copper ≥ 0.4 mm from V-cut; three fiducials 1.0 to 3.0 mm (Module 9)<sup class="cite"><a href="#ref-11">[11]</a></sup></td><td>2</td><td>3</td><td>6</td><td>Accept. Re-route at 0.10 / 0.10 mm; 0.25 mm rings; 0.5 mm edge clearance; three 1.5 mm fiducials.</td></tr>
+          <tr><td>DFM-14</td><td>15 PCBA</td><td>Motor current path on a 2.0 mm wide 1 oz trace at 10 A</td><td>IPC-2221 external trace: I = 0.048 · ΔT<sup>0.44</sup> · A<sup>0.725</sup> (A in square mils) (Module 9)<sup class="cite"><a href="#ref-11">[11]</a></sup>. For 10 A and a 20 °C rise, A ≈ 256 square mils: about 4.7 mm wide at 1 oz, or 2.4 mm at 2 oz</td><td>3</td><td>3</td><td>9</td><td>Accept. 2 oz copper on the motor path, 3.0 mm wide, or route motor current through a harness and relay board-side only the switch.</td></tr>
+          <tr><td>DFM-15</td><td>18, 19 window and lens</td><td>0.8 mm walls, no draft, glued into the housing</td><td>Draft 0.5 to 2° minimum on plain walls; adhesive is a secondary operation (Modules 6, 13)<sup class="cite"><a href="#ref-3">[3]</a></sup></td><td>2</td><td>2</td><td>4</td><td>Accept. 1.5 mm wall, 1° draft, snap-in with a lip retained by the upper housing (see DFA-06).</td></tr>
+          <tr><td>DFM-16</td><td>22 fitting</td><td>Machined brass fitting with 1/8 BSP thread and PTFE tape into the die-cast head</td><td>A separate part in a different material that does not move fails the minimum-part questions only if the port can be formed in the casting (Modules 7, 10)<sup class="cite"><a href="#ref-1">[1]</a></sup></td><td>1</td><td>2</td><td>2</td><td>Negotiate. Keep the brass fitting for the hose thread (wear and galvanic reasons) but seal with an O-ring on a cast and spot-faced port, no tape.</td></tr>
+          <tr><td>DFM-17</td><td>1, 2 housings</td><td>ABS within 5 mm of a head that reaches over 90 °C at the end of the duty cycle</td><td>Material selection by service temperature and the heat shield's job (Module 13); the moulder's guide lists material as a primary selection driver<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>2</td><td>2</td><td>4</td><td>Accept. Keep the heat shield; add 3 mm standoff ribs between shield and housing; confirm the ABS grade's heat deflection temperature against the measured head temperature at DVT.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="dfa">DFA review</h2>
+    <p>Apply the three questions to every part: does it move relative to the parts already assembled; must it be a different material; must it be separate for assembly, service, or adjustment?<sup class="cite"><a href="#ref-1">[1]</a></sup> The theoretical minimum for the inflator comes to 13: two housing halves (one would do for the count, but service requires opening, so two are justified), a compressor block, a piston, a connecting rod, a crank, a bearing, a motor, a PCBA with display and keypad treated as one because they could be one assembly, a power cord, a hose, a fitting in brass, a piston seal in PTFE, and a set of reed valves in spring steel. Fasteners, brackets, shields, windows, lenses, feet, gaskets, clips, and grommets all fail all three questions.</p>
+    <p>Assembly time is estimated with the simplified method of Module 10: a theoretical minimum time of about 3 seconds per part (Boothroyd Dewhurst use 2.93 s), against an estimated actual time built from handling and insertion allowances, with screws carrying a penalty for tool acquisition, alignment, and driving.<sup class="cite"><a href="#ref-2">[2]</a></sup><sup class="cite"><a href="#ref-12">[12]</a></sup> The estimate below uses round allowances, stated so you can redo it with your own line's times.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 4. Assembly time estimate, baseline (illustrative allowances).</caption>
+        <thead><tr><th>Operation</th><th>Count</th><th>Allowance (s)</th><th>Time (s)</th></tr></thead>
+        <tbody>
+          <tr><td>Threaded fasteners (handle, align, drive)</td><td>26</td><td>9</td><td>234</td></tr>
+          <tr><td>Other parts (handle and insert)</td><td>35</td><td>5</td><td>175</td></tr>
+          <tr><td>Reorientations of the assembly</td><td>6</td><td>5</td><td>30</td></tr>
+          <tr><td>Solder joints (motor tabs, cord to PCBA)</td><td>4</td><td>8</td><td>32</td></tr>
+          <tr><td>Adhesive joints (window, lens, keypad, feet, label)</td><td>8</td><td>6</td><td>48</td></tr>
+          <tr><td>Wire routing and PTFE tape</td><td></td><td></td><td>30</td></tr>
+          <tr><td><strong>Total</strong></td><td></td><td></td><td><strong>549</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="formula">DFA index (baseline) = 13 × 2.93 ÷ 549 = 0.069, about 7 %</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 5. DFA findings.</caption>
+        <thead><tr><th>ID</th><th>Finding</th><th>Rule and source</th><th>S</th><th>L</th><th>Score</th><th>Recommendation and disposition</th></tr></thead>
+        <tbody>
+          <tr><td>DFA-01</td><td>Eight parting-line screws in four drive types across the product</td><td>Fastener reduction; one drive type (Module 10)<sup class="cite"><a href="#ref-1">[1]</a></sup><sup class="cite"><a href="#ref-2">[2]</a></sup></td><td>1</td><td>3</td><td>3</td><td>Accept. Four M3 Torx screws plus four pull-direction snap hooks; Torx everywhere.</td></tr>
+          <tr><td>DFA-02</td><td>Cylinder, valve plate, two gaskets, and head are five parts that do not move relative to each other and could share a material</td><td>Minimum-part question 2 (Module 10)<sup class="cite"><a href="#ref-1">[1]</a></sup>; die casting integrates features (Module 7)<sup class="cite"><a href="#ref-5">[5]</a></sup></td><td>2</td><td>3</td><td>6</td><td>Accept. One die casting with integral cylinder, honed bore, and a single valve plate retained by the head cap: five parts and two gaskets become two parts and one gasket.</td></tr>
+          <tr><td>DFA-03</td><td>Steel motor bracket, four screws to housing, two to motor, four to head</td><td>Question 3: separate only if required for assembly; a moulded cradle locates the motor and block (Module 10)<sup class="cite"><a href="#ref-1">[1]</a></sup></td><td>2</td><td>3</td><td>6</td><td>Accept. Mould a cradle with a motor saddle and two block locating bosses into the lower housing; retain the block with two M4 screws into the casting; motor held by the cradle and the upper housing.</td></tr>
+          <tr><td>DFA-04</td><td>PCBA on four screws and bosses</td><td>Self-locating features replace fasteners (Module 10)<sup class="cite"><a href="#ref-1">[1]</a></sup>; but ICT and FCT need a repeatable position (Module 11)<sup class="cite"><a href="#ref-13">[13]</a></sup></td><td>1</td><td>3</td><td>3</td><td>Accept. Card-edge slots in the lower housing with one retaining screw; two tooling holes in the PCB for the test fixture and the slot.</td></tr>
+          <tr><td>DFA-05</td><td>Heat shield on two screws</td><td>Tabs and slots (Module 5)<sup class="cite"><a href="#ref-7">[7]</a></sup></td><td>1</td><td>3</td><td>3</td><td>Accept. Two tabs into housing slots, captured by the upper half.</td></tr>
+          <tr><td>DFA-06</td><td>Window and lens glued</td><td>Adhesive is an operation with cure time and a cleanliness requirement (Module 13)</td><td>2</td><td>2</td><td>4</td><td>Accept. Snap-in window and lens with a lip trapped at the parting line.</td></tr>
+          <tr><td>DFA-07</td><td>Unkeyed LCD FPC connector; motor leads soldered both ends</td><td>Poka-yoke: make wrong assembly impossible (Module 10)<sup class="cite"><a href="#ref-14">[14]</a></sup></td><td>2</td><td>2</td><td>4</td><td>Accept. Keyed FPC connector; motor with a polarised two-pin connector to the PCBA; no hand soldering on the line.</td></tr>
+          <tr><td>DFA-08</td><td>Cord soldered to the PCBA and clipped with a screw</td><td>Fastener elimination; strain relief moulded into the housing</td><td>1</td><td>3</td><td>3</td><td>Accept. Cord with a moulded strain relief that snaps into a housing slot and a two-pin connector to the PCBA.</td></tr>
+          <tr><td>DFA-09</td><td>Set screw fixes crank to motor shaft</td><td>Adjustment fasteners drift under vibration (Module 10)</td><td>2</td><td>2</td><td>4</td><td>Accept. D-shaft motor with a press-fit crank; no set screw.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 640 260" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Motor mounting before and after</title>
+        <desc id="fig2-desc">Left: baseline, a motor sits on a bent sheet metal bracket fixed to the housing with four screws, to the motor with two screws, and to the compressor head with four screws. Right: redesign, the motor sits in a saddle moulded into the lower housing, the compressor block sits on two locating bosses with two screws, and the upper housing captures both when it closes. The count under each side reads 11 parts including 10 screws on the left and 3 parts including 2 screws on the right.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M30 200 H300" class="diagram-soft"/>
+          <path d="M60 200 V150 H90 V190 H230 V150 H260 V200" class="diagram-soft"/>
+          <rect x="100" y="110" width="110" height="80" rx="4"/>
+          <rect x="230" y="120" width="50" height="60" class="diagram-accent"/>
+          <g class="diagram-accent">
+            <circle cx="75" cy="195" r="3"/><circle cx="245" cy="195" r="3"/><circle cx="105" cy="120" r="3"/><circle cx="205" cy="120" r="3"/>
+            <circle cx="235" cy="130" r="3"/><circle cx="275" cy="130" r="3"/><circle cx="235" cy="170" r="3"/><circle cx="275" cy="170" r="3"/>
+            <circle cx="65" cy="160" r="3"/><circle cx="255" cy="160" r="3"/>
+          </g>
+          <path d="M340 200 H610" class="diagram-soft"/>
+          <path d="M370 200 V170 Q370 140 400 140 H480 Q510 140 510 170 V200" class="diagram-soft"/>
+          <rect x="385" y="110" width="110" height="80" rx="4"/>
+          <path d="M525 200 V185 H540 V200 M585 200 V185 H600 V200" class="diagram-soft"/>
+          <rect x="520" y="125" width="80" height="60" class="diagram-accent"/>
+          <g class="diagram-accent"><circle cx="532" cy="192" r="3"/><circle cx="592" cy="192" r="3"/></g>
+          <path d="M30 80 H300 M340 80 H610" stroke-dasharray="6 4" class="diagram-soft"/>
+        </g>
+        <g class="diagram-text">
+          <text x="30" y="40" font-weight="600">Baseline</text>
+          <text x="30" y="60" class="diagram-text-muted">Bracket, 10 screws, 3 drive types</text>
+          <text x="340" y="40" font-weight="600">Redesign</text>
+          <text x="340" y="60" class="diagram-text-muted">Moulded cradle, 2 screws, captured by the upper half</text>
+          <text x="120" y="155">Motor</text>
+          <text x="405" y="155">Motor</text>
+          <text x="238" y="245" class="diagram-text-muted">Block</text>
+          <text x="545" y="245" class="diagram-text-muted">Block</text>
+          <text x="30" y="230">11 parts, 10 screws</text>
+          <text x="340" y="230">3 parts, 2 screws</text>
+          <text x="30" y="98" class="diagram-text-muted">parting line</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. Finding DFA-03. The cradle costs mould features once; the bracket and its ten screws cost handling and driving time on every unit.</figcaption>
+    </figure>
+
+    <h2 id="dft">DFT review</h2>
+    <p>The test strategy follows Module 11: catch structural faults on the PCBA at in-circuit test, prove function at a functional test, and prove the pressurised subassembly before it disappears inside the housing. The baseline design allows none of the three.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 6. DFT findings.</caption>
+        <thead><tr><th>ID</th><th>Finding</th><th>Rule and source</th><th>S</th><th>L</th><th>Score</th><th>Recommendation and disposition</th></tr></thead>
+        <tbody>
+          <tr><td>DFT-01</td><td>No test points on the PCBA</td><td>One test point per net; pads 1.0 mm best, 0.9 mm minimum top side; 2.54 mm probe pitch at cost factor 1; no mask on pads (Module 11)<sup class="cite"><a href="#ref-13">[13]</a></sup></td><td>2</td><td>3</td><td>6</td><td>Accept. Bottom-side test pads on every net, 1.0 mm, 2.54 mm grid where possible; 0.7 mm clearance from parts under 2 mm tall.</td></tr>
+          <tr><td>DFT-02</td><td>No tooling holes or fixture keep-out</td><td>Two or three 2.7 mm ±0.05 mm non-plated holes, ≥ 3 mm from the edge; 3 mm clear rail strip (Module 11)<sup class="cite"><a href="#ref-13">[13]</a></sup></td><td>2</td><td>3</td><td>6</td><td>Accept. Two tooling holes shared with the housing slot datum (DFA-04); 3 mm edge strips.</td></tr>
+          <tr><td>DFT-03</td><td>Pressure sensor accuracy is unverifiable after assembly; no reference port</td><td>Functional test needs a controlled stimulus; plan the fixture with the product (Module 11)</td><td>3</td><td>3</td><td>9</td><td>Accept. FCT applies reference pressure to the sensor through the hose fitting with the outlet valve held open by the fixture; calibration offset written to the MCU; auto-stop verified at 200 and 600 kPa.</td></tr>
+          <tr><td>DFT-04</td><td>The compressor block cannot be run or leak tested until it is inside the housing</td><td>Test subassemblies before they are buried; pressure decay per ASTM E2930 (Module 11)<sup class="cite"><a href="#ref-15">[15]</a></sup></td><td>3</td><td>2</td><td>6</td><td>Accept. Block, valves, cap, fitting, and motor are built and tested as a subassembly: run 20 s into a fixed test volume and check the pressure rise time and motor current; then pressure decay leak test at 700 kPa.</td></tr>
+          <tr><td>DFT-05</td><td>No way to verify the thermal cut-out or the fuse at end of line without destroying them</td><td>Test coverage versus escape trade-off (Module 11)</td><td>2</td><td>1</td><td>2</td><td>Accept as a design-verification item: qualify the cut-out at DVT with a sample plan; verify fuse presence and continuity at FCT.</td></tr>
+          <tr><td>DFT-06</td><td>Keypad and LCD can only be tested through the finished product</td><td>Boundary of ICT coverage; functional test of the human interface (Module 11)<sup class="cite"><a href="#ref-16">[16]</a></sup></td><td>1</td><td>3</td><td>3</td><td>Accept. Add a serial test connector footprint (unpopulated) that the FCT fixture probes to read keypad state and drive test patterns on the LCD; camera check of the display in the fixture.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 640 230" role="img" aria-labelledby="fig3-title fig3-desc">
+        <title id="fig3-title">Test sequence in the redesigned build</title>
+        <desc id="fig3-desc">Five boxes in sequence: PCBA in-circuit test with test pads and tooling holes; compressor block subassembly run test and pressure decay leak test; final assembly; functional test with reference pressure, current, keypad and display; then pack. Under the block subassembly box a note says the block is tested before the housing closes.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="20" y="60" width="110" height="70" rx="5"/>
+          <rect x="150" y="60" width="130" height="70" rx="5" class="diagram-accent"/>
+          <rect x="300" y="60" width="100" height="70" rx="5"/>
+          <rect x="420" y="60" width="120" height="70" rx="5" class="diagram-accent"/>
+          <rect x="560" y="60" width="60" height="70" rx="5"/>
+          <path d="M130 95 h20 M144 89 l6 6 l-6 6 M280 95 h20 M294 89 l6 6 l-6 6 M400 95 h20 M414 89 l6 6 l-6 6 M540 95 h20 M554 89 l6 6 l-6 6" class="diagram-accent" stroke-width="3"/>
+        </g>
+        <g class="diagram-text">
+          <text x="30" y="85">PCBA</text><text x="30" y="103">ICT</text><text x="30" y="121" class="diagram-text-muted">pads, holes</text>
+          <text x="160" y="85">Block</text><text x="160" y="103">run + leak</text><text x="160" y="121" class="diagram-text-muted">before housing</text>
+          <text x="310" y="85">Final</text><text x="310" y="103">assembly</text>
+          <text x="430" y="85">FCT</text><text x="430" y="103">pressure, current</text><text x="430" y="121" class="diagram-text-muted">keypad, LCD</text>
+          <text x="572" y="100">Pack</text>
+          <text x="20" y="180" class="diagram-text-muted">Each test station has a fixture designed with the part it holds: the same two holes locate</text>
+          <text x="20" y="198" class="diagram-text-muted">the PCBA in the housing and in the ICT fixture.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 3. Test sequence after findings DFT-01 to DFT-04. The block is proven before it is buried.</figcaption>
+    </figure>
+
+    <h2 id="dfs">DFS review: service, reliability, and compliance</h2>
+    <p>The service review starts from a short list: what wears, what fails, what the user will break, and what a regulator will ask for. On this product the wear part is the piston cup seal; the likely failures are the motor brushes, the fuse, and the cord at its strain relief; the user will lose the chuck and the adaptor nozzles; and the regulator will ask for materials declarations and the CE technical file. Each of those items gets a path: replaceable by the user, by a technician, or not at all, and each path is checked against the fastener count and the adhesives the DFA review left behind. The reliability items come from Module 12's derating and thermal rules; the compliance items reach back into the DFM review, because the finish specification on a steel bracket is where RoHS actually lives.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 7. DFS findings.</caption>
+        <thead><tr><th>ID</th><th>Finding</th><th>Rule and source</th><th>S</th><th>L</th><th>Score</th><th>Recommendation and disposition</th></tr></thead>
+        <tbody>
+          <tr><td>DFS-01</td><td>Piston cup seal is the wear part and sits behind 8 housing screws, 4 bracket screws, and 4 head screws</td><td>Field-replaceable units reachable with the fewest fasteners; no adhesive on serviceable joints (Module 12)<sup class="cite"><a href="#ref-17">[17]</a></sup></td><td>2</td><td>3</td><td>6</td><td>Accept. With DFA-01 to DFA-03 the seal is reached by four Torx screws and a snap-open housing, then two head-cap screws.</td></tr>
+          <tr><td>DFS-02</td><td>Fuse is user-replaceable in the plug; hose is replaceable; cord is not</td><td>Repair on request and spare-part availability under the EU repair directive (Module 12)<sup class="cite"><a href="#ref-17">[17]</a></sup></td><td>1</td><td>2</td><td>2</td><td>Accept. Cord with connector (DFA-08) becomes a spare part; publish part numbers for cord, hose, chuck, seal, and fuse.</td></tr>
+          <tr><td>DFS-03</td><td>Motor MOSFET rated 20 A at 25 °C, carrying 10 A next to a 90 °C head, no derating analysis</td><td>Derate semiconductors to about 50 % power and 75 % voltage, junction under 110 °C (Module 12)<sup class="cite"><a href="#ref-18">[18]</a></sup></td><td>3</td><td>2</td><td>6</td><td>Accept. Select a device rated at least 30 A with the junction temperature calculated at 50 °C ambient and end-of-duty head temperature; add copper pour for heat spreading (DFM-14).</td></tr>
+          <tr><td>DFS-04</td><td>No ingress rating; openings around the keypad, window, hose, and cord</td><td>IEC 60529 second numeral 4 is splashing water from any direction (Module 12)<sup class="cite"><a href="#ref-19">[19]</a></sup></td><td>2</td><td>2</td><td>4</td><td>Accept. Lip-and-groove parting line (DFM-06), gasketed window, drain path at the base, sealed cord strain relief; verify IPX4 at DVT.</td></tr>
+          <tr><td>DFS-05</td><td>Materials declaration missing for plating, cable jacket, keypad adhesive</td><td>RoHS limits in homogeneous materials: Pb, Hg, Cr(VI), PBB, PBDE, four phthalates at 0.1 %; Cd at 0.01 % (Module 12)<sup class="cite"><a href="#ref-9">[9]</a></sup></td><td>3</td><td>2</td><td>6</td><td>Accept. Declaration required on every BOM line before PVT; trivalent passivate per DFM-11.</td></tr>
+          <tr><td>DFS-06</td><td>Rating label is the only place the model and revision appear</td><td>Traceability for recalls and service (Modules 12, 14)</td><td>1</td><td>3</td><td>3</td><td>Accept. Mould the model into the lower housing; date code and revision on a label inside the housing; serial number in the MCU readable over the test connector.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="findings">Consolidated scored findings</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 8. All findings with a score of 6 or more, ranked. These are fixed before tooling.</caption>
+        <thead><tr><th>Rank</th><th>ID</th><th>Score</th><th>Summary</th><th>Owner</th><th>Gate</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>DFM-11</td><td>9</td><td>Zinc plating unspecified; hexavalent passivate would fail RoHS</td><td>Mechanical</td><td>Before RFQ</td></tr>
+          <tr><td>2</td><td>DFM-14</td><td>9</td><td>10 A on a 2 mm 1 oz trace</td><td>Electrical</td><td>Before board fabrication</td></tr>
+          <tr><td>3</td><td>DFT-03</td><td>9</td><td>Pressure sensor cannot be verified or calibrated</td><td>Test</td><td>EVT fixture design</td></tr>
+          <tr><td>4</td><td>DFM-01</td><td>6</td><td>Thick section under handle</td><td>Mechanical</td><td>Before tooling</td></tr>
+          <tr><td>5</td><td>DFM-02</td><td>6</td><td>Draft on textured walls</td><td>Mechanical</td><td>Before tooling</td></tr>
+          <tr><td>6</td><td>DFM-05</td><td>6</td><td>Ribs equal to wall</td><td>Mechanical</td><td>Before tooling</td></tr>
+          <tr><td>7</td><td>DFM-07</td><td>6</td><td>Die-cast walls, draft, corner radii</td><td>Mechanical</td><td>Before tooling</td></tr>
+          <tr><td>8</td><td>DFM-09</td><td>6</td><td>Piston tolerance; separate cylinder</td><td>Mechanical</td><td>Before tooling</td></tr>
+          <tr><td>9</td><td>DFM-10</td><td>6</td><td>Bracket bend rules (superseded by DFA-03)</td><td>Mechanical</td><td>Closed by DFA-03</td></tr>
+          <tr><td>10</td><td>DFM-13</td><td>6</td><td>Board below standard tier rules; no fiducials</td><td>Electrical</td><td>Before board fabrication</td></tr>
+          <tr><td>11</td><td>DFA-02</td><td>6</td><td>Integrate cylinder, valve plate, head</td><td>Mechanical</td><td>Before tooling</td></tr>
+          <tr><td>12</td><td>DFA-03</td><td>6</td><td>Replace bracket with moulded cradle</td><td>Mechanical</td><td>Before tooling</td></tr>
+          <tr><td>13</td><td>DFT-01</td><td>6</td><td>Test points</td><td>Electrical, Test</td><td>Before board fabrication</td></tr>
+          <tr><td>14</td><td>DFT-02</td><td>6</td><td>Tooling holes and rails</td><td>Electrical, Test</td><td>Before board fabrication</td></tr>
+          <tr><td>15</td><td>DFT-04</td><td>6</td><td>Block tested before housing closes</td><td>Test, Manufacturing</td><td>EVT build plan</td></tr>
+          <tr><td>16</td><td>DFS-01</td><td>6</td><td>Wear part behind 16 screws</td><td>Mechanical, Service</td><td>Before tooling</td></tr>
+          <tr><td>17</td><td>DFS-03</td><td>6</td><td>MOSFET derating</td><td>Electrical</td><td>Before board fabrication</td></tr>
+          <tr><td>18</td><td>DFS-05</td><td>6</td><td>RoHS declarations</td><td>Sourcing</td><td>Before PVT</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The review took about a day of one engineer's time with the drawings, plus a two-hour meeting with electrical, test, and sourcing to agree the dispositions. That is the normal cost of a first DFx review on a product of this size, and it is the cheapest day on the program: every finding in Table 8 would have been a tool change, a board respin, a fixture rebuild, or a compliance failure if found at DVT.</p>
+    <p>Thirty-eight findings in total: 17 DFM, 9 DFA, 6 DFT, 6 DFS. Eighteen score 6 or more. Two were negotiated rather than accepted (DFM-12, DFM-16) and none rejected, which is typical of a first review on a design that has not seen a supplier yet; later reviews reject more, because the cheap changes have been made.</p>
+
+    <h2 id="redesign">Redesigned bill of materials</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 9. Redesigned BOM. Changes reference the finding that caused them.</caption>
+        <thead><tr><th>No.</th><th>Part</th><th>Qty</th><th>Process</th><th>Change</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Housing, upper, ABS</td><td>1</td><td>Moulding, steel tool</td><td>2.2 mm walls, 3° textured draft, 1.1 mm ribs, gusseted OD 6 bosses, pull-direction hooks, window and lens lips (DFM-01 to 05, 15)</td></tr>
+          <tr><td>2</td><td>Housing, lower, ABS</td><td>1</td><td>Moulding, steel tool</td><td>Motor cradle and block bosses, PCBA slots, heat shield slots, cord strain-relief slot, lip and groove, moulded model name (DFA-03 to 08, DFM-06, DFS-06)</td></tr>
+          <tr><td>3</td><td>Compressor block, A380</td><td>1</td><td>Die casting, honed bore, spot-faced ports</td><td>Cylinder integral; 3.5 mm walls, 1° draft, R3; M4 × 10 threads; O-ring port (DFM-07, 08, 09, 16, DFA-02)</td></tr>
+          <tr><td>4</td><td>Head cap with valve plate</td><td>1</td><td>Die casting</td><td>Retains one gasket and both reed valves; 2 screws (DFA-02)</td></tr>
+          <tr><td>5</td><td>Piston, 6061</td><td>1</td><td>CNC</td><td>±0.05 mm; cup seal retained by a snap ring (DFM-09)</td></tr>
+          <tr><td>6</td><td>Cup seal, PTFE</td><td>1</td><td>Purchased</td><td>Spare part number published (DFS-01, 02)</td></tr>
+          <tr><td>7</td><td>Connecting rod, steel, with bearing</td><td>1</td><td>CNC, purchased bearing</td><td>Unchanged</td></tr>
+          <tr><td>8</td><td>Crank, steel</td><td>1</td><td>CNC</td><td>Press fit on D-shaft; no set screw (DFA-09)</td></tr>
+          <tr><td>9</td><td>Motor, 12 V, D-shaft, 2-pin connector</td><td>1</td><td>Purchased</td><td>Polarised connector; cradle mounted (DFA-03, 07)</td></tr>
+          <tr><td>10</td><td>Heat shield, 0.8 mm steel</td><td>1</td><td>Sheet metal, ASTM B633 SC2 trivalent</td><td>Three bends, one radius, two tabs (DFM-11, 12, DFA-05)</td></tr>
+          <tr><td>11</td><td>Reed valves</td><td>2</td><td>Purchased</td><td>Unchanged</td></tr>
+          <tr><td>12</td><td>Gasket</td><td>1</td><td>Purchased</td><td>One instead of two (DFA-02)</td></tr>
+          <tr><td>13</td><td>PCBA, 2 layer, 2 oz</td><td>1</td><td>SMT</td><td>0.10 mm rules, 0.25 mm rings, fiducials, test pads, tooling holes, 3.0 mm motor trace, 30 A MOSFET, keyed connectors, test connector footprint (DFM-13, 14, DFT-01, 02, 06, DFS-03)</td></tr>
+          <tr><td>14</td><td>LCD module, keyed FPC</td><td>1</td><td>Purchased</td><td>(DFA-07)</td></tr>
+          <tr><td>15</td><td>Membrane keypad</td><td>1</td><td>Purchased</td><td>Unchanged; RoHS declaration (DFS-05)</td></tr>
+          <tr><td>16</td><td>Display window, PC</td><td>1</td><td>Moulding</td><td>1.5 mm, 1° draft, snap lip with gasket (DFM-15, DFA-06, DFS-04)</td></tr>
+          <tr><td>17</td><td>LED lens, PC</td><td>1</td><td>Moulding</td><td>Snap lip (DFA-06)</td></tr>
+          <tr><td>18</td><td>Power cord with moulded strain relief, 2-pin connector</td><td>1</td><td>Purchased</td><td>Spare part (DFA-08, DFS-02)</td></tr>
+          <tr><td>19</td><td>Hose with chuck</td><td>1</td><td>Purchased</td><td>Unchanged</td></tr>
+          <tr><td>20</td><td>Hose fitting, brass, O-ring</td><td>1</td><td>CNC</td><td>O-ring seal, no tape (DFM-16)</td></tr>
+          <tr><td>21</td><td>O-rings</td><td>2</td><td>Purchased</td><td>Fitting and window (DFM-16, DFS-04)</td></tr>
+          <tr><td>22</td><td>Rubber feet</td><td>4</td><td>Purchased</td><td>Press-in instead of adhesive</td></tr>
+          <tr><td>23</td><td>Label, inside</td><td>1</td><td>Purchased</td><td>Date code and revision (DFS-06)</td></tr>
+          <tr><td>24</td><td>Screws, housing M3 Torx</td><td>4</td><td>Purchased</td><td>From 8 (DFA-01)</td></tr>
+          <tr><td>25</td><td>Screws, block to housing M4 Torx</td><td>2</td><td>Purchased</td><td>From 8 bracket screws (DFA-03)</td></tr>
+          <tr><td>26</td><td>Screws, head cap M4 Torx</td><td>2</td><td>Purchased</td><td>From 4 (DFA-02)</td></tr>
+          <tr><td>27</td><td>Screw, PCBA M3 Torx</td><td>1</td><td>Purchased</td><td>From 4 (DFA-04)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 10. Before and after.</caption>
+        <thead><tr><th>Measure</th><th>Baseline</th><th>Redesign</th></tr></thead>
+        <tbody>
+          <tr><td>Line items</td><td>31</td><td>27</td></tr>
+          <tr><td>Parts per unit</td><td>61</td><td>38</td></tr>
+          <tr><td>Threaded fasteners</td><td>26</td><td>9</td></tr>
+          <tr><td>Fastener drive types</td><td>4</td><td>1</td></tr>
+          <tr><td>Adhesive joints</td><td>8</td><td>1 (keypad)</td></tr>
+          <tr><td>Hand solder joints</td><td>4</td><td>0</td></tr>
+          <tr><td>Theoretical minimum parts</td><td>13</td><td>13</td></tr>
+          <tr><td>Estimated assembly time</td><td>549 s</td><td>257 s (see Table 11)</td></tr>
+          <tr><td>DFA index</td><td>0.069</td><td>0.148</td></tr>
+          <tr><td>Screws between a technician and the wear seal</td><td>16</td><td>6</td></tr>
+          <tr><td>Subassembly testable before housing closes</td><td>No</td><td>Yes</td></tr>
+          <tr><td>Side actions in housing tool</td><td>1</td><td>0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 11. Assembly time estimate, redesign (same allowances as Table 4).</caption>
+        <thead><tr><th>Operation</th><th>Count</th><th>Allowance (s)</th><th>Time (s)</th></tr></thead>
+        <tbody>
+          <tr><td>Threaded fasteners</td><td>9</td><td>9</td><td>81</td></tr>
+          <tr><td>Other parts</td><td>29</td><td>5</td><td>145</td></tr>
+          <tr><td>Reorientations</td><td>3</td><td>5</td><td>15</td></tr>
+          <tr><td>Solder joints</td><td>0</td><td>8</td><td>0</td></tr>
+          <tr><td>Adhesive joints (keypad)</td><td>1</td><td>6</td><td>6</td></tr>
+          <tr><td>Connectors and routing</td><td></td><td></td><td>10</td></tr>
+          <tr><td><strong>Total</strong></td><td></td><td></td><td><strong>257</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="formula">DFA index (redesign) = 13 × 2.93 ÷ 257 = 0.148, about 15 %</p>
+    <p>The cost side, in the terms of Module 15 and with illustrative rates: the housing tool loses a side action (about $1,000 to 1,500 saved on tooling and a few seconds of cycle) and gains cradle, slot, and lip features (several hundred dollars of additional cavity work).<sup class="cite"><a href="#ref-4">[4]</a></sup> The steel bracket, its plating, and 16 screws leave the BOM. The cylinder machined from bar and the valve plate leave; the die casting grows and needs honing, which was already needed. About 290 seconds of assembly time per unit leave; at an illustrative loaded labour rate of $0.50 per minute that is about $2.40 per unit, or about $49,000 per year at 20,000 units, against a one-time cavity change measured in low thousands. The redesign also makes the product testable, serviceable, and RoHS-compliant, none of which the baseline was. Those do not appear in a cost model, and they are the reason the review exists.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 12. Rules applied in this review, with the modules that teach them.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Minimum-part questions</td><td>Move, material, separate</td><td>Part is necessary only if it moves relative to others, must be a different material, or must be separate for assembly or service</td><td>Defines the theoretical minimum</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>DFA index</td><td>Ideal time over actual</td><td>N<sub>min</sub> × 2.93 s ÷ estimated assembly time</td><td>Measures assembly efficiency</td><td><a href="#ref-2">[2]</a>, <a href="#ref-12">[12]</a></td></tr>
+          <tr><td>ABS wall</td><td>Thin and uniform</td><td>1.14 to 3.56 mm</td><td>Sink, warp, cooling time</td><td><a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Draft</td><td>More for texture</td><td>0.5 to 2° plain; 3° light texture; 5° medium</td><td>Ejection without scuffing</td><td><a href="#ref-3">[3]</a>, <a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Ribs and bosses</td><td>Half the wall; twice the screw</td><td>Rib 0.5 × wall; boss OD 2 × screw diameter</td><td>Sink and strength</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Moulding tolerance</td><td>Standard first</td><td>About ±0.25 mm</td><td>Tighter costs tool iterations</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Side action</td><td>Avoid</td><td>+15 to 30 % tool cost; $1,000 to 1,500 minimum</td><td>Mechanism and cycle time</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Die-cast wall and draft</td><td>Thin, drafted</td><td>1.0 to 5.1 mm; D = √L / C, aluminium inside C = 6.00, outside 12.00 (mm)</td><td>Fill, porosity, release</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Thread engagement</td><td>Three diameters</td><td>≤ 3 × nominal diameter</td><td>Extra depth adds cost, not strength</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Machining tolerance</td><td>Standard first</td><td>±0.125 mm standard; ±0.025 mm feasible</td><td>Cost rises steeply below standard</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Sheet metal features</td><td>Multiples of thickness</td><td>Hole to bend ≥ 2.5 t; flange ≥ 4 t; bend radius ≥ 1 t</td><td>Distortion and die support</td><td><a href="#ref-7">[7]</a></td></tr>
+          <tr><td>Bend cost</td><td>Count bends</td><td>15 to 45 s each</td><td>Forming time</td><td><a href="#ref-10">[10]</a></td></tr>
+          <tr><td>Zinc plating</td><td>Class and passivate</td><td>ASTM B633 SC2 = 8 µm moderate service</td><td>Corrosion protection specified, not assumed</td><td><a href="#ref-8">[8]</a></td></tr>
+          <tr><td>RoHS</td><td>Homogeneous materials</td><td>Pb, Hg, Cr(VI), PBB, PBDE, four phthalates 0.1 %; Cd 0.01 %</td><td>Market access</td><td><a href="#ref-9">[9]</a></td></tr>
+          <tr><td>PCB fabrication</td><td>Standard tier</td><td>0.10 / 0.10 mm trace and space; ring ≥ 0.20 mm; copper ≥ 0.4 mm from V-cut; 3 fiducials</td><td>Yield at the standard price</td><td><a href="#ref-11">[11]</a></td></tr>
+          <tr><td>Trace current</td><td>IPC-2221 external</td><td>I = 0.048 · ΔT<sup>0.44</sup> · A<sup>0.725</sup>, A in square mils</td><td>Temperature rise</td><td><a href="#ref-11">[11]</a></td></tr>
+          <tr><td>Test points</td><td>One per net</td><td>1.0 mm pads; 2.54 mm pitch; 2.7 mm tooling holes; 3 mm rails</td><td>ICT coverage and fixture cost</td><td><a href="#ref-13">[13]</a></td></tr>
+          <tr><td>Leak test</td><td>Pressure decay</td><td>ASTM E2930 practice</td><td>Proves sealed assemblies</td><td><a href="#ref-15">[15]</a></td></tr>
+          <tr><td>Derating</td><td>Semiconductors</td><td>≤ 50 % power, ≤ 75 % voltage, junction ≤ 110 °C</td><td>Reliability margin</td><td><a href="#ref-18">[18]</a></td></tr>
+          <tr><td>Ingress</td><td>IEC 60529</td><td>Second numeral 4: splashing water</td><td>Roadside use</td><td><a href="#ref-19">[19]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: what a finished DFA review reports</h2>
+    <p>The inflator review is invented. The reporting format is not. The L3Harris walkthrough at the 2019 DFMA Forum lays out an electronics enclosure exactly the way Tables 4, 5, 10, and 11 do: a parts list with a theoretical-minimum judgement against each item, a handling and insertion time for each, a total (87.6 seconds for 11 parts), the index (11.76), a proposed change (a snap-fit cover in place of four screws), and the recomputed result (17.63, about 29 seconds and $0.95 saved).<sup class="cite"><a href="#ref-2">[2]</a></sup> A 2013 Forum paper from Acorn Product Development shows the same method by hand, with the assembly efficiency written as the minimum part count times a base time of about 3 seconds divided by the estimated time, and with penalties for fastener type and for the extra passes a screw pattern needs.<sup class="cite"><a href="#ref-12">[12]</a></sup> At the other end of the scale, the IDEXX door case shows what several rounds of the same reasoning did on a complex assembly.<sup class="cite"><a href="#ref-1">[1]</a></sup> The format is the deliverable: a list a supplier can quote, a manager can read, and the next engineer can audit.</p>
+    <!-- AUTHOR: optional personal note here (how a real review changed a design, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes in running a review</h2>
+    <ol>
+      <li><strong>Reviewing DFA before DFM.</strong> Consequence: assembly time is optimised on parts that will change shape. Fix: DFM first, then DFA, DFT, DFS.</li>
+      <li><strong>Findings without scores.</strong> Consequence: forty items of equal weight, none fixed. Fix: severity × likelihood, a threshold, and a gate for each.</li>
+      <li><strong>Findings without dispositions.</strong> Consequence: nobody knows what was decided. Fix: accept, negotiate, or reject, with an owner and a reason (Module 14).</li>
+      <li><strong>Counting parts but not fasteners, drives, adhesives, and solder joints.</strong> Consequence: the assembly time estimate misses the operations that cost most. Fix: count every operation, not just every part number.</li>
+      <li><strong>Removing a fastener a service technician needs.</strong> Consequence: a wear part behind a glued or welded joint. Fix: run DFS on the DFA result and keep openable joints where the wear parts are.</li>
+      <li><strong>Test as an afterthought.</strong> Consequence: a subassembly that can only be tested through the finished product. Fix: design the fixture datums and the test sequence with the part (Module 11).</li>
+      <li><strong>Compliance as a checkbox.</strong> Consequence: a passivate that fails RoHS discovered at PVT. Fix: material and finish specifications carry the compliance requirement on the drawing.</li>
+      <li><strong>Claiming precision the model does not have.</strong> Consequence: a "$2.40 saving" argued to the cent. Fix: state allowances and rates as assumptions and report ranges; the direction and order of magnitude are what the decision needs.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: finish the review</h2>
+    <p>Four items the review left for you. Show your working.</p>
+    <ol>
+      <li>Recompute the IPC-2221 trace width in DFM-14 for 10 A at a 20 °C rise on 1 oz (35 µm, 1.378 mil) and 2 oz copper. Then check whether the redesign's 3.0 mm trace at 2 oz meets a 20 °C rise.</li>
+      <li>The redesigned compressor block has a 20 mm deep internal cavity. Compute the NADCA draft angle with the formula in DFM-07 and compare it with the 1° the review specified.</li>
+      <li>If the redesign kept the sheet metal bracket instead of adopting DFA-03, give the minimum hole-to-bend distance, flange length, and inside bend radius for 2.0 mm steel, and estimate the forming time for its four bends at 30 s each.</li>
+      <li>Suppose the line's real allowances are 12 s per screw and 4 s per other part, with everything else as in Tables 4 and 11. Recompute both assembly times and both DFA indices.</li>
+    </ol>
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>1. Trace width.</strong> Rearranging I = 0.048 · ΔT<sup>0.44</sup> · A<sup>0.725</sup>: A = (I ÷ (0.048 · ΔT<sup>0.44</sup>))<sup>1/0.725</sup>. With ΔT = 20 °C, 20<sup>0.44</sup> = 3.74, so 0.048 × 3.74 = 0.179. Then 10 ÷ 0.179 = 55.7, and 55.7<sup>1.379</sup> = 256 square mils. At 1 oz (1.378 mil thick) the width is 256 ÷ 1.378 = 186 mil = 4.7 mm. At 2 oz (2.756 mil) it is 93 mil = 2.4 mm. The redesign's 3.0 mm at 2 oz is 118 mil wide, A = 118 × 2.756 = 325 square mils, and I = 0.048 × 3.74 × 325<sup>0.725</sup> = 0.179 × 66.2 = 11.9 A at a 20 °C rise, so it carries 10 A with margin. This is the conservative IPC-2221 estimate; IPC-2152 would allow less copper (Module 9).</p>
+      <p><strong>2. Die-cast draft.</strong> D = √L ÷ C = √20 ÷ 6.00 = 4.47 ÷ 6.00 = 0.75°. The review's 1° is above the formula minimum and below NADCA's general 2° note for 25 mm and deeper features; it is a reasonable specification. Say so on the drawing: "1° minimum inside draft; die caster may increase".</p>
+      <p><strong>3. Bracket rules.</strong> For t = 2.0 mm: hole to bend ≥ 2.5 × 2.0 = 5.0 mm; flange ≥ 4 × 2.0 = 8.0 mm; inside bend radius ≥ 1 × 2.0 = 2.0 mm. Forming time 4 bends × 30 s = 120 s per bracket, which at a $90 per hour brake rate (Module 15) is $3.00 of forming per unit before setup, material, plating, and the ten screws it needs. That number is why DFA-03 wins.</p>
+      <p><strong>4. Revised allowances.</strong> Baseline: 26 × 12 = 312; 35 × 4 = 140; plus 30 + 32 + 48 + 30 = 140; total 592 s; index 13 × 2.93 ÷ 592 = 0.064. Redesign: 9 × 12 = 108; 29 × 4 = 116; plus 15 + 0 + 6 + 10 = 31; total 255 s; index 13 × 2.93 ÷ 255 = 0.149. The redesign's time barely moves because it has few screws, which is where the allowance changed most; the baseline gets worse. The ranking and the order of magnitude did not change, which is what a robust review looks like.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="16">
+      <fieldset class="q" data-answer="b">
+        <legend>1. In what order does this module recommend running the four reviews, and why?</legend>
+        <label><input type="radio" name="q1" value="a"> DFS, DFT, DFA, DFM: start from the customer</label>
+        <label><input type="radio" name="q1" value="b"> DFM, DFA, DFT, DFS: each review works on a design the previous one has simplified</label>
+        <label><input type="radio" name="q1" value="c"> All four at once in one meeting</label>
+        <label><input type="radio" name="q1" value="d"> DFA first because part count matters most</label>
+        <p class="explain" hidden>DFM changes parts, DFA removes them, DFT adds access, DFS decides which joints must reopen.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.148" data-tolerance="0.005">
+        <legend>2. The redesign has a theoretical minimum of 13 parts and an estimated assembly time of 257 s. What is its DFA index (as a decimal, using 2.93 s per part)?</legend>
+        <label>Answer: <input type="number" name="q2" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>13 × 2.93 ÷ 257 = 0.148.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>3. Why did finding DFM-11 (plating specified only as "zinc") score 9, the highest possible?</legend>
+        <label><input type="radio" name="q3" value="a"> Zinc is expensive</label>
+        <label><input type="radio" name="q3" value="b"> Zinc cannot be plated on steel</label>
+        <label><input type="radio" name="q3" value="c"> The bracket was too thick</label>
+        <label><input type="radio" name="q3" value="d"> An unspecified passivate could be hexavalent chromate, which would fail the RoHS limit on every part</label>
+        <p class="explain" hidden>Severity 3 (compliance) times likelihood 3 (every part) = 9. Specify class, thickness, and a trivalent passivate.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="4.7" data-tolerance="0.3">
+        <legend>4. Using IPC-2221 (I = 0.048 · ΔT^0.44 · A^0.725), about how wide in mm must a 1 oz (1.378 mil) external trace be to carry 10 A at a 20 °C rise?</legend>
+        <label>Answer: <input type="number" name="q4" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>A ≈ 256 square mils; 256 ÷ 1.378 = 186 mil ≈ 4.7 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>5. Which baseline part fails all three minimum-part questions?</legend>
+        <label><input type="radio" name="q5" value="a"> The steel motor bracket</label>
+        <label><input type="radio" name="q5" value="b"> The piston</label>
+        <label><input type="radio" name="q5" value="c"> The PTFE cup seal</label>
+        <label><input type="radio" name="q5" value="d"> The brass hose fitting</label>
+        <p class="explain" hidden>The bracket does not move, need not be a different material from the housing's function, and is not needed for assembly or service once a cradle is moulded in. The piston moves, the seal and fitting need their materials.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>6. Finding DFT-04 asks for the compressor block to be run and leak tested as a subassembly. The main reason is</legend>
+        <label><input type="radio" name="q6" value="a"> to make the fixture cheaper</label>
+        <label><input type="radio" name="q6" value="b"> to avoid testing the PCBA</label>
+        <label><input type="radio" name="q6" value="c"> a fault found after the housing closes costs disassembly, and the block cannot be probed inside the housing</label>
+        <label><input type="radio" name="q6" value="d"> the standard requires it</label>
+        <p class="explain" hidden>Test subassemblies before they are buried; the cost of finding a fault rises with every operation after it was introduced.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.75" data-tolerance="0.05">
+        <legend>7. Using D = √L ÷ C with C = 6.00 for an internal aluminium die-cast wall, what draft angle in degrees does the formula give for a 20 mm deep cavity?</legend>
+        <label>Answer: <input type="number" name="q7" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>√20 = 4.47; 4.47 ÷ 6.00 = 0.75°.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>8. In the scoring method, a finding with severity 2 and likelihood 3</legend>
+        <label><input type="radio" name="q8" value="a"> scores 5 and is deferred</label>
+        <label><input type="radio" name="q8" value="b"> scores 6 and is fixed before tooling</label>
+        <label><input type="radio" name="q8" value="c"> scores 1 and is ignored</label>
+        <label><input type="radio" name="q8" value="d"> is rejected automatically</label>
+        <p class="explain" hidden>Score = severity × likelihood = 6; the threshold for fixing before tooling is 6.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>b. DFM, DFA, DFT, DFS.</li>
+        <li>0.148.</li>
+        <li>d. Possible hexavalent chromate against RoHS.</li>
+        <li>About 4.7 mm.</li>
+        <li>a. The bracket.</li>
+        <li>c. Faults after closure cost disassembly.</li>
+        <li>0.75°.</li>
+        <li>b. Score 6, fix before tooling.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>A review is a list: finding, rule and source, score, disposition, owner, gate. Anything less is a conversation.</li>
+      <li>Run DFM, then DFA, then DFT, then DFS. Each works on what the previous one left.</li>
+      <li>Ask the three questions of every part. The inflator's 61 parts had a theoretical minimum of 13; the redesign reached 38 and did not need to reach 13.</li>
+      <li>Count operations, not part numbers: fasteners, drive types, adhesives, solder joints, and reorientations are where assembly time lives.</li>
+      <li>Test the subassembly before it is buried, and give the fixture the same datums the housing uses.</li>
+      <li>Service and compliance findings can outrank everything else: an unspecified passivate scored higher than any moulding rule.</li>
+      <li>State your allowances and rates. The redesign's value is in its direction and order of magnitude, not in the second decimal.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07. Rules cited here were introduced, with fuller context, in the modules named in the tables.</p>
+    <ol class="references">
+      <li id="ref-1">Boothroyd Dewhurst, Inc. "What Is Design for Assembly (DFA)?" n.d. <a href="https://www.dfma.com/design-for-assembly.asp">https://www.dfma.com/design-for-assembly.asp</a> <span class="tag">(vendor-published case results)</span></li>
+      <li id="ref-2">Devenish, B. (L3Harris). "Conducting a Step-by-Step DFA Analysis." DFMA Forum, 2019. <a href="https://www.dfma.com/forum/2019pdf/devenish.pdf">https://www.dfma.com/forum/2019pdf/devenish.pdf</a></li>
+      <li id="ref-3">Protolabs. "Plastic Injection Molding Design Guidelines." n.d. <a href="https://www.protolabs.com/services/injection-molding/plastic-injection-molding/design-guidelines/">https://www.protolabs.com/services/injection-molding/plastic-injection-molding/design-guidelines/</a></li>
+      <li id="ref-4">Protolabs Network (formerly Hubs). "Injection molding design guide." n.d. <a href="https://www.hubs.com/guides/injection-molding/">https://www.hubs.com/guides/injection-molding/</a></li>
+      <li id="ref-5">North American Die Casting Association. <em>Product Specification Standards for Die Castings</em>, 2015, Section 4A, Engineering and Design: Coordinate Dimensioning (public excerpt hosted by A&amp;B Die Casting). <a href="https://www.abdiecasting.com/wp-content/uploads/2017/08/Section-04a-Coordinate-Dimensioning.pdf">https://www.abdiecasting.com/wp-content/uploads/2017/08/Section-04a-Coordinate-Dimensioning.pdf</a></li>
+      <li id="ref-6">Protolabs Network (formerly Hubs). "CNC machining design guide." n.d. <a href="https://www.hubs.com/guides/cnc-machining/">https://www.hubs.com/guides/cnc-machining/</a></li>
+      <li id="ref-7">Xometry. <em>Design Guidelines and Best Practices for Sheet Metal Fabrication.</em> n.d. <a href="https://f.hubspotusercontent00.net/hubfs/340051/Xometry%20Sheet%20Metal%20Design%20Guide%202020.pdf">https://f.hubspotusercontent00.net/hubfs/340051/Xometry%20Sheet%20Metal%20Design%20Guide%202020.pdf</a></li>
+      <li id="ref-8">Gatto Industrial Platers. "ASTM B633 Zinc Electroplating Services." n.d. <a href="https://www.gattoplaters.com/astm-b633.html">https://www.gattoplaters.com/astm-b633.html</a> <span class="tag">(plater's summary of the standard's service conditions)</span></li>
+      <li id="ref-9">European Parliament and Council. <em>Directive 2011/65/EU of 8 June 2011 on the restriction of the use of certain hazardous substances in electrical and electronic equipment</em> (RoHS), as amended by Delegated Directive (EU) 2015/863. <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32011L0065">https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32011L0065</a></li>
+      <li id="ref-10">Boothroyd Dewhurst, Inc. "Sheet Metal Fabrication Cost Estimating: How Cost Works." n.d. <a href="https://www.dfma.com/resources/sheet-metal-fabrication-cost.asp">https://www.dfma.com/resources/sheet-metal-fabrication-cost.asp</a> <span class="tag">(software vendor's reference values)</span></li>
+      <li id="ref-11">Sierra Circuits. "DFM Rules." n.d. <a href="https://www.protoexpress.com/kb/dfm-rules/">https://www.protoexpress.com/kb/dfm-rules/</a>; and IPC-2221 trace current formula as introduced in Module 9.</li>
+      <li id="ref-12">Range, B. (Acorn Product Development). "Hand-Calculated Savings: Case Studies in the Application of a Simplified Boothroyd-Dewhurst Methodology." DFMA Forum, 2013. <a href="https://www.dfma.com/forum/2013pdf/Range.pdf">https://www.dfma.com/forum/2013pdf/Range.pdf</a></li>
+      <li id="ref-13">Sierra Circuits. "Design for Testing (DFT) Guidelines for PCB Manufacturing." n.d. <a href="https://www.protoexpress.com/blog/design-for-testing-guidelines-pcb-manufacturing/">https://www.protoexpress.com/blog/design-for-testing-guidelines-pcb-manufacturing/</a></li>
+      <li id="ref-14">Shingo, S. <em>Zero Quality Control: Source Inspection and the Poka-yoke System.</em> Productivity Press, 1986. <a href="https://www.routledge.com/Zero-Quality-Control-Source-Inspection-and-the-Poka-Yoke-System/Shingo/p/book/9780915299072">https://www.routledge.com/Zero-Quality-Control-Source-Inspection-and-the-Poka-Yoke-System/Shingo/p/book/9780915299072</a> <span class="tag">(secondary: origin of the term; text not read)</span></li>
+      <li id="ref-15">ASTM International. <em>ASTM E2930-13(2021) Standard Practice for Pressure Decay Leak Test Method.</em> <a href="https://www.astm.org/Standards/E2930.htm">https://www.astm.org/Standards/E2930.htm</a></li>
+      <li id="ref-16">Keysight. "How In-Circuit Tests Ensure PCBA Quality and Reliability." 2024. <a href="https://www.keysight.com/blogs/en/tech/educ/2024/in-circuit-test">https://www.keysight.com/blogs/en/tech/educ/2024/in-circuit-test</a></li>
+      <li id="ref-17">European Parliament and Council. <em>Directive (EU) 2024/1799 of 13 June 2024 on common rules promoting the repair of goods.</em> <a href="https://eur-lex.europa.eu/eli/dir/2024/1799/oj/eng">https://eur-lex.europa.eu/eli/dir/2024/1799/oj/eng</a></li>
+      <li id="ref-18">NASA Goddard Space Flight Center. <em>Preferred Reliability Practice PD-ED-1201: EEE Parts Derating.</em> <a href="https://extapps.ksc.nasa.gov/Reliability/Documents/Preferred_Practices/1201.pdf">https://extapps.ksc.nasa.gov/Reliability/Documents/Preferred_Practices/1201.pdf</a></li>
+      <li id="ref-19">International Electrotechnical Commission. "Ingress Protection (IP) ratings." n.d. <a href="https://www.iec.ch/ip-ratings">https://www.iec.ch/ip-ratings</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Boothroyd, G., Dewhurst, P., Knight, W. A. <em>Product Design for Manufacture and Assembly</em>, 3rd ed. CRC Press, 2011. The handling and insertion time tables behind the DFA index.</li>
+      <li>Ulrich, K. T., Eppinger, S. D., Yang, M. C. <em>Product Design and Development</em>, 7th ed. McGraw-Hill, 2020. The design-for-manufacturing chapter's review process.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>

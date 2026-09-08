@@ -25,7 +25,7 @@
     { num: "13", slug: "13-materials-finishes-joining", title: "Materials, finishes, and joining", built: true },
     { num: "14", slug: "14-suppliers", title: "Working with suppliers and contract manufacturers", built: true },
     { num: "15", slug: "15-cost-modeling", title: "Cost modeling and should-cost", built: true },
-    { num: "16", slug: "16-capstone", title: "Capstone: a full DFx review", built: false }
+    { num: "16", slug: "16-capstone", title: "Capstone: a full DFx review", built: true }
   ];
 
   var PASS_MARK = 0.7; /* fraction of quiz questions needed to mark a module complete */
