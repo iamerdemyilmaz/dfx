@@ -32,6 +32,38 @@
       <li><strong>Choose</strong> a tolerance, a surface finish, and a tooling class with an understanding of what each one costs.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="06">
+        <fieldset class="q" data-answer="b">
+          <legend>1. The single most important wall thickness rule for injection moulded parts is</legend>
+          <label><input type="radio" name="p1" value="a"> as thick as possible</label>
+          <label><input type="radio" name="p1" value="b"> uniform thickness</label>
+          <label><input type="radio" name="p1" value="c"> exactly 3 mm</label>
+          <label><input type="radio" name="p1" value="d"> thicker at the gate</label>
+          <p class="explain" hidden>Uneven walls cool at different rates and cause sink, warp, and long cycles.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>2. A textured outer surface typically needs draft of about</legend>
+          <label><input type="radio" name="p2" value="a"> 0&deg;</label>
+          <label><input type="radio" name="p2" value="b"> 0.5&deg;</label>
+          <label><input type="radio" name="p2" value="c"> 3&deg; or more</label>
+          <label><input type="radio" name="p2" value="d"> 45&deg;</label>
+          <p class="explain" hidden>Texture is a field of micro-undercuts; light texture needs about 3&deg;, medium about 5&deg;.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="a">
+          <legend>3. A rib on a moulded part should be about</legend>
+          <label><input type="radio" name="p3" value="a"> half the wall thickness</label>
+          <label><input type="radio" name="p3" value="b"> twice the wall thickness</label>
+          <label><input type="radio" name="p3" value="c"> the same as the wall</label>
+          <label><input type="radio" name="p3" value="d"> as tall as possible</label>
+          <p class="explain" hidden>Thick ribs cause sink on the opposite face; the module gives the height limit too.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>A machined part that comes back wrong can be fixed by changing a program. A moulded part that comes back wrong means a tool change, and the direction of the change decides the cost. Removing steel from a mould (which adds plastic to the part) is a machining operation. Adding steel to a mould (which removes plastic from the part) means welding, inserts, or a new cavity block. Moulders call the cheap direction "steel-safe" and design their first cut so that the likely corrections go that way. If your part needs a wall to get thinner after first shots, you are asking for the expensive direction.</p>
     <p>The precision that good moulding can reach is real. The LEGO Group's own history notes that its 1963 switch from cellulose acetate to ABS permitted moulding "to an accuracy of 1/200 mm", which is 0.005 mm.<sup class="cite"><a href="#ref-10">[10]</a></sup> That precision is bought with tooling quality, process control, and a part design that gives the process a chance: uniform walls, generous draft, and features that cool at the same rate.</p>

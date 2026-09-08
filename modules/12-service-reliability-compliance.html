@@ -32,6 +32,38 @@
       <li><strong>Identify</strong> when potable-water contact standards apply and what they require of wetted materials.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="12">
+        <fieldset class="q" data-answer="b">
+          <legend>1. NASA derating guidance for semiconductors suggests operating at about</legend>
+          <label><input type="radio" name="p1" value="a"> 100 percent of rated power</label>
+          <label><input type="radio" name="p1" value="b"> 50 percent of rated power or less</label>
+          <label><input type="radio" name="p1" value="c"> 150 percent of rated power</label>
+          <label><input type="radio" name="p1" value="d"> any power; rating is irrelevant</label>
+          <p class="explain" hidden>Derating buys reliability margin; the module lists the guidance by part type.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>2. In an IP code such as IPX4, the second numeral describes protection against</legend>
+          <label><input type="radio" name="p2" value="a"> dust</label>
+          <label><input type="radio" name="p2" value="b"> impact</label>
+          <label><input type="radio" name="p2" value="c"> water</label>
+          <label><input type="radio" name="p2" value="d"> fire</label>
+          <p class="explain" hidden>First numeral solids, second numeral water, under IEC 60529.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>3. Under RoHS, hexavalent chromium is limited in homogeneous materials to</legend>
+          <label><input type="radio" name="p3" value="a"> 10 percent</label>
+          <label><input type="radio" name="p3" value="b"> 1 percent</label>
+          <label><input type="radio" name="p3" value="c"> 0.1 percent</label>
+          <label><input type="radio" name="p3" value="d"> no limit</label>
+          <p class="explain" hidden>0.1 percent by weight for most restricted substances, 0.01 percent for cadmium.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>On 23 January 2017 Samsung Electronics held a press conference to announce the cause of the Galaxy Note7 incidents that had led to two recalls of the phone the previous autumn. The company's investigation, and independent investigations by UL, Exponent, and TÜV Rheinland, concluded that the batteries were the cause.<sup class="cite"><a href="#ref-1">[1]</a></sup> Two battery suppliers were involved and their defects were different: in the first, the negative electrode was deflected at a corner of the cell; in the second, a welding defect during manufacture led to an internal short.<sup class="cite"><a href="#ref-2">[2]</a></sup> Samsung's response was an eight-point battery safety check applied to every battery, covering durability, visual, X-ray, charge and discharge, leak, disassembly, accelerated usage, and voltage tests, and a Battery Advisory Group of outside experts.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
     <p>The public record does not include the internal engineering decisions, and this course does not speculate about them. What the record shows is the shape of a reliability and compliance failure: a purchased component, qualified and tested, failed in the field at a rate that ended the product; two different suppliers failed in two different ways; and the remedy was a test regime that the original process had not included. The lessons are the ones in this module. Reliability is a property of margins, not of a passed test; environmental and abuse testing must reflect the service the product will see; and supplier processes are part of your product's reliability whether you inspect them or not.</p>

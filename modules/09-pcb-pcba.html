@@ -32,6 +32,38 @@
       <li><strong>Assess</strong> component lifecycle and material risk, including the tin-whisker lesson, before a part is designed in.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="09">
+        <fieldset class="q" data-answer="b">
+          <legend>1. The annular ring on a plated hole is</legend>
+          <label><input type="radio" name="p1" value="a"> the solder mask opening</label>
+          <label><input type="radio" name="p1" value="b"> the copper between the hole wall and the pad edge</label>
+          <label><input type="radio" name="p1" value="c"> the silkscreen circle</label>
+          <label><input type="radio" name="p1" value="d"> the drill bit</label>
+          <p class="explain" hidden>It must survive drill wander; the module gives minimum and recommended values.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>2. How many fiducials does a board normally need for placement?</legend>
+          <label><input type="radio" name="p2" value="a"> One</label>
+          <label><input type="radio" name="p2" value="b"> Two, close together</label>
+          <label><input type="radio" name="p2" value="c"> Three, far apart, in bare copper</label>
+          <label><input type="radio" name="p2" value="d"> None</label>
+          <p class="explain" hidden>Three global fiducials let the machine correct offset, rotation, and scale.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="b">
+          <legend>3. Copper near a V-cut (scored) panel edge should be kept back about</legend>
+          <label><input type="radio" name="p3" value="a"> 0.05 mm</label>
+          <label><input type="radio" name="p3" value="b"> 0.4 mm</label>
+          <label><input type="radio" name="p3" value="c"> 5 mm</label>
+          <label><input type="radio" name="p3" value="d"> There is no limit</label>
+          <p class="explain" hidden>The scoring blade needs clearance; routed edges allow less. The module's fabrication table has both.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>On 19 May 1998 the Galaxy IV communications satellite failed in orbit, taking down most of the pagers in the United States. It was one of three Hughes HS601 satellites that lost a side of their redundant spacecraft control processors that year. In August 1998 Hughes reported publicly that "electrical shorts involving tin-plated relay switches are the most likely cause", and that its investigators had "narrowed down the most probable cause to a tin-plated latching relay that serves as an on/off switch"; under certain conditions "a tiny, crystalline structure, less than the width of a human hair, can grow and bridge a relay terminal to its case, causing an electrical short".<sup class="cite"><a href="#ref-14">[14]</a></sup> The structure is a tin whisker. NASA's list of documented whisker failures records Galaxy IV as a complete loss and includes, among others, a 1986 heart pacemaker recall, missile programmes, and relay failures at several nuclear power plants.<sup class="cite"><a href="#ref-14">[14]</a>,<a href="#ref-15">[15]</a></sup></p>
     <p>Nothing on the Galaxy IV schematic was wrong. A relay was specified, a relay was fitted, and the relay worked. The failure came from a material choice inside a purchased component, pure tin plating, that the circuit designer may never have seen. That is the shape of PCBA DFM: the board and the components are made by other people to rules you do not write, and your job is to design so that their rules, their processes, and their materials produce the board you drew. This module gives you the rules for the board, the assembly, and the components, in that order.</p>

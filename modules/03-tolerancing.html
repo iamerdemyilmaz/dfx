@@ -32,6 +32,38 @@
       <li><strong>Justify</strong> why a ±0.05 mm tolerance on a moulded part is a cost decision, with numbers.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="03">
+        <fieldset class="q" data-answer="b">
+          <legend>1. A drawing note "ISO 2768-m" means</legend>
+          <label><input type="radio" name="p1" value="a"> all dimensions are in metres</label>
+          <label><input type="radio" name="p1" value="b"> general tolerances of the medium class apply to dimensions without individual tolerances</label>
+          <label><input type="radio" name="p1" value="c"> the part is machined</label>
+          <label><input type="radio" name="p1" value="d"> maximum material condition applies</label>
+          <p class="explain" hidden>ISO 2768-1 has four classes: f, m, c, v.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>2. A root sum square (RSS) stack-up compared with a worst-case stack-up gives</legend>
+          <label><input type="radio" name="p2" value="a"> a larger total, to be safe</label>
+          <label><input type="radio" name="p2" value="b"> the same total</label>
+          <label><input type="radio" name="p2" value="c"> a smaller total, assuming independent, normally distributed contributions</label>
+          <label><input type="radio" name="p2" value="d"> no total; it is qualitative</label>
+          <p class="explain" hidden>RSS combines tolerances as the square root of the sum of squares.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>3. A process with Cpk = 1.33 on a dimension</legend>
+          <label><input type="radio" name="p3" value="a"> is incapable</label>
+          <label><input type="radio" name="p3" value="b"> is centred exactly on nominal</label>
+          <label><input type="radio" name="p3" value="c"> has its nearer specification limit four standard deviations from the mean</label>
+          <label><input type="radio" name="p3" value="d"> produces 50 percent rejects</label>
+          <p class="explain" hidden>Cpk = (nearest limit &minus; mean) &divide; 3&sigma;, so 1.33 means 4&sigma; of margin; the module gives the reject rates.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>The primary mirror of the Hubble Space Telescope was ground to the wrong shape. The error was not carelessness at the polishing machine: the mirror matched its test instrument almost perfectly. The instrument was wrong. A device called the reflective null corrector had a field lens spaced about 1.3 mm from where it should have been, in an assembly whose spacings "need to be correct to 10 µm" for the mirror to meet its requirement.<sup class="cite"><a href="#ref-11">[11]</a></sup> The mirror was then polished until it agreed with the mis-spaced instrument, producing a shape that NASA describes as too flat toward the edge by "10 times larger than the specified tolerance".<sup class="cite"><a href="#ref-12">[12]</a></sup></p>
     <p>Two other instruments, an inverse null corrector and a refractive null corrector, showed the discrepancy at the time. Both readings were "discounted" as being themselves in error, because the reflective null corrector was believed to be the more precise device.<sup class="cite"><a href="#ref-11">[11]</a></sup> The investigation board's findings read like a tolerancing lesson: complete reliance was placed on a single test; no independent measurement of the instrument's spacings was made after assembly; and the instrument had been designed so that its spacings could be re-checked without disassembly, but the implementation did not allow it.<sup class="cite"><a href="#ref-11">[11]</a></sup></p>

@@ -32,6 +32,38 @@
       <li><strong>Decide</strong> when AM is the right production process and when it is a prototype or a tooling process.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="08">
+        <fieldset class="q" data-answer="c">
+          <legend>1. FDM (fused deposition) parts are typically</legend>
+          <label><input type="radio" name="p1" value="a"> isotropic</label>
+          <label><input type="radio" name="p1" value="b"> strongest between layers</label>
+          <label><input type="radio" name="p1" value="c"> weaker between layers than within a layer</label>
+          <label><input type="radio" name="p1" value="d"> fully dense metal</label>
+          <p class="explain" hidden>Layer adhesion is the weak direction; orientation is a design decision.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>2. Which powder-bed polymer process needs no support structures?</legend>
+          <label><input type="radio" name="p2" value="a"> SLA</label>
+          <label><input type="radio" name="p2" value="b"> FDM</label>
+          <label><input type="radio" name="p2" value="c"> SLS</label>
+          <label><input type="radio" name="p2" value="d"> DMLS</label>
+          <p class="explain" hidden>Unfused powder supports the part in SLS and MJF.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="b">
+          <legend>3. Metal laser powder-bed parts (DMLS) usually require</legend>
+          <label><input type="radio" name="p3" value="a"> no post-processing</label>
+          <label><input type="radio" name="p3" value="b"> supports, heat treatment, and machining of critical surfaces</label>
+          <label><input type="radio" name="p3" value="c"> injection moulding afterwards</label>
+          <label><input type="radio" name="p3" value="d"> a wax pattern</label>
+          <p class="explain" hidden>The module's process table lists minimum features and post-processing for each process.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>Two documented facts frame this module. The first is what AM can do when the design is built for it. GE Aviation's fuel nozzle tip for the LEAP engine replaced an assembly of about 20 pieces welded and brazed together with a single printed part that "weighed 25 percent less than its predecessor" and was "five times more durable", housing 14 internal fluid passages; by late 2018 more than 33,000 had been printed at a dedicated plant in Auburn, Alabama.<sup class="cite"><a href="#ref-11">[11]</a></sup> That is AM as a production process, and it worked because the part was redesigned for it, not converted.</p>
     <p>The second is what goes wrong when design rules are treated as universal. Every AM guide publishes minimum feature sizes, and they are machine-specific. Formlabs' guide for its Form 2 stereolithography printer gives a minimum supported wall of 0.4 mm and an unsupported wall of 0.6 mm, a maximum unsupported overhang of 1.0 mm, and a minimum drain hole of 3.5 mm.<sup class="cite"><a href="#ref-9">[9]</a></sup> The same company's specifications for the later Form 3 give 0.2 mm for both wall types, a 5.0 mm unsupported overhang, and a 2.5 mm drain hole.<sup class="cite"><a href="#ref-10">[10]</a></sup> Both are correct; they describe different machines, resins, and layer thicknesses. A design that meets the rules for one printer and is quoted to a bureau running another will either fail to print or be rejected at DFM review. The rule in this module is therefore always "for this process, on this machine, in this material", and the design task includes asking which one you will get.</p>

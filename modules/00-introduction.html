@@ -31,6 +31,38 @@
       <li><strong>Calculate</strong> the break-even between engineering time spent early and a per-unit cost avoided later.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="00">
+        <fieldset class="q" data-answer="b">
+          <legend>1. What does DFA stand for?</legend>
+          <label><input type="radio" name="p1" value="a"> Design for accuracy</label>
+          <label><input type="radio" name="p1" value="b"> Design for assembly</label>
+          <label><input type="radio" name="p1" value="c"> Drawing for approval</label>
+          <label><input type="radio" name="p1" value="d"> Design failure analysis</label>
+          <p class="explain" hidden>Design for assembly: fewest parts consistent with function, each easy to handle and insert.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>2. The claim that "design determines about 80 percent of product cost" is best described as</legend>
+          <label><input type="radio" name="p2" value="a"> a measured result from a large industry study</label>
+          <label><input type="radio" name="p2" value="b"> a requirement of ISO 9001</label>
+          <label><input type="radio" name="p2" value="c"> a widely repeated rule of thumb whose original data is hard to trace</label>
+          <label><input type="radio" name="p2" value="d"> false; design has no effect on cost</label>
+          <p class="explain" hidden>Ulrich and Pearson traced it to folklore and then measured the design effect on coffee makers; this module explains what they found.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>3. As a product moves from concept to mass production, the cost of fixing a design problem generally</legend>
+          <label><input type="radio" name="p3" value="a"> falls, because more people are available</label>
+          <label><input type="radio" name="p3" value="b"> stays about constant</label>
+          <label><input type="radio" name="p3" value="c"> rises sharply, because tooling, inventory, and certification become involved</label>
+          <label><input type="radio" name="p3" value="d"> depends only on part size</label>
+          <p class="explain" hidden>The cost-of-change curve is the reason DFx work is done early; the module discusses the rule of ten and what evidence exists for it.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>In June 2006, and again in October 2006, Airbus announced delays to the A380 programme. The company's stated root cause was that the three-dimensional digital mock-up used to design the installation of electrical harnesses "was implemented late", and that the people working on it were still on their learning curve when the aircraft was already being built.<sup class="cite"><a href="#ref-7">[7]</a></sup> Harnesses designed against one representation of the airframe did not fit the airframe as built, and installed wiring had to be reworked in the final assembly hall. EADS put the earnings impact of the October announcement at 2.8 billion euros over four years, on top of the 2 billion euros already announced in June, and first delivery slipped a full year to October 2007.<sup class="cite"><a href="#ref-7">[7]</a>,<a href="#ref-8">[8]</a></sup></p>
     <p>Nothing in that story is about a bad wire or a bad bracket. It is about design information that arrived after the decisions it should have informed. That is the failure DFx exists to prevent, and it is why this course spends as much time on process, reviews, and supplier communication as on wall thickness and bend radii. The same shape of failure appears at every scale: a moulded housing whose draft was added after the mating lid was designed, a board whose test points were placed after the fixture was quoted, a bracket whose bend clearance was checked after the tool was cut. The part is rarely wrong in isolation. The order of decisions was wrong.</p>

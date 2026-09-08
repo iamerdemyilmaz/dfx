@@ -32,6 +32,38 @@
       <li><strong>Calculate</strong> the schedule and cost effect of catching a finding one build later.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="01">
+        <fieldset class="q" data-answer="b">
+          <legend>1. Which is the usual order of new product introduction builds?</legend>
+          <label><input type="radio" name="p1" value="a"> PVT, DVT, EVT</label>
+          <label><input type="radio" name="p1" value="b"> EVT, DVT, PVT</label>
+          <label><input type="radio" name="p1" value="c"> DVT, EVT, PVT</label>
+          <label><input type="radio" name="p1" value="d"> EVT, PVT, DVT</label>
+          <p class="explain" hidden>Engineering validation, then design validation, then production validation.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>2. The production validation test (PVT) build mainly validates</legend>
+          <label><input type="radio" name="p2" value="a"> the industrial design</label>
+          <label><input type="radio" name="p2" value="b"> the marketing forecast</label>
+          <label><input type="radio" name="p2" value="c"> the production process at rate with production tooling and operators</label>
+          <label><input type="radio" name="p2" value="d"> the patent position</label>
+          <p class="explain" hidden>By PVT the design should be frozen; what is being tested is the factory's ability to make it.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="b">
+          <legend>3. In this course, a DFM review is treated as</legend>
+          <label><input type="radio" name="p3" value="a"> an informal chat with the supplier</label>
+          <label><input type="radio" name="p3" value="b"> a formal deliverable at a phase gate with scored findings and dispositions</label>
+          <label><input type="radio" name="p3" value="c"> something only the supplier does</label>
+          <label><input type="radio" name="p3" value="d"> optional for low-volume products</label>
+          <p class="explain" hidden>The module defines the review's inputs, outputs, and owner at each phase.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>In late July 2017 Tesla handed over the first thirty Model 3 sedans and announced a target of about 5,000 cars per week by the end of the year. The day after the event, Elon Musk told journalists the company was about to go through "at least six months of manufacturing hell".<sup class="cite"><a href="#ref-5">[5]</a></sup> By April 2018 the line had still not reached a reduced target of 2,500 per week. Musk's own diagnosis, in a post on 13 April 2018, was blunt: "Yes, excessive automation at Tesla was a mistake. To be precise, my mistake. Humans are underrated."<sup class="cite"><a href="#ref-4">[4]</a></sup> In a television interview the same week he said the company had dismantled an overly complex automated conveyor system because "it was not working".<sup class="cite"><a href="#ref-4">[4]</a></sup></p>
     <p>Strip out the celebrity and the story is an NPI lesson. The product had been validated; the production process had not, at the rate it was asked to run. Production validation is a build phase with its own exit criteria for exactly this reason. A line that has never run at rate has not been tested, and a line that has not been tested is a prototype, however much it cost.</p>

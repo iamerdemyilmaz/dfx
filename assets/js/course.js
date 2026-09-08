@@ -224,7 +224,7 @@
 
   /* ---------- Quiz engine ----------
      Markup contract:
-     <form class="quiz" data-module="06">
+     <form class="quiz" data-module="06">           (add data-pre for a "before you start" check: graded, never saved)
        <fieldset class="q" data-answer="b">          multiple choice: radio inputs, value = letter
          <legend>1. Question text</legend>
          <label><input type="radio" name="q1" value="a"> ...</label>
@@ -312,6 +312,14 @@
 
     var out = form.querySelector(".quiz-score");
     var pct = total ? score / total : 0;
+    if (form.hasAttribute("data-pre")) {
+      /* Pre-module check: show the result and explanations, never record progress. */
+      var pre = "You got " + score + " of " + total + ". ";
+      if (unanswered) { pre += unanswered + " left blank. "; }
+      pre += (score === total) ? "You know this ground; the module adds the numbers and the reasons." : "The explanations point to the sections that cover each answer.";
+      if (out) { out.textContent = pre; out.className = "quiz-score"; }
+      return;
+    }
     var passed = pct >= PASS_MARK;
     var msg = "Score: " + score + " of " + total + " (" + Math.round(pct * 100) + "%). ";
     msg += passed ? "Pass. " : "Below the " + Math.round(PASS_MARK * 100) + "% pass mark. Review the explanations and try again. ";

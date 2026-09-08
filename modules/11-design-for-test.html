@@ -32,6 +32,38 @@
       <li><strong>Plan</strong> the test fixture alongside the product so that datums, access, and sequence are shared.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="11">
+        <fieldset class="q" data-answer="b">
+          <legend>1. In-circuit test (ICT) mainly finds</legend>
+          <label><input type="radio" name="p1" value="a"> software bugs</label>
+          <label><input type="radio" name="p1" value="b"> structural faults: shorts, opens, missing or wrong components</label>
+          <label><input type="radio" name="p1" value="c"> cosmetic defects</label>
+          <label><input type="radio" name="p1" value="d"> packaging errors</label>
+          <p class="explain" hidden>Functional test checks behaviour; ICT checks that the board was built right.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="b">
+          <legend>2. A good in-circuit test point diameter is about</legend>
+          <label><input type="radio" name="p2" value="a"> 0.1 mm</label>
+          <label><input type="radio" name="p2" value="b"> 1.0 mm</label>
+          <label><input type="radio" name="p2" value="c"> 5 mm</label>
+          <label><input type="radio" name="p2" value="d"> 10 mm</label>
+          <p class="explain" hidden>1.0 mm best, smaller minima on the bottom side; the module gives the probe pitch cost factors too.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="b">
+          <legend>3. A pressure decay leak test works by</legend>
+          <label><input type="radio" name="p3" value="a"> weighing the part</label>
+          <label><input type="radio" name="p3" value="b"> pressurising a sealed volume and measuring the pressure drop over time</label>
+          <label><input type="radio" name="p3" value="c"> immersing the part in water and counting bubbles</label>
+          <label><input type="radio" name="p3" value="d"> X-ray inspection</label>
+          <p class="explain" hidden>ASTM E2930 describes the practice; the module works an example with a sensor resolution check.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>On 7 January 2013 a lithium-ion battery in the auxiliary power unit of a Boeing 787 caught fire on the ground in Boston. The National Transportation Safety Board's probable cause was "an internal short circuit within a cell of the APU lithium-ion battery, which led to thermal runaway that cascaded to adjacent cells", resulting from "Boeing's failure to incorporate design requirements to mitigate the most severe effects of an internal short circuit within an APU battery cell and the FAA's failure to identify this design deficiency during the type design certification process".<sup class="cite"><a href="#ref-7">[7]</a></sup> The report's findings read as a design-for-test post-mortem. The safety assessment assumed that an internal short in one cell would be limited to that cell venting; the cell manufacturer "did not test the battery under the most severe conditions possible in service"; the possibility of cascading thermal runaway "was not considered"; and as a result the certification engineers did not require a thermal-runaway test.<sup class="cite"><a href="#ref-7">[7]</a></sup> Investigators also found manufacturing conditions at the cell plant, including foreign object debris generated during welding, and an inspection process that could not reliably detect the defects that could cause an internal short.<sup class="cite"><a href="#ref-7">[7]</a></sup></p>
     <p>Two lessons transfer to any product. A test only validates the assumption it was designed around; if the worst credible case is not in the test plan, the test passes and the product does not. And inspection is itself a process with a detection capability; a defect the inspection cannot see is a defect that ships. Both lessons apply as much to a bed-of-nails fixture on a controller board or a leak test on a valve body as to an aircraft battery.</p>

@@ -32,6 +32,38 @@
       <li><strong>Explain</strong> what a salt-spray test does and does not tell you.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="13">
+        <fieldset class="q" data-answer="b">
+          <legend>1. Bolting an aluminium part to a steel part in a damp environment mainly risks</legend>
+          <label><input type="radio" name="p1" value="a"> nothing; both are metals</label>
+          <label><input type="radio" name="p1" value="b"> galvanic corrosion of the aluminium unless the joint is isolated or protected</label>
+          <label><input type="radio" name="p1" value="c"> melting</label>
+          <label><input type="radio" name="p1" value="d"> thread stripping only</label>
+          <p class="explain" hidden>The module uses MIL-STD-889 compatibility and the Statue of Liberty as the case.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="b">
+          <legend>2. Compared with Type II anodising, Type III (hardcoat) anodising is</legend>
+          <label><input type="radio" name="p2" value="a"> thinner and decorative</label>
+          <label><input type="radio" name="p2" value="b"> thicker and harder, for wear resistance</label>
+          <label><input type="radio" name="p2" value="c"> a paint</label>
+          <label><input type="radio" name="p2" value="d"> only for steel</label>
+          <p class="explain" hidden>The module gives thickness ranges per MIL-A-8625.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="b">
+          <legend>3. A brazed lap joint should overlap by about</legend>
+          <label><input type="radio" name="p3" value="a"> the thickness of the thinner member</label>
+          <label><input type="radio" name="p3" value="b"> three times the thickness of the thinner member</label>
+          <label><input type="radio" name="p3" value="c"> one hundred times the thickness</label>
+          <label><input type="radio" name="p3" value="d"> nothing; butt joints are stronger</label>
+          <p class="explain" hidden>The rule of three from brazing joint design guidance.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>The Statue of Liberty is a copper skin hung on an iron armature. Its builders knew the two metals would corrode in contact, and separated them with shellac-coated asbestos. A century later the National Institute of Standards and Technology, asked by the National Park Service to help plan the 1980s restoration, found that "the shellac had disintegrated over time, and the asbestos had become dry and porous"; with moisture and salt from the harbour air reactivating the joint, "the two metals produced electric currents like a battery, causing corrosion" of the iron.<sup class="cite"><a href="#ref-1">[1]</a></sup> The skin is attached to the armature by about 1,500 U-shaped copper saddles and 300,000 copper rivets, so every saddle was a place where iron and copper met.<sup class="cite"><a href="#ref-2">[2]</a></sup> The restoration, begun in 1981 and finished in 1986, replaced the iron with a chromium-nickel-molybdenum stainless steel selected by testing and coated with PTFE to prevent friction and wear; an inspection in 1996 confirmed the fix had worked.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
     <p>Every element of this module is in that story. A material pair chosen for reasons that had nothing to do with corrosion. An isolation scheme that depended on a coating with a finite life. A mechanical consequence (a swelling, rusting frame inside a thin skin) of an electrochemical cause. And a fix that changed the material, the isolation, and the interface at the same time, because those three are one decision. The scale is unusual; the design error is the one a junior engineer makes with a stainless screw in an aluminium bracket on a product that lives outdoors.</p>

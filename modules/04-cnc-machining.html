@@ -32,6 +32,38 @@
       <li><strong>Explain</strong> the cost drivers of a machined part in the order a machine shop experiences them.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="04">
+        <fieldset class="q" data-answer="b">
+          <legend>1. For a milled pocket, the internal vertical corner radius should be</legend>
+          <label><input type="radio" name="p1" value="a"> as sharp as possible</label>
+          <label><input type="radio" name="p1" value="b"> larger than about one third of the pocket depth</label>
+          <label><input type="radio" name="p1" value="c"> exactly 1 mm</label>
+          <label><input type="radio" name="p1" value="d"> equal to the pocket width</label>
+          <p class="explain" hidden>A larger radius allows a larger, stiffer cutter; the module explains the depth-to-radius reasoning.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="b">
+          <legend>2. Tapping a thread deeper than about three times its diameter</legend>
+          <label><input type="radio" name="p2" value="a"> doubles the joint strength</label>
+          <label><input type="radio" name="p2" value="b"> adds cost with little or no strength benefit</label>
+          <label><input type="radio" name="p2" value="c"> is required by ISO 286</label>
+          <label><input type="radio" name="p2" value="d"> reduces tool wear</label>
+          <p class="explain" hidden>The first threads carry most of the load; extra depth is machining time and tap risk.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>3. A typical standard machining tolerance quoted by online machine shops is about</legend>
+          <label><input type="radio" name="p3" value="a"> &plusmn;0.001 mm</label>
+          <label><input type="radio" name="p3" value="b"> &plusmn;0.025 mm</label>
+          <label><input type="radio" name="p3" value="c"> &plusmn;0.125 mm</label>
+          <label><input type="radio" name="p3" value="d"> &plusmn;1 mm</label>
+          <p class="explain" hidden>About &plusmn;0.125 mm standard, with &plusmn;0.025 mm feasible at a cost; see this module's cost section and Module 3.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>In January and April 1954 two de Havilland Comet 1 airliners broke up in flight. The court of inquiry, reporting to Parliament in February 1955, found that the cause of the first accident "was the structural failure of the pressure cabin brought about by fatigue".<sup class="cite"><a href="#ref-11">[11]</a></sup> To prove it, the Royal Aircraft Establishment at Farnborough put a complete airframe in a water tank and cycled the cabin pressure. After 3,060 cycles "the fuselage failed at the corner of the forward port cabin window"; the accident aircraft's cracks were traced to the corners of the cabin windows and the aerial apertures in the fuselage crown.<sup class="cite"><a href="#ref-12">[12]</a></sup> The Comet was a riveted sheet-metal structure, not a machined part, but the mechanism is the one every machined-part designer meets: a corner concentrates stress, and a sharp corner concentrates it most.</p>
     <p>In machining the sharp internal corner is doubly bad. It is a stress raiser in the finished part, and it is a shape a rotating cutter cannot produce at all. Every internal vertical corner in a milled pocket has the radius of the tool that cut it, so a drawing that shows a sharp corner is asking for either a hand operation, an electrical discharge machining step, or a change the machinist will make without telling you. The rules in this module exist to keep the drawing and the cutter in agreement.</p>

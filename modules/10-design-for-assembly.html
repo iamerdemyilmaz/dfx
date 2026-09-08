@@ -32,6 +32,38 @@
       <li><strong>Sequence</strong> an assembly so that parts stack from one direction with test and service access preserved.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="10">
+        <fieldset class="q" data-answer="b">
+          <legend>1. The Boothroyd Dewhurst minimum-part criteria ask whether a part</legend>
+          <label><input type="radio" name="p1" value="a"> is expensive, heavy, or large</label>
+          <label><input type="radio" name="p1" value="b"> moves relative to others, must be a different material, or must be separate for assembly or service</label>
+          <label><input type="radio" name="p1" value="c"> is made in-house</label>
+          <label><input type="radio" name="p1" value="d"> has a drawing</label>
+          <p class="explain" hidden>A part that fails all three is a candidate for elimination.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>2. The DFA index is</legend>
+          <label><input type="radio" name="p2" value="a"> total parts divided by fasteners</label>
+          <label><input type="radio" name="p2" value="b"> assembly time in minutes</label>
+          <label><input type="radio" name="p2" value="c"> theoretical minimum parts &times; an ideal time per part, divided by estimated assembly time</label>
+          <label><input type="radio" name="p2" value="d"> the number of screws</label>
+          <p class="explain" hidden>Higher is better; the module works an example from a published case.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="b">
+          <legend>3. In DFA terms, a screw is</legend>
+          <label><input type="radio" name="p3" value="a"> free, because it is a standard part</label>
+          <label><input type="radio" name="p3" value="b"> an operation that costs handling, alignment, and driving time on every unit</label>
+          <label><input type="radio" name="p3" value="c"> always better than a snap fit</label>
+          <label><input type="radio" name="p3" value="d"> not counted</label>
+          <p class="explain" hidden>The module puts a time and a cost on a screw from a published walkthrough.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>When Tesla's Model 3 line failed to reach its rate in 2018, the company's chief executive gave a diagnosis in one sentence: "Yes, excessive automation at Tesla was a mistake. To be precise, my mistake. Humans are underrated."<sup class="cite"><a href="#ref-7">[7]</a></sup> In an interview the same week he said an overly complex automated conveyor system had been removed because "it was not working".<sup class="cite"><a href="#ref-7">[7]</a></sup> Module 1 read that as a validation lesson. Read as a DFA lesson it says something else: an assembly that is hard for a robot is usually hard for a person too, and an assembly that is easy for a person, few parts, obvious orientation, one direction of insertion, is the one that automates. The remedy for a line that will not run is rarely more automation; it is fewer and better parts.</p>
     <p>The record on the other side is unusually good. The consultancy that formalised DFA publishes case results with numbers: a medical instrument's maintenance access door redesigned from 183 parts to 31, from 63 fasteners to none, and from 45 minutes of assembly to 11.<sup class="cite"><a href="#ref-1">[1]</a></sup> A defence electronics engineer's published walkthrough of the method on a simple enclosure shows the same arithmetic at small scale: eleven parts, three of which were necessary, and a redesign that removed the screws and cut assembly time by about a third.<sup class="cite"><a href="#ref-5">[5]</a></sup> These are vendor-published and practitioner-published results, and this module labels them as such; but they are specific, dated, and consistent with each other, which is more than most DFM claims can say.</p>

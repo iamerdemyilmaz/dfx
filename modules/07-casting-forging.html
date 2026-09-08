@@ -32,6 +32,38 @@
       <li><strong>Decide</strong>, with a break-even, when a casting beats a machined part and when it does not.</li>
     </ul>
 
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="07">
+        <fieldset class="q" data-answer="b">
+          <legend>1. Typical wall thickness for an aluminium die casting is about</legend>
+          <label><input type="radio" name="p1" value="a"> 0.1 mm</label>
+          <label><input type="radio" name="p1" value="b"> 1 to 5 mm</label>
+          <label><input type="radio" name="p1" value="c"> 10 to 20 mm</label>
+          <label><input type="radio" name="p1" value="d"> 25 mm or more</label>
+          <p class="explain" hidden>Thin, uniform walls fill well and avoid porosity in thick sections.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>2. In die casting, internal walls need</legend>
+          <label><input type="radio" name="p2" value="a"> less draft than external walls</label>
+          <label><input type="radio" name="p2" value="b"> no draft</label>
+          <label><input type="radio" name="p2" value="c"> more draft than external walls, because the alloy shrinks onto cores</label>
+          <label><input type="radio" name="p2" value="d"> negative draft</label>
+          <p class="explain" hidden>The NADCA draft formula uses a different constant for inside and outside surfaces.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>3. Investment casting is usually chosen over die casting when</legend>
+          <label><input type="radio" name="p3" value="a"> volume is very high</label>
+          <label><input type="radio" name="p3" value="b"> the part is simple</label>
+          <label><input type="radio" name="p3" value="c"> the part is complex, the alloy is not die-castable, or the volume is low</label>
+          <label><input type="radio" name="p3" value="d"> the part is plastic</label>
+          <p class="explain" hidden>The module's process comparison sets out the volume and complexity trade-offs.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
     <h2 id="why">Why this matters</h2>
     <p>On 19 July 1989 the stage 1 fan disk of the tail engine of a DC-10 burst in flight; the debris cut all three of the aircraft's hydraulic systems, and the crew's crash landing at Sioux City, Iowa, was survived by 185 of the 296 people on board. The disk was a titanium forging. The FAA's lessons-learned record states that "the fan disk failure was caused by a fatigue crack that initiated from a metallurgical defect located on the surface of the disk bore", and that the defect "formed during the initial manufacture of the titanium alloy material and was not detected by inspections performed during the manufacturing process" in 1971.<sup class="cite"><a href="#ref-8">[8]</a></sup> The National Transportation Safety Board's probable cause was the inadequate consideration of human-factors limitations in the inspection and quality-control procedures at the overhaul facility, which "resulted in the failure to detect a fatigue crack originating from a previously undetected metallurgical defect".<sup class="cite"><a href="#ref-8">[8]</a></sup> At the last fluorescent penetrant inspection, 760 cycles before the accident, the surface crack is estimated to have been about 12 mm (0.5 in) long, and it was not found.<sup class="cite"><a href="#ref-8">[8]</a></sup> The industry response was to change how the material was made and inspected: the double vacuum arc remelt process was judged "inadequate to consistently produce defect-free parts" and gave way to triple melting, and an airworthiness directive required ultrasonic inspection of the affected disks.<sup class="cite"><a href="#ref-8">[8]</a></sup></p>
     <p>Few readers will design fan disks. Everyone who specifies a casting or forging inherits the same fact: the process puts material where you cannot see it, and defects in the melt, the fill, or the flow become defects inside the part. A die casting traps gas as porosity; a sand casting has inclusions and shrinkage cavities; a forging has flow lines and, occasionally, whatever was in the billet. Design for these processes therefore includes designing the inspection: which surfaces will be machined and how far, where porosity is tolerable and where it is not, and what the foundry or forge will check before the part ships.</p>
