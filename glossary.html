@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary · DFx Course</title>
+<meta name="description" content="Definitions of the terms, acronyms, and standards used in the Design for Manufacturing and Assembly course.">
+<link rel="stylesheet" href="assets/css/course.css">
+</head>
+<body data-root="" data-page="glossary">
+
+<header class="site-header">
+  <a class="brand" href="index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Reference</p>
+    <h1>Glossary</h1>
+    <p class="lead">Short definitions of the terms, acronyms, and standards used across the course, with the module where each is treated in depth. Standards are listed by designation with the revision the course cites; check the publisher's catalogue before relying on a revision, because they change.</p>
+
+    <dl class="glossary">
+      <dt id="additive">Additive manufacturing (AM)</dt>
+      <dd>Building a part by adding material layer by layer from a digital model, as opposed to removing it (machining) or forming it (moulding, casting). Processes include FDM, SLA, SLS, MJF, and DMLS. Module 8.</dd>
+
+      <dt id="annular-ring">Annular ring</dt>
+      <dd>The ring of copper around a plated hole on a printed circuit board, from the hole wall to the pad edge. It must survive drill wander; the course uses 0.20 mm minimum and 0.25 mm recommended. Module 9.</dd>
+
+      <dt id="aoi">AOI (automated optical inspection)</dt>
+      <dd>Camera-based inspection of a soldered board for missing, misplaced, or badly soldered components. Sees surfaces only; hidden joints need X-ray. Module 11.</dd>
+
+      <dt id="apqp">APQP (Advanced Product Quality Planning)</dt>
+      <dd>The automotive industry's product quality planning framework, published by AIAG (second edition, 2008). It defines prototype, pre-launch, and production control plans. Module 14.</dd>
+
+      <dt id="as9102">AS9102</dt>
+      <dd>SAE aerospace standard for first article inspection, revision C (2023). Three forms: part accountability, product accountability, and characteristic accountability. Module 14.</dd>
+
+      <dt id="asme-y145">ASME Y14.5-2018</dt>
+      <dd>The American standard for dimensioning and tolerancing, including geometric dimensioning and tolerancing (GD&amp;T). Module 3.</dd>
+
+      <dt id="asme-y1441">ASME Y14.41</dt>
+      <dd>The American standard for digital product definition data practices, the basis for model-based definition. The 2019 edition is in wide use; ASME lists a 2026 edition. Module 14.</dd>
+
+      <dt id="aspect-ratio">Aspect ratio (PCB)</dt>
+      <dd>Board thickness divided by hole diameter. Plating must reach the middle of the hole, so fabricators limit it, typically to 10:1 for through-holes. Module 9.</dd>
+
+      <dt id="bend-allowance">Bend allowance</dt>
+      <dd>The arc length of the neutral axis through a bend, added to the flat lengths to get the flat pattern length. Computed from the bend angle, inside radius, thickness, and K-factor. Module 5.</dd>
+
+      <dt id="bend-relief">Bend relief</dt>
+      <dd>A small cut at the end of a bend line that stops the material tearing where a bent flange meets an unbent edge. Module 5.</dd>
+
+      <dt id="boothroyd">Boothroyd Dewhurst method</dt>
+      <dd>The design for assembly method that asks three questions of every part (must it move, must it be a different material, must it be separate for assembly or service), counts the theoretical minimum, and estimates handling and insertion times. Module 10.</dd>
+
+      <dt id="boss">Boss</dt>
+      <dd>A cylindrical feature on a moulded part that receives a screw or locates a mating part. Outside diameter about twice the screw nominal; tie it to a wall with a gusset. Module 6.</dd>
+
+      <dt id="boundary-scan">Boundary scan</dt>
+      <dd>A test method built into digital devices (IEEE 1149.1, the JTAG standard) that lets a tester control and read device pins through a four- or five-wire port, reaching nets a probe cannot. Module 11.</dd>
+
+      <dt id="break-even">Break-even volume</dt>
+      <dd>The quantity at which two processes cost the same in total: (difference in fixed cost) divided by (difference in variable cost per part). Above it, the process with the higher fixed cost and lower piece price wins. Modules 2 and 15.</dd>
+
+      <dt id="ce">CE marking</dt>
+      <dd>The manufacturer's declaration that a product meets the applicable European Union directives and regulations, supported by a technical file. Module 12.</dd>
+
+      <dt id="cm">Contract manufacturer (CM)</dt>
+      <dd>A company that builds a product or subassembly to the designer's specification, often sourcing parts as well. Module 14.</dd>
+
+      <dt id="control-plan">Control plan</dt>
+      <dd>The document that lists, for each characteristic that matters, how it is controlled in production: process step, specification, measurement, sample size and frequency, and reaction plan. Modules 3 and 14.</dd>
+
+      <dt id="cp">Cp and Cpk</dt>
+      <dd>Process capability indices. Cp compares the tolerance width with six standard deviations of the process; Cpk also accounts for how far the process mean sits from the tolerance centre. Module 3.</dd>
+
+      <dt id="datum">Datum reference frame</dt>
+      <dd>The set of planes, axes, or points, established from real features on the part, from which geometric tolerances are measured. Module 3.</dd>
+
+      <dt id="dfa">DFA (design for assembly)</dt>
+      <dd>Designing so that a product has the fewest parts consistent with function and each part is easy to handle and insert. Module 10.</dd>
+
+      <dt id="dfa-index">DFA index</dt>
+      <dd>Theoretical minimum part count times an ideal time per part (Boothroyd Dewhurst use 2.93 s), divided by the estimated actual assembly time. Higher is better. Modules 10 and 16.</dd>
+
+      <dt id="dfm">DFM (design for manufacturing)</dt>
+      <dd>Designing parts so that the chosen process can make them at the required quality, volume, and cost. Modules 4 to 9 by process.</dd>
+
+      <dt id="dfs">DFS (design for service)</dt>
+      <dd>Designing so that wear parts and likely failures can be reached, replaced, and diagnosed with reasonable effort, and so the product meets its regulatory obligations. Module 12.</dd>
+
+      <dt id="dft">DFT (design for test)</dt>
+      <dd>Designing the product and its test fixtures together so that faults can be found where they are cheapest to fix. Module 11.</dd>
+
+      <dt id="dfx">DFx</dt>
+      <dd>Collective term for DFM, DFA, DFT, DFS, and related "design for" disciplines. Module 0.</dd>
+
+      <dt id="die-casting">Die casting</dt>
+      <dd>Injecting molten metal, usually aluminium, zinc, or magnesium alloy, into a steel die under high pressure. Thin walls, fine detail, high volume. Module 7.</dd>
+
+      <dt id="dmls">DMLS (direct metal laser sintering)</dt>
+      <dd>A laser powder-bed fusion process for metal parts. Requires supports, heat treatment, and usually machining of critical surfaces. Module 8.</dd>
+
+      <dt id="draft">Draft</dt>
+      <dd>The taper on walls parallel to the direction a part is pulled from a mould or die, so it releases without dragging. More is needed for textured surfaces and deeper features. Modules 6 and 7.</dd>
+
+      <dt id="dvt">DVT (design validation test)</dt>
+      <dd>The NPI build in which the design is validated against its requirements using production-intent parts and tooling. Module 1.</dd>
+
+      <dt id="eco">ECO (engineering change order)</dt>
+      <dd>The controlled record of a design change: what changes, why, its impact on tooling, fixtures, inventory, test, certification, cost, and schedule, its effectivity, and its approvals. Module 14.</dd>
+
+      <dt id="evt">EVT (engineering validation test)</dt>
+      <dd>The first NPI build with representative parts, used to prove that the design works and to find the engineering problems. Module 1.</dd>
+
+      <dt id="fai">FAI (first article inspection)</dt>
+      <dd>Formal measurement of every characteristic on a ballooned drawing for the first parts from a new tool, process, or supplier, with material and process certificates. Module 14.</dd>
+
+      <dt id="fct">FCT (functional test)</dt>
+      <dd>Powering an assembly and exercising it as it will be used, checking behaviour rather than structure. Module 11.</dd>
+
+      <dt id="fdm">FDM (fused deposition modelling)</dt>
+      <dd>Extruding a thermoplastic filament layer by layer. Cheap and anisotropic; strong in the layer plane, weak between layers. Module 8.</dd>
+
+      <dt id="fiducial">Fiducial</dt>
+      <dd>A bare copper mark on a printed circuit board that placement machines use to locate the board and fine-pitch components. Three per board, far apart. Module 9.</dd>
+
+      <dt id="flying-probe">Flying probe</dt>
+      <dd>An in-circuit tester that moves a few probes to each test point in turn, avoiding a dedicated fixture at the cost of test time. Module 11.</dd>
+
+      <dt id="gate">Gate (moulding)</dt>
+      <dd>The opening through which plastic enters the mould cavity. Its location sets flow, weld lines, and the position of the gate mark. Module 6.</dd>
+
+      <dt id="gdt">GD&amp;T (geometric dimensioning and tolerancing)</dt>
+      <dd>The symbolic language for controlling form, orientation, location, and runout relative to datums, defined in ASME Y14.5 and the ISO GPS standards. Module 3.</dd>
+
+      <dt id="hem">Hem</dt>
+      <dd>A sheet metal edge folded back on itself for stiffness, safety, or appearance. Module 5.</dd>
+
+      <dt id="ict">ICT (in-circuit test)</dt>
+      <dd>Testing a populated board through a bed-of-nails fixture that contacts test points on every net, finding shorts, opens, missing and wrong parts. Module 11.</dd>
+
+      <dt id="ip">IP code</dt>
+      <dd>The ingress protection rating of an enclosure under IEC 60529: first numeral for solids (0 to 6), second for water (0 to 9). Module 12.</dd>
+
+      <dt id="ipc">IPC</dt>
+      <dd>The trade association that publishes the standards used for printed circuit board design, fabrication, and assembly acceptance. Module 9.</dd>
+
+      <dt id="ipc2221">IPC-2221</dt>
+      <dd>Generic standard on printed board design. Its conservative trace current formula is used as a quick check; IPC-2152 gives test-based values. Module 9.</dd>
+
+      <dt id="ipca610">IPC-A-610</dt>
+      <dd>Acceptability of electronic assemblies: the workmanship standard by which soldered boards are inspected, in three classes. Module 9.</dd>
+
+      <dt id="iso2768">ISO 2768-1:1989</dt>
+      <dd>General tolerances for linear and angular dimensions without individual tolerance indications, in four classes (f, m, c, v), invoked by a drawing note such as "ISO 2768-m". Module 3.</dd>
+
+      <dt id="iso286">ISO 286-1:2010</dt>
+      <dd>The ISO code system for tolerances on linear sizes: the IT grades and the fundamental deviations behind fit designations such as H7/g6. Module 3.</dd>
+
+      <dt id="iso8015">ISO 8015:2011</dt>
+      <dd>The fundamental concepts and rules of geometrical product specification, including the independency principle. Module 3.</dd>
+
+      <dt id="k-factor">K-factor</dt>
+      <dd>The position of the neutral axis in a bend as a fraction of sheet thickness. Determined by test for each material, thickness, and tooling; roughly 0.3 to 0.5. Module 5.</dd>
+
+      <dt id="mbd">MBD (model-based definition)</dt>
+      <dd>Carrying the complete product definition, including tolerances and notes, on the annotated 3D model rather than on a separate drawing. Module 14.</dd>
+
+      <dt id="mjf">MJF (Multi Jet Fusion)</dt>
+      <dd>A powder-bed polymer process that fuses nylon with an agent and infrared energy. No supports; good for small functional parts in quantity. Module 8.</dd>
+
+      <dt id="moq">MOQ (minimum order quantity)</dt>
+      <dd>The smallest quantity a supplier will accept on an order, often the point at which setup cost becomes tolerable to them. Modules 14 and 15.</dd>
+
+      <dt id="npi">NPI (new product introduction)</dt>
+      <dd>The process of taking a product from concept through validation builds to mass production. Module 1.</dd>
+
+      <dt id="nre">NRE (non-recurring engineering)</dt>
+      <dd>One-time charges on a quote: tooling, fixtures, programming, first article inspection. Module 15.</dd>
+
+      <dt id="parting-line">Parting line</dt>
+      <dd>The line on a moulded or cast part where the two halves of the tool meet. Flash, mismatch, and cosmetic witness lines appear here. Modules 6 and 7.</dd>
+
+      <dt id="pcba">PCBA (printed circuit board assembly)</dt>
+      <dd>A bare printed circuit board with its components soldered on. Module 9.</dd>
+
+      <dt id="pcn">PCN (product change notification)</dt>
+      <dd>A supplier's notice that a component will change or be discontinued. Treated as an incoming engineering change. Modules 9 and 14.</dd>
+
+      <dt id="piece-price">Piece price</dt>
+      <dd>The recurring cost per part: material, conversion, setup per batch, tooling per volume, secondary operations, and the supplier's overhead and margin. Module 15.</dd>
+
+      <dt id="poka-yoke">Poka-yoke</dt>
+      <dd>Mistake-proofing: designing parts and processes so that wrong assembly is impossible or immediately obvious. Keyed connectors, asymmetric features. Module 10.</dd>
+
+      <dt id="ppap">PPAP (Production Part Approval Process)</dt>
+      <dd>The automotive process for demonstrating that a supplier's part and process meet requirements before volume production; eighteen elements and five submission levels. Module 14.</dd>
+
+      <dt id="pressure-decay">Pressure decay leak test</dt>
+      <dd>Pressurising a sealed volume and measuring the pressure drop over time to infer a leak rate; standard practice in ASTM E2930. Module 11.</dd>
+
+      <dt id="pvt">PVT (production validation test)</dt>
+      <dd>The NPI build that validates the production process at rate with production tooling, fixtures, and operators. Module 1.</dd>
+
+      <dt id="reach">REACH</dt>
+      <dd>The EU regulation on chemicals (Regulation (EC) No 1907/2006). Its Article 33 obliges suppliers to communicate the presence of substances of very high concern above 0.1 percent in articles. Module 12.</dd>
+
+      <dt id="rfq">RFQ (request for quotation)</dt>
+      <dd>The package sent to suppliers to obtain a price: models and drawings with revisions, BOM, quantities, material, finish, inspection, and compliance requirements. Module 14.</dd>
+
+      <dt id="rib">Rib</dt>
+      <dd>A thin wall added to a moulded part for stiffness. About half the wall thickness and no more than three times its own thickness tall, to avoid sink. Module 6.</dd>
+
+      <dt id="rohs">RoHS</dt>
+      <dd>The EU directive restricting hazardous substances in electrical and electronic equipment (Directive 2011/65/EU as amended): lead, mercury, hexavalent chromium, two brominated flame retardants, and four phthalates at 0.1 percent, cadmium at 0.01 percent, in homogeneous materials. Module 12.</dd>
+
+      <dt id="rss">RSS (root sum square)</dt>
+      <dd>A statistical tolerance stack-up that combines tolerances as the square root of the sum of their squares, assuming independent, normally distributed contributions. Module 3.</dd>
+
+      <dt id="runner">Runner</dt>
+      <dd>The channel that carries plastic from the sprue to the gates in a mould. Cold runners are moulded and scrapped or reground; hot runners keep the plastic molten. Module 6.</dd>
+
+      <dt id="should-cost">Should-cost</dt>
+      <dd>An estimate of what a part should cost when made efficiently, built bottom-up and used to negotiate on cost drivers rather than on margin. Defined for US federal procurement in FAR 15.407-4. Module 15.</dd>
+
+      <dt id="shut-off">Shut-off</dt>
+      <dd>A surface where two parts of a mould meet to close off an opening in the part. Needs about 3° of draft so steel does not wear on steel. Module 6.</dd>
+
+      <dt id="side-action">Side action</dt>
+      <dd>A moving core or slide in a mould that forms an undercut and withdraws before ejection. Adds tool cost, maintenance, and cycle time. Module 6.</dd>
+
+      <dt id="sink">Sink mark</dt>
+      <dd>A depression on a moulded surface opposite a thick section, rib, or boss, caused by uneven cooling and shrinkage. Module 6.</dd>
+
+      <dt id="sla">SLA (stereolithography)</dt>
+      <dd>Curing a liquid photopolymer layer by layer with a laser or projector. Fine detail and smooth surfaces; parts are brittle and light-sensitive. Module 8.</dd>
+
+      <dt id="sls">SLS (selective laser sintering)</dt>
+      <dd>Fusing polymer powder, usually nylon, with a laser. No supports needed; slightly porous surface. Module 8.</dd>
+
+      <dt id="spi">SPI mould finish</dt>
+      <dd>The Plastics Industry Association's grades of mould surface finish, from A-1 (diamond buff, optical) to D-3 (coarse blast). Module 6.</dd>
+
+      <dt id="stack-up">Tolerance stack-up</dt>
+      <dd>The analysis of how individual part tolerances accumulate across an assembly to affect a gap or fit, by worst case or statistically. Module 3.</dd>
+
+      <dt id="steel-safe">Steel-safe</dt>
+      <dd>Cutting an uncertain mould feature so that the first correction removes steel rather than adding it: holes slightly small, walls slightly thick. Module 6.</dd>
+
+      <dt id="test-point">Test point</dt>
+      <dd>A pad on a printed circuit board placed for a test probe. About 1.0 mm diameter, on a 2.54 mm grid where possible, no solder mask, one per net. Module 11.</dd>
+
+      <dt id="thermal-relief">Thermal relief</dt>
+      <dd>Spokes connecting a through-hole pad to a copper plane so that the pad can be heated to soldering temperature without the plane sinking the heat. Module 9.</dd>
+
+      <dt id="amortisation">Tooling amortisation</dt>
+      <dd>Spreading a one-time tooling cost over a stated number of parts to get a cost per part. The basis (a year, a lifetime, the tool's rated life) must be stated. Modules 2 and 15.</dd>
+
+      <dt id="undercut">Undercut</dt>
+      <dd>A feature that would prevent a part from being pulled straight out of its mould or die, or that a straight cutter cannot reach in machining. Modules 4, 6, and 7.</dd>
+
+      <dt id="weld-line">Weld line</dt>
+      <dd>The visible and weaker line where two plastic flow fronts meet in a mould, downstream of a hole or between gates. Module 6.</dd>
+
+      <dt id="worst-case">Worst case (stack-up)</dt>
+      <dd>A tolerance stack-up that adds every tolerance at its limit in the same direction. Safe, and usually pessimistic. Module 3.</dd>
+
+      <dt id="yield">Yield</dt>
+      <dd>The fraction of parts or assemblies that pass. Material and conversion costs are divided by yield in a cost model. Modules 11 and 15.</dd>
+    </dl>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="assets/js/course.js"></script>
+</body>
+</html>

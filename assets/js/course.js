@@ -103,9 +103,9 @@
     var ol2 = el("ol");
     var pages = [
       { href: root() + "index.html", title: "Course home", key: "index" },
-      { href: root() + "glossary.html", title: "Glossary", key: "glossary", built: false },
-      { href: root() + "references.html", title: "All references", key: "references", built: false },
-      { href: root() + "about.html", title: "About and licence", key: "about", built: false }
+      { href: root() + "glossary.html", title: "Glossary", key: "glossary", built: true },
+      { href: root() + "references.html", title: "All references", key: "references", built: true },
+      { href: root() + "about.html", title: "About and licence", key: "about", built: true }
     ];
     var page = document.body.getAttribute("data-page");
     pages.forEach(function (p) {

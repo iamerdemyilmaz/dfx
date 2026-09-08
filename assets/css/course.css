@@ -240,6 +240,10 @@ details[open] summary { margin-bottom: 0.6rem; }
 
 /* References */
 
+.glossary dt { font-weight: 600; margin-top: 1rem; }
+.glossary dd { margin: 0.2rem 0 0 0; }
+.glossary dt:target { background: var(--accent-soft); }
+
 .references { font-size: 0.92rem; padding-left: 2.2rem; }
 .references li { margin-bottom: 0.6rem; overflow-wrap: anywhere; }
 .references li:target { background: var(--accent-soft); }
