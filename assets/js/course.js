@@ -18,7 +18,7 @@
     { num: "06", slug: "06-injection-molding", title: "DFM for injection molding", built: true },
     { num: "07", slug: "07-casting-forging", title: "DFM for casting and forging", built: true },
     { num: "08", slug: "08-additive", title: "DFM for additive manufacturing", built: true },
-    { num: "09", slug: "09-pcb-pcba", title: "DFM for PCB and PCBA", built: false },
+    { num: "09", slug: "09-pcb-pcba", title: "DFM for PCB and PCBA", built: true },
     { num: "10", slug: "10-design-for-assembly", title: "Design for assembly", built: false },
     { num: "11", slug: "11-design-for-test", title: "Design for test", built: false },
     { num: "12", slug: "12-service-reliability-compliance", title: "Design for service, reliability, and compliance", built: false },

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 9: DFM for PCB and PCBA · DFx Course</title>
+<meta name="description" content="Design for manufacturing rules for printed circuit boards and assemblies: IPC standards, trace and space, annular rings, via types, solder mask, panelization, fiducials, component orientation for reflow and wave, thermal relief, board-house DFM checks, and component lifecycle risk.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="09">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 9</p>
+    <h1>DFM for PCB and PCBA</h1>
+    <p class="lead">A printed circuit board (PCB) is made by one supplier and populated into a printed circuit board assembly (PCBA) by another, and both have design rules that the schematic never shows. This module covers the rules that decide whether a board can be fabricated, assembled, and inspected at yield, and the component decisions that decide whether it can still be built in three years.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Name</strong> the IPC standards that govern board design, land patterns, DFX practice, and assembly acceptability, and state what each one is for.</li>
+      <li><strong>Size</strong> a trace for current with the IPC-2221 relationship and check it against a fabricator's minimum trace and space.</li>
+      <li><strong>Specify</strong> drills, annular rings, via types, aspect ratios, and solder mask features that a board house can build at yield.</li>
+      <li><strong>Lay out</strong> a panel with rails, fiducials, and tooling holes, and orient components for reflow and wave soldering.</li>
+      <li><strong>Apply</strong> thermal relief where it prevents soldering defects and omit it where current matters more.</li>
+      <li><strong>Assess</strong> component lifecycle and material risk, including the tin-whisker lesson, before a part is designed in.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>On 19 May 1998 the Galaxy IV communications satellite failed in orbit, taking down most of the pagers in the United States. It was one of three Hughes HS601 satellites that lost a side of their redundant spacecraft control processors that year. In August 1998 Hughes reported publicly that "electrical shorts involving tin-plated relay switches are the most likely cause", and that its investigators had "narrowed down the most probable cause to a tin-plated latching relay that serves as an on/off switch"; under certain conditions "a tiny, crystalline structure, less than the width of a human hair, can grow and bridge a relay terminal to its case, causing an electrical short".<sup class="cite"><a href="#ref-14">[14]</a></sup> The structure is a tin whisker. NASA's list of documented whisker failures records Galaxy IV as a complete loss and includes, among others, a 1986 heart pacemaker recall, missile programmes, and relay failures at several nuclear power plants.<sup class="cite"><a href="#ref-14">[14]</a>,<a href="#ref-15">[15]</a></sup></p>
+    <p>Nothing on the Galaxy IV schematic was wrong. A relay was specified, a relay was fitted, and the relay worked. The failure came from a material choice inside a purchased component, pure tin plating, that the circuit designer may never have seen. That is the shape of PCBA DFM: the board and the components are made by other people to rules you do not write, and your job is to design so that their rules, their processes, and their materials produce the board you drew. This module gives you the rules for the board, the assembly, and the components, in that order.</p>
+
+    <h2 id="standards">The IPC standards you will meet</h2>
+    <p>IPC is the trade association that publishes the standards the electronics industry designs and inspects to. Four of them matter for DFM.</p>
+    <ul>
+      <li><strong>IPC-2221B, Generic Standard on Printed Board Design (2012).</strong> The foundation design standard for the 2220 series, covering the generic requirements for printed board design whether single-sided, double-sided, or multilayer: materials, conductor spacing, current capacity, holes, and mechanical requirements.<sup class="cite"><a href="#ref-1">[1]</a></sup> Its trace-current relationship is the one every calculator uses (below).</li>
+      <li><strong>IPC-7351B, Generic Requirements for Surface Mount Design and Land Pattern Standard.</strong> Defines land patterns (footprints) for surface-mount components and the courtyard, a boundary around the part body, leads, and lands that lets two components be placed adjacent without violating the clearances of IPC-2221.<sup class="cite"><a href="#ref-4">[4]</a>,<a href="#ref-16">[16]</a></sup></li>
+      <li><strong>IPC-2231, DFX Guidelines (2019; current revision IPC-2231A).</strong> A guideline, not a specification, that establishes "best practice methodology for use in developing a formal design for excellence (DFX) process for laying out printed board assemblies".<sup class="cite"><a href="#ref-3">[3]</a></sup> It is the electronics industry's version of this course.</li>
+      <li><strong>IPC-A-610H, Acceptability of Electronic Assemblies (September 2020).</strong> The visual acceptance criteria for assembled boards, used by every contract manufacturer and inspector; revision H removed the former "target condition" category and added guidance for bottom-terminated components.<sup class="cite"><a href="#ref-2">[2]</a></sup> It defines the three product classes (Class 1 general electronic, Class 2 dedicated service, Class 3 high performance) that set how tight the acceptance criteria are, and your fabricator's capability table is usually written against those classes.</li>
+    </ul>
+    <p>You will not read the standards cover to cover. You need to know which one your contract manufacturer inspects to (usually IPC-A-610 Class 2 unless you say otherwise), and that when a fabricator's DFM report cites a rule, it is usually traceable to IPC-2221 or to their own process capability, and you should know which.</p>
+
+    <h2 id="traces">Trace width and spacing</h2>
+    <p>Two limits govern a trace. The fabricator's minimum is a process capability: one high-volume board house lists 0.10 mm trace and 0.10 mm space (4/4 mil) for one- and two-layer boards and 0.09 mm (3.5 mil) for multilayer at 1 oz copper; a prototype and high-density house quotes 3 mil trace and space as an example capability, with 8 mil spacing minimum on 2 oz copper.<sup class="cite"><a href="#ref-5">[5]</a>,<a href="#ref-6">[6]</a></sup> Finer is possible at tighter process tiers and higher cost. The design rule that follows: use the fabricator's standard minimum plus margin everywhere, and their fine-line capability only where the pitch forces it.</p>
+    <p>The other limit is current. IPC-2221 relates current I to the trace cross-section A (in square mils) and the allowable temperature rise ΔT in °C:<sup class="cite"><a href="#ref-7">[7]</a></sup></p>
+    <p><strong>I = k · ΔT<sup>0.44</sup> · A<sup>0.725</sup></strong>, with k = 0.048 for external layers and 0.024 for internal layers.</p>
+    <p>Solve for A, then divide by the copper thickness (1 oz copper is about 35 µm, or 1.37 mil) to get the width. For 1 A at a 10 °C rise on a 1 oz external layer the published tables give a trace of about 0.25 mm (10 mil).<sup class="cite"><a href="#ref-7">[7]</a></sup> Internal traces are allowed half the current for the same width because they cannot lose heat to the air, which is why power should run on outer layers or on heavier copper. The same source notes that IPC-2152 (2009) is the newer, test-based standard for current capacity and gives more accurate results for modern boards than the IPC-2221 relationship, which dates from military work of the 1950s and 1960s.<sup class="cite"><a href="#ref-7">[7]</a></sup> The IPC-2221 formula is conservative for external traces and remains the common quick check; use IPC-2152 when the answer matters.</p>
+    <p>Spacing for voltage is tabulated in IPC-2221 by voltage range, layer (internal, external bare, external coated), and altitude. Read the table rather than guessing; for low-voltage logic the fabricator's minimum spacing governs, and for mains or high-voltage sections IPC-2221's spacing governs and is far larger.</p>
+
+    <h2 id="holes">Drills, annular rings, and vias</h2>
+    <p>A plated through-hole is a drilled hole, a copper pad, and the ring of copper between them. Drilling wanders and layers misregister, so the pad must be larger than the hole by enough to leave a ring after the worst-case offset. One board house requires a plated-hole annular ring of at least 0.20 mm and recommends 0.25 mm at 1 oz copper, a minimum drill of 0.15 mm, and a minimum via pad of 0.25 mm around a 0.15 mm via hole; non-plated holes need a larger keep-out of about 0.45 mm.<sup class="cite"><a href="#ref-6">[6]</a></sup> Another expresses the same rule as a formula: finished hole-to-copper clearance equals drill-to-copper clearance plus twice the plating thickness, so a 6 mil drill clearance with 1 mil plating gives an 8 mil (0.20 mm) finished clearance.<sup class="cite"><a href="#ref-5">[5]</a></sup></p>
+    <p>Depth matters too. The aspect ratio, board thickness divided by hole diameter, limits how well plating reaches the middle of the hole. Sierra Circuits quotes 1:10 for through-holes on a 1.57 mm (62 mil) board and 0.75:1 for microvias.<sup class="cite"><a href="#ref-5">[5]</a></sup> On a 1.6 mm board that means a 0.16 mm drill is the limit for a reliable through-via, and standard FR-4 thicknesses run 0.4 to 2.0 mm with 1.6 mm the default.<sup class="cite"><a href="#ref-6">[6]</a></sup></p>
+    <p>Via types, in order of cost: <strong>through vias</strong> pass through the whole board and are drilled mechanically; <strong>blind vias</strong> connect an outer layer to an inner layer; <strong>buried vias</strong> connect inner layers only; <strong>microvias</strong> are laser-drilled, small, and shallow, and are used in high-density interconnect (HDI) boards. Every step beyond through vias adds lamination cycles and cost. A via placed in a surface-mount pad (via-in-pad) must be filled and plated over or the solder wicks into it and starves the joint. Keep vias out of pads unless the density leaves no choice, and then specify filled and capped vias explicitly.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 260" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Section through a plated through-hole showing drill, plating, annular ring, and solder mask</title>
+        <desc id="fig1-desc">A cross-section of a four-layer board. A vertical plated hole passes through all layers. On the top and bottom surfaces a copper pad extends beyond the hole; the ring between the hole wall and the pad edge is labelled annular ring, at least 0.20 mm, 0.25 mm recommended. Solder mask covers the surface and stops short of the pad, leaving a mask clearance. The board thickness and hole diameter are labelled to show the aspect ratio.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- board laminate -->
+          <rect x="60" y="80" width="520" height="100" class="diagram-soft"/>
+          <!-- inner layers -->
+          <path d="M60 110 L250 110 M390 110 L580 110 M60 150 L250 150 M390 150 L580 150" stroke-width="3" class="diagram-accent"/>
+          <!-- hole with plating -->
+          <rect x="300" y="70" width="40" height="120" fill="var(--bg)" stroke="none"/>
+          <path d="M300 70 L300 190 M340 70 L340 190" class="diagram-accent" stroke-width="4"/>
+          <!-- pads top and bottom -->
+          <path d="M270 80 L370 80 M270 180 L370 180" class="diagram-accent" stroke-width="5"/>
+          <!-- solder mask -->
+          <path d="M60 77 L255 77 M385 77 L580 77 M60 183 L255 183 M385 183 L580 183" stroke-width="3"/>
+          <!-- dimension: annular ring -->
+          <path d="M340 60 L370 60 M340 56 L340 64 M370 56 L370 64"/>
+          <!-- thickness -->
+          <path d="M600 80 L600 180 M596 80 L604 80 M596 180 L604 180"/>
+          <!-- hole dia -->
+          <path d="M300 210 L340 210 M300 206 L300 214 M340 206 L340 214"/>
+        </g>
+        <g class="diagram-text">
+          <text x="345" y="50">Annular ring ≥ 0.20 (0.25 recommended)</text>
+          <text x="606" y="135">Board 1.6</text>
+          <text x="280" y="232">Drill ≥ 0.15; aspect ratio ≤ 10 : 1</text>
+          <text x="70" y="70">Solder mask</text>
+          <text x="70" y="128">Inner layer</text>
+          <text x="400" y="200">Pad</text>
+          <text x="70" y="250" class="diagram-text-muted">Dimensions in mm, one fabricator's minima. Mask clearance around the pad must exceed the mask registration tolerance.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. The annular ring is what survives drill wander and layer misregistration. The aspect ratio limits how deep a hole can be plated reliably.<sup class="cite"><a href="#ref-5">[5]</a>,<a href="#ref-6">[6]</a></sup></figcaption>
+    </figure>
+
+    <h2 id="mask">Solder mask and silkscreen</h2>
+    <p>Solder mask keeps solder where it belongs, and it has its own registration tolerance and minimum feature. Sierra Circuits' standard tier gives a minimum mask dam (the strip of mask between two pads) of 0.13 mm (5 mil), a mask feature tolerance of about 0.04 mm, and a registration of about 0.05 mm; the high-volume house lists a 0.10 mm minimum mask bridge for standard colours at 1 oz copper.<sup class="cite"><a href="#ref-5">[5]</a>,<a href="#ref-6">[6]</a></sup> When pads are closer than the dam minimum the fabricator gangs the mask opening, and solder can bridge between them. Fine-pitch parts therefore push you toward the fabricator's better mask tier or toward a larger pitch. Silkscreen needs clearance too: Sierra lists 0.11 mm to mask, 0.15 mm to copper, and 0.20 mm to holes and routed edges (4.5, 6, and 8 mil).<sup class="cite"><a href="#ref-5">[5]</a></sup> Silkscreen on a pad is ink in a solder joint; the fabricator will clip it, and your reference designator disappears.</p>
+
+    <h2 id="landpatterns">Land patterns, courtyards, and spacing</h2>
+    <p>IPC-7351B defines the land pattern for each component family and the courtyard around it, so that two courtyards placed edge to edge respect the electrical clearances of IPC-2221.<sup class="cite"><a href="#ref-4">[4]</a>,<a href="#ref-16">[16]</a></sup> Use the standard's patterns or the manufacturer's recommended footprint; do not shrink pads to make room, because pad size sets the solder volume and the self-alignment of the part during reflow. Around the courtyard, leave room for three other things: the pick-and-place nozzle and the rework tool (a hot-air nozzle around a BGA needs several millimetres), the test probe (Module 11: a probe needs 0.7 mm beside components under 2 mm tall and 1.91 mm beside components over 4 mm), and the inspection camera's line of sight.<sup class="cite"><a href="#ref-13">[13]</a></sup> Keep copper 0.2 mm from routed board edges and 0.4 mm from V-cut edges, and keep a 3 mm clear strip along edges that ride on conveyor rails.<sup class="cite"><a href="#ref-6">[6]</a>,<a href="#ref-13">[13]</a></sup></p>
+
+    <h2 id="soldering">Reflow, wave, and orientation</h2>
+    <p>Surface-mount parts are reflow soldered: paste is printed through a stencil, parts are placed, and the whole board passes through an oven. Through-hole parts, and some surface-mount parts on the bottom side, are wave soldered: the board passes over a standing wave of molten solder. The two processes want different things from the layout.</p>
+    <p>For wave soldering, orientation relative to the direction of travel decides whether a part gets soldered. Small discrete surface-mount parts should travel through the wave perpendicular to it "so that both pins are soldered simultaneously"; multi-pin surface-mount ICs should be aligned with the wave direction so the leading pins do not shadow the trailing ones; large multi-pin through-hole connectors should also be perpendicular to the wave; and small parts should not sit behind large ones in the direction of travel, or the large part shadows them and leaves a poor joint.<sup class="cite"><a href="#ref-10">[10]</a></sup> Oversized pads bridge in the wave, so follow the IPC land patterns.<sup class="cite"><a href="#ref-10">[10]</a></sup> Bottom-side surface-mount parts close to through-hole pins complicate the wave pallet and can block the wave from the pins.<sup class="cite"><a href="#ref-10">[10]</a></sup></p>
+
+    <figure>
+      <svg viewBox="0 0 640 240" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Component orientation for wave soldering</title>
+        <desc id="fig2-desc">A board outline moving to the right through a solder wave drawn as a hatched band. A small two-pad chip component is oriented with its pads side by side across the direction of travel, marked good because both pads hit the wave together. A second chip is oriented with one pad behind the other, marked shadowed. A multi-pin IC is aligned with the direction of travel, marked good. A tall connector sits ahead of a small part, which is marked as shadowed by the connector.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="40" y="40" width="440" height="160"/>
+          <!-- wave band -->
+          <path d="M520 30 L520 210 M560 30 L560 210" class="diagram-accent" stroke-width="3"/>
+          <path d="M524 40 L556 60 M524 70 L556 90 M524 100 L556 120 M524 130 L556 150 M524 160 L556 180" class="diagram-accent"/>
+          <!-- travel arrow -->
+          <path d="M60 225 L200 225 M194 220 L200 225 L194 230"/>
+          <!-- good chip: pads across travel -->
+          <rect x="80" y="60" width="14" height="36" class="diagram-accent"/>
+          <rect x="80" y="60" width="14" height="10" fill="currentColor" stroke="none"/>
+          <rect x="80" y="86" width="14" height="10" fill="currentColor" stroke="none"/>
+          <!-- bad chip: pads in line with travel -->
+          <rect x="80" y="130" width="36" height="14" class="diagram-accent"/>
+          <rect x="80" y="130" width="10" height="14" fill="currentColor" stroke="none"/>
+          <rect x="106" y="130" width="10" height="14" fill="currentColor" stroke="none"/>
+          <!-- IC aligned with travel -->
+          <rect x="200" y="60" width="90" height="40" class="diagram-accent"/>
+          <path d="M205 60 v-6 M220 60 v-6 M235 60 v-6 M250 60 v-6 M265 60 v-6 M280 60 v-6 M205 100 v6 M220 100 v6 M235 100 v6 M250 100 v6 M265 100 v6 M280 100 v6"/>
+          <!-- tall connector then small part behind (left of) it -->
+          <rect x="380" y="130" width="70" height="30" class="diagram-accent" stroke-width="3"/>
+          <rect x="350" y="138" width="14" height="14" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="60" y="240">Direction of travel</text>
+          <text x="100" y="82">Good: both pads meet the wave together</text>
+          <text x="125" y="140">Shadowed: trailing pad starved</text>
+          <text x="200" y="125">Good: IC pins in line with travel</text>
+          <text x="330" y="180">Small part shadowed by tall connector</text>
+          <text x="500" y="24" class="diagram-text-muted">Solder wave</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. Wave soldering rewards two-pad parts turned across the direction of travel, multi-pin parts turned along it, and nothing small hiding behind anything tall.<sup class="cite"><a href="#ref-10">[10]</a></sup></figcaption>
+    </figure>
+
+    <p>For reflow, the main orientation issue is thermal balance across a part's pads. If one pad of a small chip component connects to a large copper pour and the other to a thin trace, the pour end heats more slowly; the trace end's paste melts first, surface tension pulls that end up, and the part stands on end. This is tombstoning, and it is the reason for thermal relief.</p>
+
+    <h2 id="relief">Thermal relief</h2>
+    <p>A thermal relief connects a pad to a copper plane through a few narrow spokes instead of a solid connection, so that the plane does not pull heat out of the joint while it is being soldered. The Altium guide's summary: thermal reliefs confine heat during soldering to avoid cold joints on through-hole connections and tombstoning; a four-spoke connection is the norm; they are needed on plane-connected surface-mount pads and through-hole pins, not on vias; and in reflow they are needed less often than in hand soldering.<sup class="cite"><a href="#ref-12">[12]</a></sup> JLCPCB's guidance gives four spokes as the practical maximum, spoke widths of 0.10 to 0.20 mm for fine-pitch passives, 0.20 to 0.30 mm for general surface-mount parts, and 0.30 to 0.50 mm for through-hole pins, with anti-pad gaps of about 0.20 to 0.60 mm depending on the class, and a direct connection for any pad carrying more than 3 A continuously or for the exposed pad under a power package, which should connect through a via array instead.<sup class="cite"><a href="#ref-11">[11]</a></sup> The trade-off is exactly as stated: relief protects the joint, a solid connection carries current and heat. Decide per pad.</p>
+
+    <h2 id="panel">Panelization, fiducials, and tooling holes</h2>
+    <p>Boards are assembled in panels with breakaway rails that the conveyor and fixtures grip. PCBWay's instructions: rails at least 3 mm wide, with 5, 6, 7, 8, or 10 mm as standard offerings; at least three fiducial marks per panel arranged in an L shape, on both sides if both sides are populated; fiducials of 1.0 to 3.0 mm diameter in bare copper with a clear area of radius at least 2R (3R preferred) that solder mask must not cover, placed at least 5 mm from the board edge; and tooling holes of about 2 mm, non-plated, for positioning and securing the panel.<sup class="cite"><a href="#ref-9">[9]</a></sup> Eurocircuits' advice on fiducials agrees and adds detail: a copper diameter between 1 and 2 mm with 1.5 mm ideal and 0.6 mm the minimum, a mask clearance of 1:2 to 1:3 relative to the copper, three global fiducials near the corners as far apart as possible so the machine can correct for offset, rotation, and stretch, and two local fiducials placed diagonally across each fine-pitch component when the machine needs them.<sup class="cite"><a href="#ref-8">[8]</a></sup></p>
+    <p>Decide the panel with the assembler, not after the board is done. Rails need clearance under overhanging components, V-cut edges need 0.4 mm of copper clearance rather than 0.2 mm,<sup class="cite"><a href="#ref-6">[6]</a></sup> tab-routed edges need tabs where no component sits, and fiducials must be visible with the panel loaded either way up.</p>
+
+    <h2 id="dfm-checks">What the board house checks, and how to read it</h2>
+    <p>Every fabricator runs the design through a DFM check before quoting or building, and the output is a list of violations against their capability: trace and space, annular ring, drill-to-copper, mask dam, silkscreen overlap, copper to edge, aspect ratio, and missing or ambiguous data in the fabrication files.<sup class="cite"><a href="#ref-5">[5]</a></sup> Read the report the way Module 14 describes reading any supplier DFM review. Violations of the fabricator's standard tier are usually fixable in layout at no cost. Violations that push the board into a higher capability tier are a price decision. And the items marked "will be adjusted" (mask openings ganged, silkscreen clipped, teardrops added) are the fabricator changing your design; know what they are before you approve them.</p>
+    <p>On the assembly side, the equivalent check covers stencil aperture design, component orientation and spacing for the placement machine, reflow profile compatibility of every part (a part that cannot survive the reflow temperature is a hand-soldering operation), fiducial visibility, and inspection access. Automated optical inspection (AOI) sees only surfaces; joints hidden under components, such as those on bottom-terminated packages, need X-ray inspection.<sup class="cite"><a href="#ref-13">[13]</a></sup> Module 11 covers test access.</p>
+
+    <h2 id="components">Component selection and lifecycle risk</h2>
+    <p>A PCBA is only buildable while its components are. Electronic component manufacturers signal the end of a part's life through product change notifications and product discontinuance notices; the industry standard for these is J-STD-048 (formerly JESD48), published jointly by JEDEC, IPC, and ECIA, which sets requirements for timely notification so customers can arrange last-time buys, qualify alternates, or redesign.<sup class="cite"><a href="#ref-16">[16]</a></sup> A part marked "not recommended for new designs" (NRND) is still in production but on notice; designing it in is a redesign scheduled for later. Practical rules: check the lifecycle status of every active component before the layout is frozen; prefer parts with a second source in the same footprint; for critical parts, keep an approved alternate on the BOM; and treat a single-source connector or sensor as a program risk with an owner, not a footnote.</p>
+    <p>Materials inside components carry their own risk, which is where Galaxy IV comes back. Whiskers grow from pure tin plating on leads, terminals, and relay contacts, and the documented failures span satellites, pacemakers, missiles, and nuclear plant relays across decades.<sup class="cite"><a href="#ref-14">[14]</a></sup> NASA maintains a whisker failure database for that reason.<sup class="cite"><a href="#ref-15">[15]</a></sup> For high-reliability or long-life products, the plating finish on component terminations is a specification, not a detail: ask for it, and treat pure tin with the suspicion the record justifies.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Quantitative design rules for PCB and PCBA. Fabricator values are one or two houses' published capabilities and differ by tier; yours take precedence.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range (metric)</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Minimum trace and space</td><td>Standard tier plus margin</td><td>0.10 / 0.10 mm (1 to 2 layer, 1 oz); 0.09 mm multilayer; 3 mil (0.076 mm) at advanced tiers</td><td>Etch tolerance; finer needs better process</td><td><a href="#ref-5">[5]</a>, <a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Trace current</td><td>IPC-2221 relationship</td><td>I = k·ΔT<sup>0.44</sup>·A<sup>0.725</sup>; k = 0.048 external, 0.024 internal; 1 A at 10 °C on 1 oz external about 0.25 mm</td><td>Resistive heating; internal layers cannot convect</td><td><a href="#ref-7">[7]</a></td></tr>
+          <tr><td>Current standard</td><td>Use the newer one when it matters</td><td>IPC-2152 (2009) test-based; IPC-2221 conservative quick check</td><td>Better data</td><td><a href="#ref-7">[7]</a></td></tr>
+          <tr><td>Minimum drill</td><td>Mechanical drill limit</td><td>0.15 mm</td><td>Drill breakage and wander</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Annular ring, plated hole</td><td>Survive drill wander</td><td>≥ 0.20 mm; 0.25 mm recommended; or drill-to-copper clearance plus 2 × plating</td><td>Layer misregistration and drill offset</td><td><a href="#ref-5">[5]</a>, <a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Via pad and non-plated keep-out</td><td>Room for the ring</td><td>Via pad ≥ 0.25 mm around 0.15 mm hole; NPTH keep-out ≥ 0.45 mm</td><td>Plating and drill tolerance</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Aspect ratio</td><td>Plating must reach mid-hole</td><td>≤ 10 : 1 through-hole; microvia 0.75 : 1</td><td>Plating throw</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Board thickness</td><td>Standard laminate</td><td>0.4 to 2.0 mm standard; 1.6 mm default</td><td>Stock material</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Solder mask dam and bridge</td><td>Keep pads separated</td><td>0.13 mm dam standard tier; 0.10 mm bridge at high volume</td><td>Mask resolution; bridging risk</td><td><a href="#ref-5">[5]</a>, <a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Mask tolerance and registration</td><td>Clearance must exceed it</td><td>Feature ±0.04 mm; registration ±0.05 mm (standard tier)</td><td>Mask alignment</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Silkscreen clearance</td><td>Keep ink off pads</td><td>0.11 mm to mask; 0.15 mm to copper; 0.20 mm to holes and edges</td><td>Ink in joints; clipping</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Copper to board edge</td><td>Depends on edge type</td><td>≥ 0.2 mm routed; ≥ 0.4 mm V-cut</td><td>Cutter and score clearance</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Conveyor edge</td><td>Leave a clear strip</td><td>3 mm along rail edges</td><td>Handling and test fixture clamps</td><td><a href="#ref-13">[13]</a></td></tr>
+          <tr><td>Panel rails</td><td>Wide enough to grip</td><td>≥ 3 mm; 5 to 10 mm standard</td><td>Conveyor and fixture contact</td><td><a href="#ref-9">[9]</a></td></tr>
+          <tr><td>Fiducials</td><td>Three, far apart, bare copper</td><td>1.0 to 3.0 mm (1.5 mm ideal, 0.6 mm min); clear area 2R to 3R; ≥ 5 mm from edge; local pairs diagonal on fine pitch</td><td>Vision correction of offset, rotation, stretch</td><td><a href="#ref-8">[8]</a>, <a href="#ref-9">[9]</a></td></tr>
+          <tr><td>Tooling holes</td><td>Non-plated</td><td>About 2 mm</td><td>Panel location</td><td><a href="#ref-9">[9]</a></td></tr>
+          <tr><td>Wave orientation</td><td>Two-pad parts across travel; ICs along it</td><td>No small part behind a tall one</td><td>Shadowing starves trailing joints</td><td><a href="#ref-10">[10]</a></td></tr>
+          <tr><td>Thermal relief</td><td>Four spokes; direct connect for current</td><td>Spokes 0.10 to 0.20 mm fine-pitch, 0.20 to 0.30 mm general, 0.30 to 0.50 mm through-hole; direct above 3 A</td><td>Prevents cold joints and tombstoning; solid for current</td><td><a href="#ref-11">[11]</a>, <a href="#ref-12">[12]</a></td></tr>
+          <tr><td>Probe access beside components</td><td>Height-dependent</td><td>0.7 mm (parts &lt; 2 mm tall); 1.91 mm (parts &gt; 4 mm); 5.08 mm around BGAs</td><td>Test fixture probes (Module 11)</td><td><a href="#ref-13">[13]</a></td></tr>
+          <tr><td>Acceptance class</td><td>State it</td><td>IPC-A-610 Class 1, 2, or 3; Class 2 is the usual default</td><td>Sets inspection criteria and cost</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Component lifecycle</td><td>Check before freeze</td><td>PCN and PDN per J-STD-048; avoid NRND parts</td><td>Redesign and last-time-buy risk</td><td><a href="#ref-16">[16]</a></td></tr>
+          <tr><td>Termination plating</td><td>Question pure tin for long life</td><td>Documented whisker failures from 1986 pacemakers to 1998 to 2006 satellites</td><td>Tin whiskers short adjacent conductors</td><td><a href="#ref-14">[14]</a>, <a href="#ref-15">[15]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: Galaxy IV and the tin whisker</h2>
+    <p>The NASA briefing that documents the Galaxy IV loss is a history of electrical failures caused by metal whiskers, prepared for the Space Shuttle programme in 2006.<sup class="cite"><a href="#ref-14">[14]</a></sup> Its table of documented failures runs from cadmium whiskers in 1959 telecom equipment, through the 1986 recall of heart pacemakers for tin whiskers on crystal cans, to a series of satellite control-processor failures: Galaxy IV (complete loss, 1998), Galaxy VII (1998 and 2000, complete loss), Solidaridad 1 (1999 and 2000, complete loss), Galaxy IIIR (2001 and 2006), DirecTV 3 (2002), and Optus B1 (2005), all attributed to whiskers on relays, plus repeated relay failures at nuclear power stations from 1987 to 2005.<sup class="cite"><a href="#ref-14">[14]</a></sup></p>
+    <p>The mechanism Hughes described in 1998 is the whole DFM lesson: a filament of tin grows from a pure-tin-plated surface until it bridges to something at a different potential.<sup class="cite"><a href="#ref-14">[14]</a></sup> The circuit was correct. The component functioned. The failure was a material inside a purchased part, chosen by someone else, that the system design did not question. The engineering responses that followed, alternative platings, conformal coatings that stay intact, and spacing that a whisker cannot bridge, are component and layout decisions, which is why component selection sits in a DFM module and not only in a reliability one.</p>
+    <p>The wider point holds for every purchased part on a BOM. The datasheet describes what the part does. It rarely describes what it is made of, how long it will be made, or what happens to it in your process. Those are questions for the DFM review, and for Module 14's supplier conversations.</p>
+    <!-- AUTHOR: optional personal note here (a board-house DFM report or a component obsolescence scramble from your own experience, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Designing to the fabricator's finest capability everywhere.</strong> Consequence: a board that must be built at the expensive tier because a few traces are fine, when standard-tier rules would have served. Fix: standard minima plus margin by default; fine-line rules only where pitch forces them, and tell the fabricator which nets those are.</li>
+      <li><strong>Undersized traces for power.</strong> Consequence: hot traces, voltage drop, and in the worst case a burned board. Fix: size with IPC-2221 or IPC-2152, put power on outer layers or heavier copper, and remember internal layers carry about half the current.</li>
+      <li><strong>Vias in pads without filling.</strong> Consequence: solder wicks into the via and the joint is starved. Fix: keep vias out of pads or specify filled and capped vias.</li>
+      <li><strong>Unbalanced thermal connections on small passives.</strong> Consequence: tombstoning in reflow. Fix: thermal relief on plane-connected pads, matched pad geometry both ends.</li>
+      <li><strong>Wave-soldered parts oriented along the wave, or small parts behind tall ones.</strong> Consequence: shadowed joints and rework. Fix: two-pad parts across the direction of travel, multi-pin parts along it, and nothing small in the wake of anything tall.</li>
+      <li><strong>Panel decided after the layout.</strong> Consequence: components overhanging rails, no room for fiducials, V-cuts through copper. Fix: agree rails, fiducials, tooling holes, and edge clearances with the assembler before routing.</li>
+      <li><strong>No room for probes or inspection.</strong> Consequence: an untestable board and joints nobody can see. Fix: leave the probe clearances now and X-ray access for bottom-terminated parts (Module 11).</li>
+      <li><strong>Designing in a part that is already on notice.</strong> Consequence: a redesign within the product's first year. Fix: check lifecycle status and second sources before the layout is frozen, and give every single-source part an owner.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: a power trace, a via, and a panel</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>A two-layer board carries a 3 A supply rail on 1 oz (35 µm, 1.37 mil) copper. The allowable temperature rise is 20 °C. The board is 1.6 mm thick, will be assembled in a panel, and has one fine-pitch controller.</p>
+    <p><strong>Tasks.</strong> (a) Using the IPC-2221 relationship, compute the required trace width if the rail runs on an outer layer, and again if it must run on an inner layer of a four-layer version. (b) Choose a via drill and pad for the rail's layer transitions using the fabricator minima in this module, and check the aspect ratio. (c) Specify the panel: rails, fiducials, and tooling holes. (d) Check the 1 A at 10 °C case against the published 0.25 mm figure to confirm you are using the formula correctly.</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a) Trace width.</strong> Rearrange I = k·ΔT<sup>0.44</sup>·A<sup>0.725</sup> to A = [I / (k·ΔT<sup>0.44</sup>)]<sup>1/0.725</sup>. ΔT<sup>0.44</sup> = 20<sup>0.44</sup> = 3.74.</p>
+      <p>External (k = 0.048): k·ΔT<sup>0.44</sup> = 0.179; I / that = 16.7; A = 16.7<sup>1.379</sup> ≈ 48.7 mil². Width = 48.7 / 1.37 ≈ 35.5 mil ≈ 0.90 mm.</p>
+      <p>Internal (k = 0.024): k·ΔT<sup>0.44</sup> = 0.0897; I / that = 33.5; A = 33.5<sup>1.379</sup> ≈ 127 mil². Width = 127 / 1.37 ≈ 92 mil ≈ 2.35 mm. The internal trace needs about 2.6 times the width for the same current and rise, which is why the rail belongs on an outer layer or on 2 oz copper. For a design where the width matters, repeat with IPC-2152.</p>
+      <p><strong>(b) Via.</strong> A single 0.15 mm via would carry the rail poorly; use several 0.3 mm vias in parallel (a common practice, sized here for the fabricator's capability rather than by a current rule). Pad diameter = drill + 2 × ring = 0.3 + 2 × 0.25 = 0.8 mm using the recommended 0.25 mm ring. Aspect ratio = 1.6 / 0.3 = 5.3 : 1, well inside the 10 : 1 limit. Keep the vias out of the component pads.</p>
+      <p><strong>(c) Panel.</strong> Rails of 5 mm on the two long edges (one standard offering above the 3 mm minimum), with the 3 mm conveyor strip inside the board outline kept free of tall parts. Three global fiducials in an L shape on each populated side, 1.5 mm bare copper with a 1.5 mm radius clear area (2R) free of mask, each at least 5 mm from the board edge and as far apart as the board allows. Two local fiducials placed diagonally across the fine-pitch controller. Two 2 mm non-plated tooling holes in the rails, diagonally opposite. Copper kept 0.4 mm from V-cut lines if the panel is scored, 0.2 mm if it is tab-routed.</p>
+      <p><strong>(d) Check.</strong> 1 A, 10 °C, external: 10<sup>0.44</sup> = 2.75; 0.048 × 2.75 = 0.132; 1 / 0.132 = 7.57; A = 7.57<sup>1.379</sup> ≈ 16.3 mil²; width ≈ 11.9 mil ≈ 0.30 mm. The published table value is about 0.25 mm (10 mil); the difference is rounding and the copper thickness assumed (some tables use 1.4 mil for 1 oz). The formula is being applied correctly; either value is a reasonable design minimum for that current, and the fabricator's 0.10 mm process minimum is not the limiting rule here.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="09">
+      <fieldset class="q" data-answer="b">
+        <legend>1. Which IPC document is the generic printed board design standard that the trace-current relationship comes from?</legend>
+        <label><input type="radio" name="q1" value="a"> IPC-A-610H</label>
+        <label><input type="radio" name="q1" value="b"> IPC-2221B</label>
+        <label><input type="radio" name="q1" value="c"> IPC-7351B</label>
+        <label><input type="radio" name="q1" value="d"> J-STD-048</label>
+        <p class="explain" hidden>IPC-2221B (2012) is the generic design standard; 7351B is land patterns, A-610H is assembly acceptability, J-STD-048 is discontinuance notification.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>2. For the same current and temperature rise, an internal trace compared with an external one needs</legend>
+        <label><input type="radio" name="q2" value="a"> the same width</label>
+        <label><input type="radio" name="q2" value="b"> about half the width</label>
+        <label><input type="radio" name="q2" value="c"> considerably more width, because k is halved (0.024 versus 0.048) and it cannot lose heat to the air</label>
+        <label><input type="radio" name="q2" value="d"> no copper at all; internal layers cannot carry power</label>
+        <p class="explain" hidden>Halving k roughly doubles the required area for the same current, and the width scales with it.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.8" data-tolerance="0.01">
+        <legend>3. A via has a 0.30 mm drill and the fabricator's recommended 0.25 mm annular ring. What pad diameter in mm is needed?</legend>
+        <label>Answer (mm): <input type="number" name="q3" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>0.30 + 2 × 0.25 = 0.80 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.16" data-tolerance="0.005">
+        <legend>4. With a maximum aspect ratio of 10 : 1, what is the smallest through-hole drill in mm for a 1.6 mm board?</legend>
+        <label>Answer (mm): <input type="number" name="q4" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>1.6 / 10 = 0.16 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>5. In wave soldering, a small two-pad chip component should be oriented</legend>
+        <label><input type="radio" name="q5" value="a"> with its pads side by side across the direction of travel, so both meet the wave together</label>
+        <label><input type="radio" name="q5" value="b"> with one pad ahead of the other along the direction of travel</label>
+        <label><input type="radio" name="q5" value="c"> directly behind the tallest connector</label>
+        <label><input type="radio" name="q5" value="d"> orientation does not matter in wave soldering</label>
+        <p class="explain" hidden>Perpendicular to the wave so neither pad is shadowed; multi-pin ICs, by contrast, go along the direction of travel.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>6. Tombstoning of a small passive in reflow is caused by</legend>
+        <label><input type="radio" name="q6" value="a"> too much solder mask</label>
+        <label><input type="radio" name="q6" value="b"> a via in the pad</label>
+        <label><input type="radio" name="q6" value="c"> the component being too heavy</label>
+        <label><input type="radio" name="q6" value="d"> one pad heating more slowly than the other, so the paste melts at different times and surface tension lifts one end</label>
+        <p class="explain" hidden>Typically one pad is tied to a large copper pour; thermal relief balances the heating.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>7. How many global fiducials does a panel need, and where?</legend>
+        <label><input type="radio" name="q7" value="a"> One, in the centre</label>
+        <label><input type="radio" name="q7" value="b"> At least three, near the corners and as far apart as possible, so offset, rotation, and stretch can be corrected</label>
+        <label><input type="radio" name="q7" value="c"> Two, on the same edge</label>
+        <label><input type="radio" name="q7" value="d"> None if the board has silkscreen</label>
+        <p class="explain" hidden>Three in an L shape, bare copper, 1.0 to 3.0 mm, with a clear area and at least 5 mm from the edge.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>8. The 1998 loss of the Galaxy IV satellite was attributed by its manufacturer to</legend>
+        <label><input type="radio" name="q8" value="a"> a software fault in the control processor</label>
+        <label><input type="radio" name="q8" value="b"> solar panel failure</label>
+        <label><input type="radio" name="q8" value="c"> an electrical short from a tin whisker grown on a tin-plated relay in the spacecraft control processor</label>
+        <label><input type="radio" name="q8" value="d"> a micrometeoroid strike</label>
+        <p class="explain" hidden>Hughes' August 1998 statement identified tin-plated relay switches as the most likely cause; the whisker bridged a relay terminal to its case.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>b. IPC-2221B.</li>
+        <li>c. Considerably wider; k is halved.</li>
+        <li>0.80 mm.</li>
+        <li>0.16 mm.</li>
+        <li>a. Pads across the direction of travel.</li>
+        <li>d. Unbalanced pad heating.</li>
+        <li>b. At least three, far apart.</li>
+        <li>c. Tin whisker on a relay.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>Know which IPC document governs what: 2221 for design, 7351 for land patterns, 2231 for DFX practice, A-610 for acceptance. State the acceptance class.</li>
+      <li>Design to the fabricator's standard tier with margin; use fine-line rules only where pitch forces them, and size power traces by current, on outer layers where possible.</li>
+      <li>Annular ring, drill size, and aspect ratio are what make a via reliable. Keep vias out of pads unless they are filled and capped.</li>
+      <li>Solder mask dams and silkscreen clearances have real minima; below them the fabricator changes your design.</li>
+      <li>Orient parts for the soldering process: across the wave for two-pad parts, along it for ICs, thermal relief where a plane would steal heat, direct connection where current matters.</li>
+      <li>Plan the panel with the assembler: rails, three fiducials in bare copper, tooling holes, and edge clearances before routing.</li>
+      <li>A component is a design decision with a lifecycle and a material inside it. Galaxy IV was lost to a plating choice nobody on the schematic side made.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07. IPC standards are cited from publisher and reseller catalogue pages; their body text is not reproduced.</p>
+    <ol class="references">
+      <li id="ref-1">IPC. <em>IPC-2221B Generic Standard on Printed Board Design</em>, 2012. ANSI Webstore listing. <a href="https://webstore.ansi.org/standards/ipc/ipc2221b2012">https://webstore.ansi.org/standards/ipc/ipc2221b2012</a></li>
+      <li id="ref-2">IPC. <em>IPC-A-610H Acceptability of Electronic Assemblies</em>, September 2020. ANSI Webstore listing. <a href="https://webstore.ansi.org/standards/ipc/ipc610h2020">https://webstore.ansi.org/standards/ipc/ipc610h2020</a></li>
+      <li id="ref-3">Crawford, P. "Design Circuit: IPC-2231 Captures Board Design Best Practices." I-Connect007, 30 September 2020. <a href="https://iconnect007.com/index.php/article/124698/design-circuit-ipc-2231-captures-board-design-best-practices/124701">https://iconnect007.com/index.php/article/124698/design-circuit-ipc-2231-captures-board-design-best-practices/124701</a></li>
+      <li id="ref-4">IPC. <em>IPC-7351B Generic Requirements for Surface Mount Design and Land Pattern Standard.</em> Table of contents. <a href="https://www.electronics.org/TOC/IPC-7351B.pdf">https://www.electronics.org/TOC/IPC-7351B.pdf</a></li>
+      <li id="ref-5">Sierra Circuits. "DFM Rules." n.d. <a href="https://www.protoexpress.com/kb/dfm-rules/">https://www.protoexpress.com/kb/dfm-rules/</a> <span class="tag">(source values in mils; converted)</span></li>
+      <li id="ref-6">JLCPCB. "PCB Capabilities." n.d. <a href="https://jlcpcb.com/capabilities/pcb-capabilities">https://jlcpcb.com/capabilities/pcb-capabilities</a></li>
+      <li id="ref-7">Schemalyzer. "PCB Trace Width Guide: Calculator, IPC-2221 Tables, and Design Rules." n.d. <a href="https://www.schemalyzer.com/en/blog/pcb-design/basics/pcb-trace-width-guide">https://www.schemalyzer.com/en/blog/pcb-design/basics/pcb-trace-width-guide</a> <span class="tag">(reproduces the IPC-2221 relationship; the standard itself is the authority)</span></li>
+      <li id="ref-8">Eurocircuits. "Finding fiducials." n.d. <a href="https://www.eurocircuits.com/tips-tricks/finding-fiducials/">https://www.eurocircuits.com/tips-tricks/finding-fiducials/</a></li>
+      <li id="ref-9">PCBWay. "Design Instruction: PCB Panelization, Breakaway Rails, Fiducial Marks, Tooling Holes." n.d. <a href="https://www.pcbway.com/helpcenter/design_instruction/PCB_Panelization__Breakaway_Rails__Fiducial_Marks__Tooling_Holes.html">https://www.pcbway.com/helpcenter/design_instruction/PCB_Panelization__Breakaway_Rails__Fiducial_Marks__Tooling_Holes.html</a></li>
+      <li id="ref-10">VSE. "Wave Soldering: Placement Guidelines." 25 October 2023. <a href="https://www.vse.com/blog/2023/10/25/wave-soldering-placement-guidelines/">https://www.vse.com/blog/2023/10/25/wave-soldering-placement-guidelines/</a></li>
+      <li id="ref-11">JLCPCB. "Thermal Relief Pad Design: PCB Dissipation &amp; Soldering Guide." n.d. <a href="https://jlcpcb.com/blog/thermal-relief-pad-design">https://jlcpcb.com/blog/thermal-relief-pad-design</a></li>
+      <li id="ref-12">Altium. "Thermal Relief Design Guide." Altium Resources, n.d. <a href="https://resources.altium.com/p/thermal-relief-design">https://resources.altium.com/p/thermal-relief-design</a></li>
+      <li id="ref-13">Sierra Circuits. "Design for Testing (DFT) Guidelines for PCB Manufacturing." n.d. <a href="https://www.protoexpress.com/blog/design-for-testing-guidelines-pcb-manufacturing/">https://www.protoexpress.com/blog/design-for-testing-guidelines-pcb-manufacturing/</a></li>
+      <li id="ref-14">Leidecker, H., and Brusse, J. <em>Tin Whiskers: A History of Documented Electrical System Failures.</em> Briefing for the Space Shuttle Program Office, NASA Goddard Space Flight Center and QSS Group, April 2006. <a href="https://nepp.nasa.gov/whisker/reference/tech_papers/2006-Leidecker-Tin-Whisker-Failures.pdf">https://nepp.nasa.gov/whisker/reference/tech_papers/2006-Leidecker-Tin-Whisker-Failures.pdf</a></li>
+      <li id="ref-15">NASA Goddard Space Flight Center. "Whisker Failures." NASA Electronic Parts and Packaging Program tin whisker homepage, updated 27 April 2026. <a href="https://nepp.nasa.gov/whisker/failures/index.htm">https://nepp.nasa.gov/whisker/failures/index.htm</a></li>
+      <li id="ref-16">JEDEC, IPC, ECIA. <em>J-STD-048 Notification Standard for Product Discontinuance</em>, November 2014 (replaces JESD48). GlobalSpec listing for JESD48. <a href="https://standards.globalspec.com/std/66088/jedec-jesd-48">https://standards.globalspec.com/std/66088/jedec-jesd-48</a> <span class="tag">(secondary: designation and purpose from catalogue listings and industry summaries; also cited for the IPC-7351 courtyard concept via Ultra Librarian, "IPC Component Spacing Guidelines for PCB Design," 5 May 2022, <a href="https://www.ultralibrarian.com/2022/05/05/ipc-component-spacing-guidelines-for-pcb-design-ulc/">https://www.ultralibrarian.com/2022/05/05/ipc-component-spacing-guidelines-for-pcb-design-ulc/</a>)</span></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>IPC. <em>IPC-2231A DFX Guidelines.</em> The electronics industry's own design-for-excellence process guideline; every rule is given with its reason.</li>
+      <li>IPC. <em>IPC-2152 Standard for Determining Current-Carrying Capacity in Printed Board Design.</em> The test-based replacement for the IPC-2221 current relationship.</li>
+      <li>Bralla, J. G. (ed.). <em>Design for Manufacturability Handbook</em>, 2nd ed. McGraw-Hill, 1999. Chapter on DFM for electronics.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>
