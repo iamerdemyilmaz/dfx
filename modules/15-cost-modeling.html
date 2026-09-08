@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 15: Cost modeling and should-cost · DFx Course</title>
+<meta name="description" content="Bottom-up cost models for a machined, a moulded, and a sheet metal part; tooling amortisation and the effect of volume; how to read a supplier quote; what should-cost means; where to push and where not to.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="15">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 15</p>
+    <h1>Cost modeling and should-cost</h1>
+    <p class="lead">A quote is a number. A cost model is an explanation. Until you can explain a supplier's piece price from material, machine time, setup, tooling, secondary operations, and margin, you cannot tell whether it is fair, and you cannot tell which change to your design would lower it. This module builds three bottom-up models, shows how volume moves each one, and then uses them to read a quote and to hold a should-cost conversation without guessing.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Decompose</strong> a piece price into material, conversion, setup, tooling amortisation, secondary operations, and overhead and margin.</li>
+      <li><strong>Build</strong> a bottom-up cost model for a machined, an injection moulded, and a sheet metal part from published rate ranges.</li>
+      <li><strong>Calculate</strong> tooling amortisation per part and the break-even volume between a tooled and an untooled process.</li>
+      <li><strong>Read</strong> a supplier quote and normalise several quotes to the same scope before comparing them.</li>
+      <li><strong>Define</strong> should-cost as it is used in procurement, and use a cost model to negotiate on drivers rather than on margin.</li>
+      <li><strong>Decide</strong> where a cost push is legitimate and where it damages the part or the supplier.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>The most quoted number in this field is that design determines 70 to 90 percent of a product's cost. In 1993 Karl Ulrich and Scott Pearson at MIT asked whether anyone had measured it. Their working paper notes that the belief "has become part of the folklore of product design and development research and practice", traces the usual 80 percent citation to a Rolls-Royce study of cost reduction opportunities rather than of cost, and observes that the meaning of the claim "has not been well defined, nor has much empirical evidence been presented to support it".<sup class="cite"><a href="#ref-1">[1]</a></sup> They then did the measurement. They bought 18 automatic drip coffee makers that brew functionally identical coffee, took each one apart, built a bill of materials and an assembly sequence, measured the moulded and sheet metal parts, and estimated the cost of every design under several assumed manufacturing systems, from a well run plant in a high-cost economy to a poorly run one in a low-cost economy.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>The answer was neither 80 percent nor zero. Under their assumptions the spread of cost across designs made in one plant, the design range, was 48 percent of the average manufacturing cost, while the spread across plants for one design, the manufacturing range, was 31 percent.<sup class="cite"><a href="#ref-1">[1]</a></sup> Their Krups scenario makes it concrete. Take the most costly design in the study, estimated at US$14.54 in a poorly run, high-cost plant. Moving it to a low-cost plant would bring it to $9.73, or $8.06 if that plant were well run. Redesigning it to the architecture of the cheapest coffee maker, the Rowenta FG22-0, in the original plant would bring it to $9.72; redesign and better operations together, $6.98; redesign, relocation, and better operations, $4.98.<sup class="cite"><a href="#ref-1">[1]</a></sup> Their conclusion was that "cost reduction through redesign of the product may be an extremely attractive alternative to moving operations to a low cost economic environment".<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>Two things follow for this module. Design is a lever on cost of the same order as where and how well the product is made, so the engineer owns a real share of the number. And the study reached that conclusion by building cost models, not by asking anyone what they thought. That is the skill here.</p>
+
+    <h2 id="anatomy">The anatomy of a piece price</h2>
+    <p>A machine shop's own account of its costs sorts them into three buckets: the raw material, the manufacturing time (machining, but also fixtures and setups), and everything else that is largely fixed per order, such as inspection, packaging, and quoting.<sup class="cite"><a href="#ref-6">[6]</a></sup> Every process fits a slightly longer version of the same structure:</p>
+    <p class="formula">Piece price = material + conversion + setup ÷ batch + tooling ÷ volume + secondary operations + overhead and margin</p>
+    <ul>
+      <li><strong>Material</strong> is what the part consumes, not what it contains: the blank, the shot including runners, the sheet including nesting scrap, divided by yield.</li>
+      <li><strong>Conversion</strong> is machine time times a machine hour rate that already carries the operator, the building, and depreciation. Cycle time is the design engineer's largest lever.</li>
+      <li><strong>Setup</strong> is fixed per batch: programming, fixturing, first-off inspection. It is divided by the batch quantity, so it dominates small orders.</li>
+      <li><strong>Tooling</strong> is fixed per design: a mould, a die, a fixture. It is divided by the volume it is amortised over, and who owns it and over how many parts is a commercial decision that changes the piece price without changing the part.</li>
+      <li><strong>Secondary operations</strong> are the finishes, inserts, welds, and inspections of Module 13, each priced per part or per area.</li>
+      <li><strong>Overhead and margin</strong> is the supplier's uplift on the sum. It is the part of the price you can see least and should push on last.</li>
+    </ul>
+
+    <figure>
+      <svg viewBox="0 0 640 250" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Anatomy of a piece price</title>
+        <desc id="fig1-desc">A horizontal bar divided into six segments labelled material, conversion (machine time times rate), setup divided by batch, tooling divided by volume, secondary operations, and overhead and margin. Below, arrows show that material and conversion are driven by the design, setup by batch size, tooling by volume and ownership, and overhead and margin by the supplier's commercial position.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="30" y="60" width="110" height="50" class="diagram-accent-fill"/>
+          <rect x="140" y="60" width="170" height="50" class="diagram-accent-fill"/>
+          <rect x="310" y="60" width="60" height="50" class="diagram-soft"/>
+          <rect x="370" y="60" width="90" height="50" class="diagram-soft"/>
+          <rect x="460" y="60" width="80" height="50" class="diagram-soft"/>
+          <rect x="540" y="60" width="70" height="50"/>
+          <path d="M85 130 v25 M225 130 v25 M340 130 v25 M415 130 v25 M500 130 v25 M575 130 v25" class="diagram-soft"/>
+        </g>
+        <g class="diagram-text">
+          <text x="40" y="90">Material</text>
+          <text x="150" y="82">Conversion</text>
+          <text x="150" y="100" class="diagram-text-muted">time × rate</text>
+          <text x="316" y="82">Setup</text>
+          <text x="316" y="100" class="diagram-text-muted">÷ batch</text>
+          <text x="378" y="82">Tooling</text>
+          <text x="378" y="100" class="diagram-text-muted">÷ volume</text>
+          <text x="466" y="82">Secondary</text>
+          <text x="466" y="100" class="diagram-text-muted">per part</text>
+          <text x="546" y="82">Margin</text>
+          <text x="546" y="100" class="diagram-text-muted">uplift</text>
+          <text x="30" y="175">Design decides</text>
+          <text x="30" y="192" class="diagram-text-muted">mass, cycle time, features</text>
+          <text x="300" y="175">Order decides</text>
+          <text x="300" y="192" class="diagram-text-muted">batch, volume, tool ownership</text>
+          <text x="540" y="175">Supplier</text>
+          <text x="540" y="192" class="diagram-text-muted">decides</text>
+          <text x="30" y="230" class="diagram-text-muted">Push where the design decides. Ask where the order decides. Leave margin until last.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. The six parts of a piece price and who controls each. The widths are schematic; Modules 2 and 6 show how the proportions shift with volume.</figcaption>
+    </figure>
+
+    <h2 id="machined">Model 1: a machined part</h2>
+    <p>Machining is the easiest process to model because it has no tooling to amortise and its conversion cost is almost entirely machine time. Protolabs Network publishes a rough hourly rate table, relative to a 3-axis mill at about US$75 per hour: a lathe at about $65 (15 percent less), an indexed 5-axis mill at $120 (60 percent more), a continuous 5-axis mill at $150 (double), and a mill-turn centre at $95 (25 percent more).<sup class="cite"><a href="#ref-3">[3]</a></sup> The same guide names the three drivers: geometry complexity (longer machining time), fixed setup and programming costs that weigh on small runs, and material cost and machinability.<sup class="cite"><a href="#ref-3">[3]</a></sup></p>
+    <p>The model:</p>
+    <ol>
+      <li><strong>Material.</strong> Start from a standard blank, not from the finished part. Standard metric plate comes in 3 to 30 mm thicknesses and then 10 mm steps, and a shop removes 0.3 to 1.5 mm per side to clean up stock, so the blank is larger than the part in every direction and its price is set by the next standard size up.<sup class="cite"><a href="#ref-8">[8]</a></sup> Mass of blank × price per kilogram.</li>
+      <li><strong>Machining time × rate.</strong> Estimate roughing (volume removed ÷ material removal rate), finishing (surface area ÷ finishing feed), and features (each hole, thread, and pocket adds seconds to minutes). A 5-axis feature costs double the rate but may save a setup.</li>
+      <li><strong>Setup ÷ batch.</strong> Program, fixture, first-off, per setup. Each additional setup is another fixture and another chance to lose datum alignment (Module 4).</li>
+      <li><strong>Secondary operations.</strong> Deburr, anodise, plate, heat treat, inspection.</li>
+      <li><strong>Uplift.</strong> Overhead and margin.</li>
+    </ol>
+    <p>The design levers are the ones listed in Module 4 and in the Hubs cost tips: larger internal radii, shallower pockets, standard hole and thread sizes, tolerances only where they are needed, no text or cosmetic features, fewer setups, and a blank size that matches stock.<sup class="cite"><a href="#ref-7">[7]</a></sup> Each of them shortens the time term, which is the largest term.</p>
+
+    <h2 id="moulded">Model 2: an injection moulded part</h2>
+    <p>Moulding inverts the machining structure: conversion per part is small and tooling is large. Protolabs Network's guide gives the shape of the curve. An aluminium pilot mould starts at about US$3,000 to $5,000 and lasts 5,000 to 10,000 cycles, with parts at $1 to $5 each and a lead time of six to eight weeks; a production mould is machined from tool steel, withstands 100,000 cycles and more, and delivers parts at a few cents to a dollar each with a lead time of four to six months.<sup class="cite"><a href="#ref-4">[4]</a></sup> For runs of 1,000 to 10,000 parts, tooling is about 50 to 70 percent of the total cost; beyond that the material and production costs take over.<sup class="cite"><a href="#ref-4">[4]</a></sup> A side action adds 15 to 30 percent to the tool, at least $1,000 to $1,500.<sup class="cite"><a href="#ref-4">[4]</a></sup></p>
+    <p>The model:</p>
+    <ol>
+      <li><strong>Material.</strong> Shot mass (part plus its share of the runner and sprue, unless regrind is allowed) × resin price per kilogram ÷ yield. Module 6's wall-thickness rules act here twice: thinner walls use less resin and cool faster.</li>
+      <li><strong>Machine time × rate.</strong> Cycle time ÷ number of cavities × press hour rate. Typical cycles run 15 to 60 seconds, set mostly by cooling time, which scales with the square of the thickest wall.<sup class="cite"><a href="#ref-4">[4]</a></sup></li>
+      <li><strong>Setup ÷ run.</strong> Mould change and start-up scrap, divided by the run quantity.</li>
+      <li><strong>Tooling ÷ volume.</strong> The mould price divided by the number of parts you will amortise it over. State the basis: one year's volume, the program's lifetime, or the tool's rated life. The same mould gives three different piece prices.</li>
+      <li><strong>Secondary operations.</strong> Usually few: texture and colour are in the tool and the resin. Painting, inserts, or machining after moulding are red flags.</li>
+      <li><strong>Uplift.</strong></li>
+    </ol>
+    <p>The design levers: fewer side actions, uniform and thinner walls, fewer cavities-worth of complexity, and the steel-safe discipline that makes the first tool correction cheap (Module 6).</p>
+
+    <h2 id="sheet">Model 3: a sheet metal part</h2>
+    <p>Sheet metal sits between the two. Boothroyd Dewhurst's costing guide lists five drivers: material including waste, cutting method and setup, forming, tooling and its amortisation, and finishing, and warns that material utilisation "is invisible in CAD but dominates cost"; poor nesting can add 30 to 50 percent to the material bill.<sup class="cite"><a href="#ref-5">[5]</a></sup> Its reference values, converted to metric where the source gives imperial, are collected in Table 1.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Reference cost values for sheet metal from the Boothroyd Dewhurst costing guide. The source is explicitly imperial; prices per pound are converted at 2.2046 lb/kg and rounded. These are budget figures; the source itself says to get quotes for real projects.<sup class="cite"><a href="#ref-5">[5]</a></sup></caption>
+        <thead><tr><th>Item</th><th>Reference value (metric)</th><th>Source value</th></tr></thead>
+        <tbody>
+          <tr><td>Mild steel sheet</td><td>US$1.10 to 3.30 per kg</td><td>$0.50 to 1.50 per lb</td></tr>
+          <tr><td>Stainless 304 sheet</td><td>US$3.30 to 8.80 per kg</td><td>$1.50 to 4.00 per lb</td></tr>
+          <tr><td>Aluminium 6061 sheet</td><td>US$3.30 to 6.60 per kg</td><td>$1.50 to 3.00 per lb</td></tr>
+          <tr><td>Material utilisation</td><td>60 to 85 percent typical; simple shapes 75 to 85, brackets 65 to 75, complex 50 to 65</td><td>same</td></tr>
+          <tr><td>Laser cutting</td><td>US$100 to 200 per hour; setup 10 to 20 min; no tooling</td><td>same</td></tr>
+          <tr><td>CNC punching</td><td>US$80 to 150 per hour; 4 to 15 s per station; setup 30 to 60 min per station</td><td>same</td></tr>
+          <tr><td>Press brake bending</td><td>US$60 to 120 per hour; 15 to 45 s per bend; tool sets $500 to 3,000</td><td>same</td></tr>
+          <tr><td>Progressive die stamping</td><td>Die $5,000 to 50,000 and more; 2 to 10 s per part; economical above about 10,000 parts</td><td>same</td></tr>
+          <tr><td>Hardware insertion</td><td>Rivet or self-clinching nut $0.05 to 0.50 each plus $0.10 to 0.30 labour</td><td>same</td></tr>
+          <tr><td>Powder coat</td><td>US$5 to 32 per m²</td><td>$0.50 to 3.00 per sq ft</td></tr>
+          <tr><td>Secondary operations overall</td><td>Can add 20 to 50 percent to part cost</td><td>same</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The model:</p>
+    <p class="formula">Material = (flat pattern area ÷ utilisation) × thickness × density × price per kg</p>
+    <ol>
+      <li><strong>Material</strong> as above. The guide's example: a part needing 100 units of area at 60 percent utilisation consumes 167 units of sheet; at 80 percent it consumes 125, a 17 percent saving on material from a 10-point change in utilisation.<sup class="cite"><a href="#ref-5">[5]</a></sup></li>
+      <li><strong>Cutting.</strong> Cut length ÷ cutting speed × laser rate, plus pierces; or stations × punch cycle × punch rate.</li>
+      <li><strong>Forming.</strong> Number of bends × seconds per bend × brake rate. This is why Module 5 counts bends: each one is 15 to 45 seconds of a $60 to 120 machine, every part, forever.<sup class="cite"><a href="#ref-5">[5]</a></sup></li>
+      <li><strong>Setup ÷ batch</strong> for the laser and for each brake setup.</li>
+      <li><strong>Tooling ÷ volume</strong> if a custom die exists. The guide's arithmetic: a $20,000 die is $20 per part at 1,000 units, $2 at 10,000, and $0.20 at 100,000, and the break-even between laser cutting and a custom die typically falls at 2,000 to 5,000 units.<sup class="cite"><a href="#ref-5">[5]</a></sup></li>
+      <li><strong>Secondary operations</strong>: hardware, welding, deburring, coating.</li>
+      <li><strong>Uplift.</strong></li>
+    </ol>
+
+    <h2 id="volume">Tooling amortisation and the effect of volume</h2>
+    <p>Put the three models on one axis and the process selection map of Module 2 falls out of them. Machining has almost no fixed cost, so its unit cost is nearly flat with volume and high. Sheet metal on a laser and a brake has a small fixed cost per batch and a moderate variable cost. Moulding has a large fixed cost and a very low variable cost. The unit cost of a tooled process is variable cost plus tooling divided by volume, a curve that falls steeply and then flattens; the break-even with an untooled process is where the curves cross:</p>
+    <p class="formula">N* = (F<sub>tooled</sub> − F<sub>untooled</sub>) ÷ (V<sub>untooled</sub> − V<sub>tooled</sub>)</p>
+    <p>Three cautions. First, the amortisation basis is a decision. Amortising a mould over one year's volume, over a lifetime forecast, or over the tool's rated life gives three piece prices for the same part; when you compare quotes, make sure the suppliers used the same basis, or separate tooling from piece price entirely. Second, tool life caps the basis: an aluminium mould rated for 5,000 to 10,000 cycles cannot be amortised over 50,000 parts.<sup class="cite"><a href="#ref-4">[4]</a></sup> Third, who owns the tool matters. A supplier who buries the tooling in the piece price owns your tool and your switching cost; a buyer who pays for the tool up front owns it and can move it.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 300" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Unit cost versus volume for three processes</title>
+        <desc id="fig2-desc">A chart with volume on the horizontal axis from 100 to 100,000 parts on a logarithmic scale and unit cost on the vertical axis. A nearly flat high line represents machining. A gently falling line represents sheet metal on laser and brake. A steeply falling curve represents injection moulding, starting far above the others at low volume and dropping below both. The crossing points are marked as break-even volumes.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M70 250 H600 M70 250 V30"/>
+          <path d="M70 90 H600" class="diagram-soft" stroke-dasharray="3 5"/>
+          <path d="M70 150 C 200 145, 350 140, 600 138" class="diagram-soft"/>
+          <path d="M70 40 C 150 200, 250 235, 600 240" class="diagram-accent" stroke-width="3"/>
+        </g>
+        <g class="diagram-text">
+          <text x="80" y="82">Machining: flat and high</text>
+          <text x="80" y="170">Sheet metal: batch setup only</text>
+          <text x="330" y="225" class="diagram-accent">Moulding: tooling ÷ volume</text>
+          <text x="70" y="270" class="diagram-text-muted">100</text>
+          <text x="200" y="270" class="diagram-text-muted">1,000</text>
+          <text x="340" y="270" class="diagram-text-muted">10,000</text>
+          <text x="500" y="270" class="diagram-text-muted">100,000 parts</text>
+          <text x="20" y="45" class="diagram-text-muted">Cost</text>
+          <text x="20" y="62" class="diagram-text-muted">per part</text>
+          <circle cx="112" cy="90" r="4" class="diagram-accent-fill"/>
+          <circle cx="160" cy="147" r="4" class="diagram-accent-fill"/>
+          <text x="120" y="118" class="diagram-text-muted">break-even points</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. Schematic unit cost curves. Moulding's curve is variable cost plus tooling divided by volume; where it crosses the others is the break-even. The exercise below computes real crossings for one part.</figcaption>
+    </figure>
+
+    <h2 id="quote">Reading a supplier quote</h2>
+    <p>A quote answers the RFQ of Module 14, and its structure tells you how the supplier thinks. The elements to find, and to ask for if they are missing:</p>
+    <ol>
+      <li><strong>Non-recurring charges.</strong> Tooling, fixtures, programming, first article inspection. Ask whether tooling is quoted separately or hidden in the piece price, who owns it, and what its rated life is.</li>
+      <li><strong>Piece price by quantity break.</strong> The RFQ guide of Module 14 says to ask for minimum order quantities and pricing tiers.<sup class="cite"><a href="#ref-11">[11]</a></sup> The shape of the tiers is a cost model in disguise: a big step between the first two breaks means setup dominates; a flat tail means material dominates.</li>
+      <li><strong>Lead time</strong> for tooling and for production, and the quantity the lead time assumes.</li>
+      <li><strong>Assumptions and exclusions.</strong> Material grade, finish, inspection level, packaging, delivery terms, quote validity, currency. A quote that excludes anodising is not comparable with one that includes it.</li>
+      <li><strong>Findings.</strong> The DFM notes that came back with the price (Module 14). A quote with no findings on a new part is either a very good part or a supplier who has not looked.</li>
+    </ol>
+    <p>To compare quotes, normalise them: same quantity break, same amortisation basis, same finish and inspection, same delivery terms, then compare the piece prices and the non-recurring charges separately. A single total is the wrong number to compare, because a low tooling charge with a high piece price and a high tooling charge with a low piece price are different bets on volume, and only your forecast can say which is better.</p>
+
+    <h2 id="shouldcost">Should-cost</h2>
+    <p>"Should-cost" has a precise meaning in United States federal procurement. The Federal Acquisition Regulation defines should-cost reviews as "a specialized form of cost analysis" that "differ from traditional evaluation methods because they do not assume that a contractor's historical costs reflect efficient and economical operation"; instead they evaluate the economy and efficiency of the contractor's workforce, methods, materials, equipment, and management, using a multi-functional team that includes engineering, with the stated objective of both improving the contractor's efficiency and giving the government "realistic objectives for negotiation".<sup class="cite"><a href="#ref-9">[9]</a></sup> The Department of Defense's Better Buying Power initiative, developed in 2010 under Ashton Carter and Frank Kendall to control cost and improve incentives to industry,<sup class="cite"><a href="#ref-12">[12]</a></sup> carried the idea into program management: its 2014 update lists "implement should-cost based management" among its initiatives for controlling cost through the product lifecycle.<sup class="cite"><a href="#ref-10">[10]</a></sup></p>
+    <p>Strip the procurement language and the idea is what this module has been doing: build your own bottom-up model of what the part should cost when made efficiently, compare it with the quote, and discuss the differences driver by driver. Used well, a should-cost model turns a negotiation about price into a conversation about cycle time, utilisation, setups, and yield, in which the supplier often knows something you do not (their real cycle time, their real scrap) and you often know something they do not (which tolerance can move, which feature can go). Used badly, it becomes a spreadsheet that assumes the supplier's overhead and margin away and asks them to work for free. The FAR's definition is careful to make the review a joint search for efficiency, not a demand.</p>
+
+    <h2 id="push">Where to push and where not to</h2>
+    <p>The coffee-maker study closed with design guidelines for low-cost electromechanical products: use inexpensive materials (polypropylene rather than polycarbonate, which they put at two to three times the price), minimise the amount of material through wall thickness and part size, minimise the number of parts, keep tooling simple, and work closely with suppliers on purchased components, which made up 25 to 50 percent of a coffee maker's cost.<sup class="cite"><a href="#ref-1">[1]</a></sup> Every one of those is a push on a design-driven term. That is the pattern.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Legitimate and illegitimate cost pushes.</caption>
+        <thead><tr><th>Push here</th><th>Because</th><th>Not here</th><th>Because</th></tr></thead>
+        <tbody>
+          <tr><td>Cycle time: thinner uniform walls, fewer setups, fewer bends</td><td>Conversion is usually the largest term and the design sets it</td><td>Machine hour rate</td><td>It carries wages, power, depreciation; a rate below cost is a supplier that will fail you</td></tr>
+          <tr><td>Material utilisation and blank size</td><td>Nesting and standard stock are free to change on the drawing</td><td>Commodity material price</td><td>Neither party controls it; index it instead</td></tr>
+          <tr><td>Tolerances and finishes that carry no function</td><td>Each costs inspection, slower feeds, or a secondary operation</td><td>Tolerances the control plan needs</td><td>Loosening them moves the cost to your field returns</td></tr>
+          <tr><td>Secondary operations: remove them by design</td><td>They can add 20 to 50 percent and each is a handoff<sup class="cite"><a href="#ref-5">[5]</a></sup></td><td>Quality steps: inspection, FAI, capability studies</td><td>Cutting them buys escapes, not savings</td></tr>
+          <tr><td>Part count and fasteners (Module 10)</td><td>Fewer parts, fewer quotes, fewer assembly seconds</td><td>Supplier margin below sustainability</td><td>A supplier that loses money on your part deprioritises it</td></tr>
+          <tr><td>Volume commitment, batch size, tool ownership</td><td>Commercial terms that change setup and tooling per part</td><td>Payment terms as a substitute for cost work</td><td>It shifts cash, not cost</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 3. Cost model reference values. All money figures are US dollars from the cited sources and are budget values; rates and prices vary with region, market, and supplier.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Machine hour rates</td><td>Relative to a 3-axis mill</td><td>3-axis $75; lathe $65; indexed 5-axis $120; continuous 5-axis $150; mill-turn $95 per hour</td><td>Conversion cost is time × rate</td><td><a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Machining cost drivers</td><td>Three</td><td>Geometry (time); setup and programming (fixed per run); material and machinability</td><td>Structure of the model</td><td><a href="#ref-3">[3]</a>, <a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Machining blank</td><td>Next standard size up</td><td>Plate 3 to 30 mm then 10 mm steps; 0.3 to 1.5 mm removed per side</td><td>Material is what you buy, not what remains</td><td><a href="#ref-8">[8]</a></td></tr>
+          <tr><td>Aluminium pilot mould</td><td>Low volume tool</td><td>$3,000 to 5,000; 5,000 to 10,000 cycles; parts $1 to 5; 6 to 8 weeks</td><td>Caps the amortisation basis</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Steel production mould</td><td>High volume tool</td><td>100,000+ cycles; parts a few cents to $1; 4 to 6 months</td><td>Tooling shrinks toward zero per part</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Tooling share of moulded cost</td><td>Dominant at low volume</td><td>About 50 to 70 percent at 1,000 to 10,000 parts</td><td>Fixed cost ÷ small volume</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Side action</td><td>Avoid</td><td>+15 to 30 percent tool cost; at least $1,000 to 1,500</td><td>Mechanism, maintenance, cycle time</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Moulding cycle</td><td>Cooling dominates</td><td>15 to 60 s typical</td><td>Cooling time rises with the square of wall thickness</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Sheet utilisation</td><td>Design for nesting</td><td>60 to 85 percent typical; poor nesting +30 to 50 percent material</td><td>Scrap is bought at full price</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Bend cost</td><td>Count bends</td><td>15 to 45 s each at $60 to 120 per hour</td><td>Forming time scales with bends</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Laser versus die</td><td>Break-even</td><td>Typically 2,000 to 5,000 parts; die $5,000 to 50,000+</td><td>Fixed cost ÷ volume crossing</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Die amortisation</td><td>Divide by volume</td><td>$20,000 die: $20 at 1,000; $2 at 10,000; $0.20 at 100,000</td><td>Hyperbolic curve</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Secondary operations</td><td>Design them out</td><td>Can add 20 to 50 percent of part cost</td><td>Each is a handoff and a rate</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Purchased components</td><td>Work with suppliers early</td><td>25 to 50 percent of a coffee maker's cost</td><td>A large share you do not make</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Design versus plant</td><td>Both matter</td><td>Design range 48 percent, manufacturing range 31 percent of average cost (coffee makers, study assumptions)</td><td>Design is a first-order lever</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Should-cost</td><td>Model, then discuss drivers</td><td>Does not assume historical costs are efficient; multi-functional team including engineering</td><td>Negotiate on drivers, not margin</td><td><a href="#ref-9">[9]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: eighteen coffee makers</h2>
+    <p>Ulrich and Pearson's method deserves attention as much as their result, because it is the method this module asks you to use. They called it product archaeology: treating the product itself as the data source. Each of the 18 coffee makers was disassembled; the team built a bill of materials and a feasible assembly sequence, recorded for every moulded part its material, mass, projected area, wall thickness, and surface finish, for every sheet metal part its material, thickness, sheet consumed, and a complexity score, and for every purchased part enough detail to price it.<sup class="cite"><a href="#ref-1">[1]</a></sup> Assembly content was estimated in Boothroyd Dewhurst hours. The cost model summed assembly, purchased parts, moulded parts, sheet metal parts, tooling, supervision, inventory, facilities, and energy, with each term built from a design parameter (mass, area, assembly content) and a manufacturing-system parameter (labour rate, productivity, yield, machine cost).<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>Two findings stand out beyond the design and manufacturing ranges. Price and cost were not correlated in their data: the Rowenta FG22-0 sold for $49.99 and was estimated at $5.92 to make in a well run, medium-cost plant, while a Toastmaster selling for $22.99 was estimated at $7.61.<sup class="cite"><a href="#ref-1">[1]</a></sup> A companion account in Wharton Magazine adds a design detail worth remembering from Module 6: one manufacturer's polypropylene tank used ribbing to hide sink marks, a texture and geometry solution to a cosmetic problem rather than a material one.<sup class="cite"><a href="#ref-2">[2]</a></sup> The study is thirty years old and its dollar figures are of their time; its method and its conclusion about design as a cost lever are not.</p>
+    <!-- AUTHOR: optional personal note here (a should-cost conversation that went well or badly, without employer-specific figures) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Comparing quote totals.</strong> Consequence: a low tooling charge hides a high piece price, or the reverse. Fix: normalise scope and amortisation basis, then compare piece price and non-recurring charges separately.</li>
+      <li><strong>Costing the finished part instead of the consumed material.</strong> Consequence: material is underestimated by the blank, the runner, or the nesting scrap. Fix: model the blank, the shot, or the sheet divided by utilisation and yield.</li>
+      <li><strong>Amortising a tool over a volume it cannot survive.</strong> Consequence: a piece price that assumes 50,000 parts from a 10,000-cycle mould. Fix: cap the basis at rated life and plan the second tool.</li>
+      <li><strong>Treating the machine rate as negotiable.</strong> Consequence: a supplier who agrees and then deprioritises your work. Fix: negotiate time, not rate; shorten the cycle by design.</li>
+      <li><strong>Forgetting setup on small batches.</strong> Consequence: prototype quotes that look absurd until you divide the setup by five parts. Fix: ask for the setup charge separately and choose batch sizes deliberately.</li>
+      <li><strong>Ignoring secondary operations.</strong> Consequence: the coating, inserts, and inspection that add 20 to 50 percent arrive as surprises. Fix: list every operation after the primary process and price each one.</li>
+      <li><strong>Should-cost as a weapon.</strong> Consequence: a model that assumes away overhead and margin, and a supplier who stops sharing data. Fix: build the model to find drivers, share it, and let the supplier correct your cycle time.</li>
+      <li><strong>Optimising the parts you make and ignoring the parts you buy.</strong> Consequence: purchased components, 25 to 50 percent of the coffee maker, go unmanaged. Fix: put purchased-part selection and supplier engagement in the DFM review.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: three cost models for one lid</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em> Rates and prices are taken from the ranges cited above where they exist and are otherwise stated as assumptions.</p>
+    <p>An aluminium or plastic lid, about 120 × 80 mm with a 3 mm wall and four mounting points, is needed at 2,000 units per year, with a possible rise to 20,000. Build a bottom-up cost model for each of three routes and find the break-even volumes. Use a 25 percent uplift for overhead and margin on all routes and a batch of 500 for setups. Assumptions: aluminium at US$5.00 per kg (within the cited $3.30 to 6.60 range); ABS at $2.50 per kg (assumed); 3-axis mill $75 per hour; laser $150 per hour; press brake $90 per hour; moulding press $60 per hour (assumed); anodising $1.20 per part (assumed); density of aluminium 2,700 kg/m³.</p>
+    <ul>
+      <li><strong>Route A, machined:</strong> blank 130 × 90 × 6 mm 6061 plate; 8 minutes of machining; 45 minutes setup per batch; anodise.</li>
+      <li><strong>Route B, sheet metal:</strong> 2 mm 5052 sheet; flat pattern 160 × 120 mm at 70 percent utilisation; 40 s laser time; four bends at 30 s each; setup 15 min laser plus 30 min brake per batch; four self-clinching nuts at $0.20 each plus $0.20 labour each; anodise.</li>
+      <li><strong>Route C, moulded:</strong> ABS shot 66 g including runner; 35 s cycle, one cavity; 2 hours setup per run of 2,000; bosses moulded in, textured, no finishing. Aluminium mould $5,000 (rated 5,000 to 10,000 cycles) for the low volume; steel mould $30,000 (assumed) for the high volume.</li>
+    </ul>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>Route A, machined.</strong> Blank volume 130 × 90 × 6 = 70,200 mm³ = 70.2 cm³; mass 70.2 × 2.7 g/cm³ = 190 g; material 0.19 × 5.00 = $0.95. Machining 8 min at $75/h = $10.00. Setup 45 min at $75/h = $56.25 per batch of 500 = $0.11. Anodise $1.20. Subtotal $12.26; with 25 percent uplift, <strong>$15.33 per part</strong>, no tooling, at any volume.</p>
+      <p><strong>Route B, sheet metal.</strong> Flat pattern 160 × 120 = 19,200 mm² = 0.0192 m²; at 70 percent utilisation the sheet consumed is 0.0192 ÷ 0.70 = 0.0274 m²; volume 0.0274 × 0.002 = 5.49 × 10⁻⁵ m³; mass 5.49 × 10⁻⁵ × 2,700 = 0.148 kg; material 0.148 × 5.00 = $0.74. Laser 40 s at $150/h = $1.67. Bends 4 × 30 s = 120 s at $90/h = $3.00. Setup 15 min at $150/h ($37.50) plus 30 min at $90/h ($45.00) = $82.50 per batch of 500 = $0.17. Hardware 4 × ($0.20 + $0.20) = $1.60. Anodise $1.20. Subtotal $8.38; with uplift, <strong>$10.48 per part</strong>, no custom tooling (generic brake tooling).</p>
+      <p><strong>Route C, moulded.</strong> Material 0.066 kg × 2.50 = $0.17. Press 35 s at $60/h = $0.58. Setup 2 h at $60/h = $120 per run of 2,000 = $0.06. Subtotal $0.81; with uplift, <strong>$1.01 per part before tooling</strong>. Tooling per part depends on the basis:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Scenario</th><th>Tool</th><th>Amortisation basis</th><th>Tooling per part</th><th>Piece price</th></tr></thead>
+          <tbody>
+            <tr><td>2,000 per year, year one</td><td>Aluminium $5,000</td><td>2,000 parts</td><td>$2.50</td><td>$3.51</td></tr>
+            <tr><td>2,000 per year, over rated life</td><td>Aluminium $5,000</td><td>10,000 parts (5 years)</td><td>$0.50</td><td>$1.51</td></tr>
+            <tr><td>20,000 per year, year one</td><td>Steel $30,000</td><td>20,000 parts</td><td>$1.50</td><td>$2.51</td></tr>
+            <tr><td>20,000 per year, over 100,000 cycles</td><td>Steel $30,000</td><td>100,000 parts</td><td>$0.30</td><td>$1.31</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Break-even volumes.</strong> Using N* = (F<sub>tooled</sub> − F<sub>untooled</sub>) ÷ (V<sub>untooled</sub> − V<sub>tooled</sub>), with the untooled routes' fixed cost taken as zero because their setups are already in the piece price:</p>
+      <ul>
+        <li>Aluminium mould versus sheet metal: 5,000 ÷ (10.48 − 1.01) = 5,000 ÷ 9.47 = <strong>528 parts</strong>.</li>
+        <li>Aluminium mould versus machining: 5,000 ÷ (15.33 − 1.01) = 5,000 ÷ 14.32 = <strong>349 parts</strong>.</li>
+        <li>Steel mould versus sheet metal: 30,000 ÷ 9.47 = <strong>3,168 parts</strong>.</li>
+      </ul>
+      <p><strong>Reading the result.</strong> At 2,000 per year the aluminium mould already wins on piece price (about $3.51 against $10.48), and it pays back within the first year's volume. The cautions matter more than the arithmetic: the aluminium tool's rated life of 5,000 to 10,000 cycles covers two and a half to five years at this volume, so a rise to 20,000 per year means a steel tool and a second tooling charge; the moulded lid's cosmetic surface, colour, and flammability rating all change with the material; and the sheet metal route stays the right answer if the volume forecast is uncertain or the design is still moving, because its only fixed cost is a batch setup. Which is the point of building the model: it tells you the price of flexibility, not just the price of the part.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="15">
+      <fieldset class="q" data-answer="c">
+        <legend>1. In Ulrich and Pearson's coffee-maker study, what did the design range and manufacturing range come to, as a share of average manufacturing cost, under their assumptions?</legend>
+        <label><input type="radio" name="q1" value="a"> Design 80 percent, manufacturing 20 percent</label>
+        <label><input type="radio" name="q1" value="b"> Design 10 percent, manufacturing 90 percent</label>
+        <label><input type="radio" name="q1" value="c"> Design 48 percent, manufacturing 31 percent</label>
+        <label><input type="radio" name="q1" value="d"> They found no design effect</label>
+        <p class="explain" hidden>Design was a first-order lever, comparable to or larger than plant choice, but nowhere near the folklore 80 percent.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="2" data-tolerance="0.01">
+        <legend>2. A progressive die costs US$20,000. What is the tooling cost per part, in dollars, when amortised over 10,000 parts?</legend>
+        <label>Answer: <input type="number" name="q2" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>20,000 ÷ 10,000 = $2.00; at 100,000 parts it would be $0.20.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>3. Per the Protolabs Network rate table, a continuous 5-axis mill costs roughly how much relative to a 3-axis mill?</legend>
+        <label><input type="radio" name="q3" value="a"> The same</label>
+        <label><input type="radio" name="q3" value="b"> About double ($150 versus $75 per hour)</label>
+        <label><input type="radio" name="q3" value="c"> About half</label>
+        <label><input type="radio" name="q3" value="d"> Ten times</label>
+        <p class="explain" hidden>Indexed 5-axis is about 60 percent more; continuous 5-axis about 100 percent more. It may still pay if it removes a setup.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="142.9" data-tolerance="1">
+        <legend>4. A flat pattern has an area of 100 cm². At 70 percent material utilisation, how many cm² of sheet does each part consume?</legend>
+        <label>Answer: <input type="number" name="q4" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>100 ÷ 0.70 = 142.9 cm². Scrap is bought at full price.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>5. For a moulded part at 1,000 to 10,000 units, roughly what share of total cost is tooling, per the cited guide?</legend>
+        <label><input type="radio" name="q5" value="a"> About 50 to 70 percent</label>
+        <label><input type="radio" name="q5" value="b"> Under 5 percent</label>
+        <label><input type="radio" name="q5" value="c"> About 10 percent</label>
+        <label><input type="radio" name="q5" value="d"> Over 95 percent</label>
+        <p class="explain" hidden>At those volumes the mould dominates; above 10,000 to 100,000 units material and production costs take over.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>6. The FAR defines a should-cost review as one that</legend>
+        <label><input type="radio" name="q6" value="a"> accepts the contractor's historical costs as the baseline</label>
+        <label><input type="radio" name="q6" value="b"> is performed by the contractor alone</label>
+        <label><input type="radio" name="q6" value="c"> sets the price at material cost only</label>
+        <label><input type="radio" name="q6" value="d"> does not assume historical costs reflect efficient operation, and is done by a multi-functional team including engineering</label>
+        <p class="explain" hidden>Its objective is to improve efficiency and to give realistic objectives for negotiation, not to remove margin.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>7. Two quotes: Supplier X charges $4,000 tooling and $3.00 per part; Supplier Y charges $12,000 tooling and $2.00 per part. Above what volume is Y cheaper in total?</legend>
+        <label><input type="radio" name="q7" value="a"> 2,000 parts</label>
+        <label><input type="radio" name="q7" value="b"> 4,000 parts</label>
+        <label><input type="radio" name="q7" value="c"> 8,000 parts</label>
+        <label><input type="radio" name="q7" value="d"> Y is never cheaper</label>
+        <p class="explain" hidden>N* = (12,000 − 4,000) ÷ (3.00 − 2.00) = 8,000 parts. Below that, X wins.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>8. Which of these is a legitimate cost push, according to this module?</legend>
+        <label><input type="radio" name="q8" value="a"> Asking the supplier to cut their machine hour rate below cost</label>
+        <label><input type="radio" name="q8" value="b"> Thinning and evening out a moulded wall to shorten the cooling time</label>
+        <label><input type="radio" name="q8" value="c"> Removing the first article inspection to save money</label>
+        <label><input type="radio" name="q8" value="d"> Loosening a tolerance the control plan depends on</label>
+        <p class="explain" hidden>Push on the terms the design decides: cycle time, utilisation, features, secondary operations, part count.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>c. 48 percent design range, 31 percent manufacturing range.</li>
+        <li>2.</li>
+        <li>b. About double.</li>
+        <li>142.9 cm².</li>
+        <li>a. About 50 to 70 percent.</li>
+        <li>d. Does not assume historical costs are efficient; multi-functional team.</li>
+        <li>c. 8,000 parts.</li>
+        <li>b. Thin and even the wall.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>A piece price is material plus conversion plus setup per batch plus tooling per volume plus secondary operations plus uplift. Model all six before you judge a quote.</li>
+      <li>Machining is time × rate with almost no fixed cost; moulding is a large fixed cost over a tiny variable cost; sheet metal sits between, and its material term is set by utilisation.</li>
+      <li>Tooling per part is tool price divided by an amortisation basis you must state, capped by rated tool life. The same mould gives three piece prices.</li>
+      <li>Compare quotes by normalising scope and basis, then compare piece price and non-recurring charges separately. Never compare totals.</li>
+      <li>Should-cost means building your own efficient-cost model and discussing the differences driver by driver, not assuming the supplier's margin away.</li>
+      <li>Push on what the design decides: cycle time, utilisation, features, tolerances without function, secondary operations, part count. Do not push on machine rates, commodity prices, quality steps, or the supplier's survival.</li>
+      <li>Design moves cost by about as much as plant choice does; the coffee-maker study measured it rather than asserting it, and so should you.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07.</p>
+    <ol class="references">
+      <li id="ref-1">Ulrich, K. T., Pearson, S. A. "Does Product Design Really Determine 80% of Manufacturing Cost?" MIT Sloan School of Management Working Paper 3601-93-MSA, August 1993. <a href="https://dspace.mit.edu/handle/1721.1/47202">https://dspace.mit.edu/handle/1721.1/47202</a></li>
+      <li id="ref-2">Wharton Magazine. "The Inside Story of Product Design." Summer 1997. <a href="https://magazine.wharton.upenn.edu/issues/summer-1997/the-inside-story-of-product-design/">https://magazine.wharton.upenn.edu/issues/summer-1997/the-inside-story-of-product-design/</a></li>
+      <li id="ref-3">Protolabs Network (formerly Hubs). "CNC machining design guide" (machine cost table). n.d. <a href="https://www.hubs.com/guides/cnc-machining/">https://www.hubs.com/guides/cnc-machining/</a></li>
+      <li id="ref-4">Protolabs Network (formerly Hubs). "Injection molding design guide" (cost and volume sections). n.d. <a href="https://www.hubs.com/guides/injection-molding/">https://www.hubs.com/guides/injection-molding/</a></li>
+      <li id="ref-5">Boothroyd Dewhurst, Inc. "Sheet Metal Fabrication Cost Estimating: How Cost Works." n.d. <a href="https://www.dfma.com/resources/sheet-metal-fabrication-cost.asp">https://www.dfma.com/resources/sheet-metal-fabrication-cost.asp</a> <span class="tag">(software vendor's reference values, explicitly imperial; converted here)</span></li>
+      <li id="ref-6">Protolabs. "Understanding CNC manufacturing costs." n.d. <a href="https://www.protolabs.com/en-gb/resources/blog/understanding-cnc-manufacturing-costs/">https://www.protolabs.com/en-gb/resources/blog/understanding-cnc-manufacturing-costs/</a></li>
+      <li id="ref-7">Protolabs Network (formerly Hubs). "14 proven design tips to reduce the cost of CNC machining." n.d. <a href="https://www.hubs.com/knowledge-base/reducing-cnc-machining-costs-design-tips/">https://www.hubs.com/knowledge-base/reducing-cnc-machining-costs-design-tips/</a></li>
+      <li id="ref-8">Protolabs Network (formerly Hubs). "Standard blank sizes for CNC machining." n.d. <a href="https://www.hubs.com/knowledge-base/standard-blank-sizes-cnc-machining-sheets-rods/">https://www.hubs.com/knowledge-base/standard-blank-sizes-cnc-machining-sheets-rods/</a></li>
+      <li id="ref-9">United States Federal Acquisition Regulation. "15.407-4 Should-cost review." Acquisition.gov, FAC 2026-01. <a href="https://www.acquisition.gov/far/15.407-4">https://www.acquisition.gov/far/15.407-4</a></li>
+      <li id="ref-10">AcqNotes. "Better Buying Power" (Better Buying Power 3.0 initiative list). n.d. <a href="https://acqnotes.com/better-buying-power">https://acqnotes.com/better-buying-power</a></li>
+      <li id="ref-11">Fictiv. "How to Prepare Your Request for Quote Package." n.d. <a href="https://www.fictiv.com/articles/preparing-your-request-for-quote-package">https://www.fictiv.com/articles/preparing-your-request-for-quote-package</a></li>
+      <li id="ref-12">Lyle, A. "Pentagon Official Announces Lower Cost Growth in Latest Acquisition Report." DoD News, 26 October 2016, via GlobalSecurity.org. <a href="https://www.globalsecurity.org/military/library/news/2016/10/mil-161026-afps05.htm">https://www.globalsecurity.org/military/library/news/2016/10/mil-161026-afps05.htm</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Boothroyd, G., Dewhurst, P., Knight, W. A. <em>Product Design for Manufacture and Assembly</em>, 3rd ed. CRC Press, 2011. Process cost models for machining, moulding, die casting, and sheet metal.</li>
+      <li>Swift, K. G., Booker, J. D. <em>Manufacturing Process Selection Handbook</em>. Butterworth-Heinemann, 2013. Component costing and process capability charts.</li>
+      <li>Ulrich, K. T., Eppinger, S. D., Yang, M. C. <em>Product Design and Development</em>, 7th ed. McGraw-Hill, 2020. Chapter on design for manufacturing and cost estimation.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>
