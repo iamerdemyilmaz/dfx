@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 14: Working with suppliers and contract manufacturers · DFx Course</title>
+<meta name="description" content="What a good RFQ package contains, drawings versus model-based definition, the supplier DFM review and how to read it, first article inspection, PPAP and control plans, engineering change discipline, and the link between BOM quality and quote quality.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="14">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 14</p>
+    <h1>Working with suppliers and contract manufacturers</h1>
+    <p class="lead">Almost everything you design is made by someone who was not in the room when you designed it. The quality of what comes back is set by the quality of what you send, by how you read what they send back, and by how disciplined you both are when something changes. This module covers the request for quotation, the supplier's design review, the approval process that ends development, and the engineering change that keeps production honest.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Assemble</strong> a request for quotation (RFQ) package that a supplier can quote accurately and build from, with the revision control that keeps it that way.</li>
+      <li><strong>Decide</strong> what belongs on a drawing and what belongs in the model, and specify both so the supplier's tools can consume them.</li>
+      <li><strong>Read</strong> a supplier DFM review and disposition every finding as accepted, negotiated, or rejected, with a written reason.</li>
+      <li><strong>Describe</strong> first article inspection, PPAP, and control plans, and what evidence each one asks the supplier to produce.</li>
+      <li><strong>Run</strong> an engineering change through an impact assessment before it is approved, including supplier-proposed changes.</li>
+      <li><strong>Explain</strong> why an incomplete bill of materials produces a padded quote.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>On 17 July 1981 two suspended walkways in the atrium of the Hyatt Regency hotel in Kansas City collapsed onto a crowded floor. The National Bureau of Standards investigation found the most probable cause to be "insufficient load capacity of the box beam-hanger rod connections"; 113 people died and 186 were injured.<sup class="cite"><a href="#ref-7">[7]</a></sup> The connection had not been built as designed. The contract drawings showed a single continuous rod from the roof through the fourth-floor walkway to the second-floor walkway. The steel fabricator changed it to two rods, one from the roof to the fourth floor and a second from the fourth floor to the second, "to avoid threading the entire rod".<sup class="cite"><a href="#ref-6">[6]</a></sup> In the original arrangement each fourth-floor connection carried one walkway's load, about 90 kN (20.3 kips) per hanger; in the arrangement as built it carried both, and the load on the connection "was essentially doubled".<sup class="cite"><a href="#ref-6">[6]</a></sup></p>
+    <p>How the change got through is the supplier-management lesson. The fabricator later said it telephoned the engineering firm for approval; the engineers denied receiving the call. What is not disputed is that the fabricator revised its shop drawings, the engineering firm received 42 shop drawings including the revised connection on 16 February 1979, and returned them on 26 February stamped with the engineer's review seal, authorising construction.<sup class="cite"><a href="#ref-6">[6]</a></sup> The Missouri licensing board found in 1984 that the engineers had not checked the connection, had placed too much reliance on the fabricator, and were responsible for the change; the two principal engineers lost their Missouri licences.<sup class="cite"><a href="#ref-6">[6]</a></sup></p>
+    <p>Few readers will stamp structural drawings. Every reader will receive a supplier's proposal to make a part easier to build, and every reader will one day approve a revised drawing in a hurry. The rule this module keeps returning to is the one the Hyatt hearing wrote down: a change proposed by a supplier is still an engineering change, it is checked by the engineer, and the check is recorded.</p>
+
+    <h2 id="rfq">What a good RFQ package contains</h2>
+    <p>A supplier quotes what they can see and pads what they cannot. Fictiv's guide to preparing a quote package gives the minimum for each unique part: a 3D model, usually in STEP format, carrying all nominal dimensions and geometry, and a 2D drawing in PDF that specifies the tolerances and the "key or essential dimensions with their maximum allowable variation"; for assemblies, an assembled model and a drawing showing the parts together with a bill of materials.<sup class="cite"><a href="#ref-1">[1]</a></sup> The same guide recommends including renderings or prototype photos and the product requirements document so the manufacturer understands the design goals, and asking the manufacturer in return for shipping arrangements, tooling and production lead times, inspection procedures and quality standards, minimum order quantities and pricing tiers, and payment terms.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>Two more items come from earlier modules. Quantities should be given as a schedule with breaks (for example 10, 50, 100 for prototypes, or annual and lifetime volumes for production), because the process decision and the tooling amortisation of Module 2 depend on them. And the tolerance discipline of Module 3 belongs here: the guide's advice is to be generous, because "looser tolerances allow for less expensive manufacturing", and to flag the few dimensions that matter.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. RFQ package checklist. Items marked with an asterisk are from the Fictiv guide; the rest follow from Modules 2, 3, 12, and 13.</caption>
+        <thead><tr><th>Item</th><th>Why the supplier needs it</th></tr></thead>
+        <tbody>
+          <tr><td>3D model per part (STEP), with revision*</td><td>Geometry for programming, tooling, and quoting</td></tr>
+          <tr><td>2D drawing per part (PDF), with revision*</td><td>Tolerances, critical dimensions, datums, notes the model cannot carry</td></tr>
+          <tr><td>Material grade and acceptable substitutes</td><td>Price, machinability, availability; substitutes avoid a re-quote</td></tr>
+          <tr><td>Finish, coating, and plating specification with thickness class and masking</td><td>Secondary operations and their cost (Module 13)</td></tr>
+          <tr><td>Quantities with breaks; annual and lifetime volume*</td><td>Process choice and tooling amortisation (Module 2)</td></tr>
+          <tr><td>Assembly model, assembly drawing, and BOM*</td><td>How the part fits; which dimensions matter</td></tr>
+          <tr><td>Inspection requirements: critical characteristics, sampling, FAI, capability studies</td><td>Inspection cost and capability commitments (Module 3)</td></tr>
+          <tr><td>Compliance requirements: RoHS, REACH declarations, water contact, flammability</td><td>Material choices and paperwork (Module 12)</td></tr>
+          <tr><td>Packaging, labelling, and delivery requirements</td><td>Cost items suppliers otherwise assume</td></tr>
+          <tr><td>Product requirements document and renderings*</td><td>Context for the supplier's DFM suggestions</td></tr>
+          <tr><td>Questions back to the supplier: lead times, inspection procedures, MOQ and price tiers, payment terms*</td><td>Turns a price into a comparable offer</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 640 220" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">The RFQ package and what comes back</title>
+        <desc id="fig1-desc">Left: a stack of documents labelled model with revision, drawing with revision, BOM, quantities, specifications, and requirements document, grouped as the RFQ package. An arrow to the right leads to a supplier box. From the supplier, arrows return labelled quote with price breaks, lead times, DFM review findings, and questions. A caption notes that everything missing from the left side is priced as risk on the right.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="30" y="40" width="200" height="140" rx="6" class="diagram-soft"/>
+          <rect x="300" y="70" width="120" height="80" rx="6"/>
+          <rect x="460" y="40" width="160" height="140" rx="6" class="diagram-soft"/>
+          <path d="M230 110 L300 110 M292 104 L300 110 L292 116" class="diagram-accent" stroke-width="3"/>
+          <path d="M420 110 L460 110 M452 104 L460 110 L452 116" class="diagram-accent" stroke-width="3"/>
+        </g>
+        <g class="diagram-text">
+          <text x="40" y="60" font-weight="600">RFQ package</text>
+          <text x="40" y="82">Model, rev. C</text>
+          <text x="40" y="98">Drawing, rev. C</text>
+          <text x="40" y="114">BOM and assembly drawing</text>
+          <text x="40" y="130">Quantities with breaks</text>
+          <text x="40" y="146">Material, finish, inspection, compliance</text>
+          <text x="40" y="162">Requirements document</text>
+          <text x="330" y="105">Supplier</text>
+          <text x="318" y="125" class="diagram-text-muted">quotes what it sees</text>
+          <text x="470" y="60" font-weight="600">What comes back</text>
+          <text x="470" y="82">Price by quantity break</text>
+          <text x="470" y="98">Tooling and lead times</text>
+          <text x="470" y="114">DFM review findings</text>
+          <text x="470" y="130">Questions and assumptions</text>
+          <text x="470" y="146">Inspection and MOQ terms</text>
+          <text x="30" y="205" class="diagram-text-muted">Anything missing on the left is priced as risk on the right.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. A complete package with revision numbers on every document gets a quote that can be compared and a DFM review that can be acted on.<sup class="cite"><a href="#ref-1">[1]</a></sup></figcaption>
+    </figure>
+
+    <h2 id="mbd">Drawings versus model-based definition</h2>
+    <p>Model-based definition (MBD) puts the product definition, including dimensions, tolerances, and notes, on the 3D model as an annotated data set rather than on a separate drawing. ASME Y14.41 establishes "requirements and reference documents applicable to the preparation and revision of digital product definition data" and "defines exceptions and additional requirements to existing ASME standards for using product definition digital data sets or drawings in digital format"; the 2019 edition is the one most suppliers have worked to, and ASME's catalogue now lists a 2026 edition on stabilised maintenance.<sup class="cite"><a href="#ref-5">[5]</a></sup> The same GD&amp;T rules of Module 3 apply to the annotated model; what changes is the carrier.</p>
+    <p>In practice most supply chains still run on both. A fabricator's guide puts it plainly: 3D models drive the cutting and forming programs, and 2D drawings "remain valuable for communicating specific tolerances, finish requirements, and threaded hole callouts".<sup class="cite"><a href="#ref-11">[11]</a></sup> The working rule: send a STEP model as the geometric authority and a PDF drawing as the specification authority, make both carry the same revision, and state on the drawing which one governs if they disagree. Before committing to MBD alone, ask each supplier what their inspection and programming software can read; an annotated model the supplier's CMM software cannot import is a drawing they have to redraw, at your risk.</p>
+
+    <h2 id="dfmreview">The supplier DFM review and how to read it</h2>
+    <p>A good supplier answers an RFQ with a quote and a list of findings. A board house's DFM check compares your data against its capability table: trace and space, annular ring, drill-to-copper, mask dam, silkscreen overlap, copper-to-edge, aspect ratio, and missing or ambiguous data.<sup class="cite"><a href="#ref-9">[9]</a></sup> A moulder's review flags walls, draft, ribs, undercuts, and tolerances against its guidelines (Module 6);<sup class="cite"><a href="#ref-10">[10]</a></sup> a machine shop's flags radii, depths, thin walls, and setups (Module 4). Read every list the same way, and answer it in writing.</p>
+    <ol>
+      <li><strong>Sort findings into three kinds.</strong> Capability violations: the supplier cannot make the feature as drawn; these are fixed in layout or accepted as a different process tier. Cost findings: the supplier can make it, at a price; these are decisions about what the function is worth. Adjustments the supplier proposes to make themselves (a mask opening ganged, a silkscreen clipped, a corner radius added, a rib thinned); these are engineering changes and are approved or refused, not waved through.</li>
+      <li><strong>Disposition each one:</strong> accept (change the design as suggested), negotiate (propose a different fix or ask for the capability cost), or reject (keep the design, state the functional reason, and confirm the supplier will build it as drawn). Record the disposition against the finding ID, in the format of Module 1's findings list.</li>
+      <li><strong>Watch for the steel-safe direction.</strong> A moulder will often propose the conservative version of an uncertain feature (a smaller hole, a thicker wall) so the first correction is cheap (Module 6). That is usually a good proposal to accept.</li>
+      <li><strong>Watch for silent changes.</strong> The most dangerous line in a DFM report is "will be adjusted to meet our process". Ask what, exactly, and put the answer on the drawing. The Hyatt shop drawing was, in effect, a silent change accepted with a stamp.</li>
+      <li><strong>Close the loop with a revision.</strong> Every accepted finding is a change to the model and drawing, which get a new revision, which goes back to the supplier. A supplier building from a marked-up PDF and your engineer working from the CAD model are building different parts.</li>
+    </ol>
+
+    <h2 id="fai">First article inspection</h2>
+    <p>First article inspection (FAI) is the formal verification that the first production parts from a tool or process match the drawing. In aerospace the governing standard is AS9102, upgraded from revision B to revision C in June 2023; the standard's purpose is to give "guidelines for planning, manufacturing, and verifying that the processes can produce parts and assemblies that meet the engineering requirements", and revision C increased tracking and documentation requirements and aligned the standard more closely with the AS9100 quality management standard.<sup class="cite"><a href="#ref-4">[4]</a></sup> Its report uses three forms: part accountability, product accountability for materials and special processes, and characteristic accountability, in which every dimension and note on a ballooned drawing is measured and recorded.<sup class="cite"><a href="#ref-4">[4]</a></sup> The standard also defines when a full or partial FAI must be repeated after changes to the design, the process, or the source, or after a lapse in production; check the current revision for the exact triggers.</p>
+    <p>Outside aerospace the same thing is done with less ceremony and the same content: a ballooned drawing, a measured value for every characteristic, material and process certificates, and a signature. The DFM connection is that the FAI is where the DVT build of Module 1 meets the tolerances of Module 3. Dimensions in one mould half or one machining setup pass; dimensions across a parting line or a second setup are where the FAI report earns its keep. Design the drawing so that the FAI can be done: every dimension measurable, every datum reachable.</p>
+
+    <h2 id="ppap">PPAP and control plans</h2>
+    <p>The automotive Production Part Approval Process (PPAP), published by the Automotive Industry Action Group (AIAG) and now in its fourth edition (2006), is the most complete public description of what a customer should hold before allowing volume production. It defines eighteen elements: design records, engineering change documentation, customer engineering approval, design FMEA, process flow diagram, process FMEA, control plan, measurement system analysis studies, dimensional results, records of material and performance tests, initial process studies, qualified laboratory documentation, appearance approval report, sample production parts, master sample, checking aids, customer-specific requirements, and the part submission warrant.<sup class="cite"><a href="#ref-2">[2]</a></sup> Five submission levels decide how much of that evidence is sent to the customer, from level 1 (warrant only) through level 3 (warrant, samples, and complete supporting data) to level 5 (complete data available for review at the supplier's site).<sup class="cite"><a href="#ref-2">[2]</a></sup></p>
+    <p>The control plan deserves its own note. It is the document that says, for every characteristic that matters, how it is controlled in production: the process step, the characteristic, the specification, the measurement method, the sample size and frequency, and the reaction plan. AIAG's Advanced Product Quality Planning (APQP) manual, second edition (2008), describes three control plans as outputs of the planning process: a prototype control plan during product design, a pre-launch plan during process design, and a production control plan for volume.<sup class="cite"><a href="#ref-3">[3]</a></sup> For a design engineer the control plan is the answer to Module 3's question: which dimensions carry function, and what will the supplier do to hold them. If you cannot fill in the control plan for a tolerance, you cannot justify the tolerance.</p>
+    <p>Initial process studies in PPAP use capability indices; industry summaries give the manual's default acceptance criterion as an index of 1.67 or higher, with 1.33 to 1.67 conditionally acceptable subject to customer review.<sup class="cite"><a href="#ref-2">[2]</a></sup> Your customer's requirement governs; the point is that a tolerance on a critical characteristic is a capability promise the supplier will have to prove with data.</p>
+
+    <h2 id="eco">Engineering change discipline</h2>
+    <p>Two of this course's largest cases are change-control failures. The Hyatt connection changed on a shop drawing without the engineering that the change required.<sup class="cite"><a href="#ref-6">[6]</a></sup> The Airbus A380's harness rework followed a design mock-up that "was implemented late", so that changes to the airframe reached the harness design after harnesses were built.<sup class="cite"><a href="#ref-8">[8]</a></sup> Neither was a bad part; both were a change that reached production without reaching everyone it affected.</p>
+    <p>An engineering change order (ECO) is the control. A workable minimum:</p>
+    <ol>
+      <li><strong>Description and reason.</strong> What changes, on which parts and documents, and why.</li>
+      <li><strong>Impact assessment.</strong> Tooling (and its steel-safe direction), fixtures, test programs, inventory of parts and finished goods, certification and compliance, cost, and schedule. This is the list from Module 0's cost-of-change table, filled in for the real program.</li>
+      <li><strong>Effectivity.</strong> From which serial number, date, or lot the change applies, and what happens to parts already built.</li>
+      <li><strong>Approval.</strong> By the people who own the affected items, recorded.</li>
+      <li><strong>Release.</strong> New revisions of every affected document, sent to every affected supplier, with confirmation that the old revision is withdrawn.</li>
+    </ol>
+    <p>Supplier-proposed changes go through the same gate. A DFM finding accepted by email is an ECO waiting to be written; a shop drawing with a different detail from the contract drawing is an ECO that was never written. The Hyatt hearing's finding that the engineers "placed too much reliance" on the fabricator is the general failure mode: the supplier knows their process and you know the function, and only the ECO makes both parties look at the same change.<sup class="cite"><a href="#ref-6">[6]</a></sup> In the other direction, supplier product change notifications (Module 9) are ECOs coming toward you; they need the same impact assessment.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 200" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Engineering change flow</title>
+        <desc id="fig2-desc">Five boxes left to right: change request from any source including supplier, impact assessment covering tooling, fixtures, inventory, test, certification, cost, and schedule, approval by the owners of affected items, release of new revisions to all affected suppliers, and effectivity by serial number or lot. A dashed loop from the supplier box at the far left shows supplier-proposed changes entering the same flow rather than bypassing it.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="20" y="60" width="105" height="60" rx="5"/>
+          <rect x="145" y="60" width="115" height="60" rx="5" class="diagram-soft"/>
+          <rect x="280" y="60" width="100" height="60" rx="5"/>
+          <rect x="400" y="60" width="105" height="60" rx="5"/>
+          <rect x="525" y="60" width="100" height="60" rx="5"/>
+          <path d="M125 90 h20 M139 84 l6 6 l-6 6 M260 90 h20 M274 84 l6 6 l-6 6 M380 90 h20 M394 84 l6 6 l-6 6 M505 90 h20 M519 84 l6 6 l-6 6" class="diagram-accent" stroke-width="3"/>
+          <path d="M70 150 v-30" stroke-dasharray="5 4" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="30" y="82">Change</text><text x="30" y="98">request</text>
+          <text x="152" y="82">Impact</text><text x="152" y="98">assessment</text>
+          <text x="290" y="82">Approval by</text><text x="290" y="98">owners</text>
+          <text x="410" y="82">Release new</text><text x="410" y="98">revisions</text>
+          <text x="535" y="82">Effectivity</text><text x="535" y="98">by serial or lot</text>
+          <text x="20" y="170" class="diagram-text-muted">Supplier-proposed changes enter here, not around it</text>
+          <text x="150" y="40" class="diagram-text-muted">Tooling, fixtures, inventory, test, certification, cost, schedule</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. Every change, whoever proposes it, passes through the same assessment, approval, and release. The Hyatt connection did not.</figcaption>
+    </figure>
+
+    <h2 id="bom">BOM quality and quote quality</h2>
+    <p>The bill of materials is the document a contract manufacturer quotes from, and its gaps become their assumptions. A BOM line that says "screw M3" without length, material, finish, and drive gets a quote for whatever the buyer has in stock and a build that may not match the prototype. A line that says "connector, TBD" gets a contingency added to the whole quote, because the manufacturer does not know whether the part will be a two-dollar or a twenty-dollar item, or whether it will fit the board. A BOM without revisions on its drawings gets a quote against whatever revision the supplier happens to open.</p>
+    <p>A complete BOM line carries: your part number and revision; a description; the manufacturer and manufacturer part number for purchased parts, with approved alternates; material and finish for made parts, pointing to the drawing revision; quantity per assembly; the process or supplier class (moulded, machined, purchased); and lifecycle status for electronic components (Module 9). The RFQ guide's warning about revision control applies to the whole package: every change to the design requires a new revision number, and you should reference that number "every time you place an order" and verify with the manufacturer that they are using it.<sup class="cite"><a href="#ref-1">[1]</a></sup> A clean BOM is not paperwork. It is the difference between a quote you can compare and a quote you will renegotiate at PVT.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Reference points for supplier engagement. Most rules in this module are procedural; the quantitative ones are collected here.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>RFQ minimum per part</td><td>Model plus drawing</td><td>STEP model and PDF drawing, both with revision</td><td>Geometry and specification authorities</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Assembly RFQ</td><td>Show the fit</td><td>Assembly model, assembly drawing, BOM</td><td>Supplier sees which dimensions matter</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Quantity breaks</td><td>Several, plus lifetime</td><td>e.g., 10, 50, 100 for prototypes; annual and lifetime for production</td><td>Process and tooling decisions depend on volume</td><td><a href="#ref-1">[1]</a>, Module 2</td></tr>
+          <tr><td>Tolerances in the RFQ</td><td>Generous, with the few critical ones flagged</td><td>General tolerances plus identified key dimensions</td><td>"Looser tolerances allow for less expensive manufacturing"</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Revision control</td><td>Every change, every document, every order</td><td>New revision number per change; confirm with the supplier at each order</td><td>Supplier and engineer must build the same part</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Model-based definition</td><td>Standard and carrier</td><td>ASME Y14.41 (2019 edition in wide use; 2026 listed)</td><td>Annotated data sets replace or supplement drawings</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Drawing content that survives MBD</td><td>Keep on the drawing</td><td>Tolerances, finish, threaded-hole callouts</td><td>Supplier tools consume them from drawings</td><td><a href="#ref-11">[11]</a></td></tr>
+          <tr><td>DFM finding disposition</td><td>Three outcomes, all written</td><td>Accept, negotiate, reject with reason; new revision on acceptance</td><td>Silent changes are uncontrolled changes</td><td>Module 1 format</td></tr>
+          <tr><td>First article inspection</td><td>Every characteristic measured</td><td>AS9102 Rev. C (June 2023); Forms 1, 2, 3; ballooned drawing</td><td>Proves the process can make the drawing</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>PPAP elements</td><td>Complete the evidence</td><td>18 elements; 5 submission levels</td><td>Customer holds proof before volume</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Initial capability</td><td>Default acceptance</td><td>Index ≥ 1.67; 1.33 to 1.67 conditional (industry summary of PPAP)</td><td>Short-run data needs margin</td><td><a href="#ref-2">[2]</a> (secondary)</td></tr>
+          <tr><td>Control plans</td><td>Three stages</td><td>Prototype, pre-launch, production (APQP 2nd ed., 2008)</td><td>Controls mature with the process</td><td><a href="#ref-3">[3]</a> (secondary)</td></tr>
+          <tr><td>ECO impact assessment</td><td>Seven items</td><td>Tooling, fixtures, inventory, test, certification, cost, schedule</td><td>Cost of change grows by phase (Module 0)</td><td>Course</td></tr>
+          <tr><td>Supplier-proposed changes</td><td>Same gate as any change</td><td>Engineered, approved, recorded before build</td><td>Hyatt: connection load doubled by a fabrication convenience</td><td><a href="#ref-6">[6]</a>, <a href="#ref-7">[7]</a></td></tr>
+          <tr><td>Design data timing</td><td>Reference geometry before dependent parts are built</td><td>A380: mock-up "implemented late"</td><td>Late data means rework of built parts</td><td><a href="#ref-8">[8]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: one connection, two rods</h2>
+    <p>The Hyatt Regency atrium had three suspended walkways. The second-floor walkway hung from the fourth-floor walkway, which hung from the roof.<sup class="cite"><a href="#ref-6">[6]</a></sup> The contract drawings called for continuous hanger rods; under that design the load transferred to each rod at the second-floor walkway was 90 kN (20.3 kips), and an essentially identical load was transferred at the fourth floor, so the connection at each walkway carried one walkway's share.<sup class="cite"><a href="#ref-6">[6]</a></sup> The fabricator proposed two rods instead of one so that the rod did not have to be threaded along its whole length; the change appeared on Shop Drawing 30 and Erection Drawing E-3. The engineering firm received the drawings on 16 February 1979 and returned them on 26 February with its review stamp.<sup class="cite"><a href="#ref-6">[6]</a></sup> In the arrangement as built, the fourth-floor box beam carried its own walkway and, through the new lower rods, the second-floor walkway as well; the load on that connection was essentially doubled.<sup class="cite"><a href="#ref-6">[6]</a></sup> NBS found the most probable cause to be insufficient load capacity of the box beam-hanger rod connections.<sup class="cite"><a href="#ref-7">[7]</a></sup></p>
+    <p>The licensing hearing that followed found the engineering firm's connection detail "failed to conform to acceptable engineering practice", found the firm responsible for the change from one rod to two, and held that even if the fabricator had not flagged the connection, "the engineers were still responsible for the final check"; they had not spot-checked the connection and had "placed too much reliance" on the fabricator. In November 1984 the two engineers and the firm were found guilty of gross negligence, misconduct, and unprofessional conduct, and the engineers lost their Missouri licences.<sup class="cite"><a href="#ref-6">[6]</a></sup></p>
+    <p>Three lessons carry to any supplier relationship. A change that makes a part easier to make is still a change to the design, and its consequences are engineered by the designer, not the maker. A review stamp is a statement that the review was done. And the record of who proposed what, when, and who approved it is not bureaucracy; it is the only thing that lets the next engineer know what was actually built.</p>
+    <!-- AUTHOR: optional personal note here (a supplier DFM review or an ECO that taught you something, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Sending a model without a drawing, or a drawing without a revision.</strong> Consequence: the supplier invents the tolerances, or builds an old revision. Fix: STEP plus PDF, same revision, revision confirmed at every order.</li>
+      <li><strong>Quoting one quantity.</strong> Consequence: no view of the tooling break-even and a re-quote when the volume changes. Fix: quantity breaks and lifetime volume in the RFQ.</li>
+      <li><strong>Accepting DFM findings by email.</strong> Consequence: the supplier builds a part the CAD model does not describe. Fix: every accepted finding becomes a revision; every rejected one is recorded with its reason.</li>
+      <li><strong>Waving through "will be adjusted".</strong> Consequence: silent changes to mask, silkscreen, radii, or walls that surface at first article or in the field. Fix: ask what exactly, and put it on the drawing.</li>
+      <li><strong>Approving supplier changes without engineering them.</strong> Consequence: the Hyatt connection. Fix: supplier proposals enter the ECO process and are checked by the engineer who owns the function.</li>
+      <li><strong>Tolerances without a control plan.</strong> Consequence: capability promises nobody can keep, discovered at PPAP. Fix: for every critical characteristic, write how it will be measured, how often, and what happens when it drifts.</li>
+      <li><strong>A BOM with TBDs and missing manufacturer part numbers.</strong> Consequence: padded quotes and a build that does not match the prototype. Fix: complete every line before the RFQ; use approved alternates instead of blanks.</li>
+      <li><strong>Reference data released late.</strong> Consequence: parts designed against a superseded geometry, rework after build. Fix: freeze and release the interfaces before dependent parts are tooled (Module 1), and route every change to every dependent supplier.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: dispositioning a supplier DFM report</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>A moulder returns a quote for a housing with eight DFM findings, and a board house returns three on the controller. Disposition each one as accept, negotiate, or reject, with a reason drawn from earlier modules, and state what document changes.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Findings for the exercise.</caption>
+        <thead><tr><th>ID</th><th>Supplier finding</th></tr></thead>
+        <tbody>
+          <tr><td>M1</td><td>Rib thickness 2.5 mm equals wall; recommend 1.25 mm to avoid sink on cosmetic face.</td></tr>
+          <tr><td>M2</td><td>Snap hook on side wall creates undercut; requires side action, add US$4,800 to tool and 3 s to cycle.</td></tr>
+          <tr><td>M3</td><td>Draft 0.5° on 40 mm textured wall; require 3° minimum for PM-T1 texture.</td></tr>
+          <tr><td>M4</td><td>Tolerance ±0.05 mm on 50 mm boss spacing; standard is ±0.25 mm; can hold ±0.125 mm at +12 % piece price with 100 % inspection.</td></tr>
+          <tr><td>M5</td><td>Hole diameter 3.0 mm will be cut steel-safe at 2.9 mm for first shots.</td></tr>
+          <tr><td>M6</td><td>Logo recess depth 0.3 mm will be adjusted to 0.5 mm for tool life.</td></tr>
+          <tr><td>M7</td><td>Resin specified as "ABS"; please confirm grade or we will quote a general-purpose grade.</td></tr>
+          <tr><td>M8</td><td>Gate location proposed on cosmetic face for fill balance.</td></tr>
+          <tr><td>B1</td><td>Trace and space 3 mil on 14 nets; standard tier is 4 mil; 3 mil moves board to advanced tier, +35 % board price.</td></tr>
+          <tr><td>B2</td><td>Mask dam 0.09 mm between two pads below 0.10 mm minimum; mask will be ganged.</td></tr>
+          <tr><td>B3</td><td>Copper 0.3 mm from V-cut edge; 0.4 mm required.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <ul>
+        <li><strong>M1, accept.</strong> Module 6's rule is a rib at 0.5 × wall to limit sink. Change the model and drawing; new revision.</li>
+        <li><strong>M2, negotiate.</strong> The hook can be reoriented to face the opening direction, or formed with a pass-through core, removing the side action and its US$4,800 plus cycle time (Module 6). Propose the redesign and ask the moulder to re-quote; new revision if accepted.</li>
+        <li><strong>M3, accept.</strong> Textured walls need 3° for light texture (Module 6). At 40 mm depth the wall moves 40 × tan 3° = 2.1 mm; check the mating lid before releasing the new revision.</li>
+        <li><strong>M4, negotiate.</strong> Module 3: run the stack-up. If ±0.125 mm works by worst case, accept the +12 % on that dimension only and record the capability requirement in the control plan; if ±0.25 mm works, loosen the drawing and pay nothing. Do not accept ±0.05 mm at any price without a stack-up that requires it.</li>
+        <li><strong>M5, accept.</strong> Steel-safe first cut: opening a 2.9 mm hole to 3.0 mm is a cheap tool change, closing one is not (Module 6). Record in the DFM disposition; the drawing stays at 3.0 mm.</li>
+        <li><strong>M6, negotiate.</strong> This is a silent change to a cosmetic feature. Ask why 0.5 mm is needed for tool life and whether 0.4 mm suffices; whichever is agreed goes on the drawing as a revision, not into the moulder's file only.</li>
+        <li><strong>M7, accept and act.</strong> A material callout without a grade is a BOM defect (this module). Specify the grade with an approved alternate, because shrinkage and wall-thickness range depend on it (Module 6); new revision.</li>
+        <li><strong>M8, reject with reason, then negotiate.</strong> A gate mark on a cosmetic face is a functional problem. State that the face is cosmetic, mark it as such on the drawing (a revision), and ask for an alternative gate location, accepting a possible weld-line position change elsewhere.</li>
+        <li><strong>B1, negotiate.</strong> A 35 % board price increase for 14 nets is the wrong trade if those nets can be routed at 4 mil by moving a component or adding a layer pair (Module 9). Ask layout to try; accept the advanced tier only if the pitch genuinely forces it.</li>
+        <li><strong>B2, accept the finding, reject the fix.</strong> Ganged mask between two pads is a bridging risk (Module 9). Move the pads or the footprint to restore a 0.10 mm dam; new revision.</li>
+        <li><strong>B3, accept.</strong> 0.4 mm from a V-cut is the fabricator's rule (Module 9). Pull the copper back; new revision.</li>
+      </ul>
+      <p>Eleven findings, six revisions, one re-quote request, and one written rejection. Every item has a recorded disposition; nothing was "adjusted" outside the drawing. That record is what the first article inspection will be checked against.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="14">
+      <fieldset class="q" data-answer="b">
+        <legend>1. Per the RFQ guide cited in this module, the minimum package for each unique part is</legend>
+        <label><input type="radio" name="q1" value="a"> a photograph and a sketch</label>
+        <label><input type="radio" name="q1" value="b"> a 3D model (STEP) and a 2D drawing (PDF) specifying tolerances and key dimensions</label>
+        <label><input type="radio" name="q1" value="c"> a 2D drawing only</label>
+        <label><input type="radio" name="q1" value="d"> a purchase order</label>
+        <p class="explain" hidden>Model for geometry, drawing for tolerances and critical dimensions; both with revision numbers.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>2. In the Hyatt Regency case, the fabricator's change from one continuous hanger rod to two rods had what effect on the fourth-floor box-beam connection?</legend>
+        <label><input type="radio" name="q2" value="a"> It halved the load</label>
+        <label><input type="radio" name="q2" value="b"> No change in load</label>
+        <label><input type="radio" name="q2" value="c"> It removed the connection</label>
+        <label><input type="radio" name="q2" value="d"> It essentially doubled the load, because the connection now carried both walkways</label>
+        <p class="explain" hidden>Each hanger was designed for about 90 kN per walkway; the as-built arrangement put both walkways' loads through the fourth-floor connection.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="18" data-tolerance="0.1">
+        <legend>3. How many elements does the AIAG PPAP (4th edition) define?</legend>
+        <label>Answer: <input type="number" name="q3" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>Eighteen elements, submitted at one of five levels.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>4. A supplier's DFM report says a silkscreen "will be adjusted to meet our process". The right response is to</legend>
+        <label><input type="radio" name="q4" value="a"> ignore it; silkscreen is cosmetic</label>
+        <label><input type="radio" name="q4" value="b"> accept it verbally</label>
+        <label><input type="radio" name="q4" value="c"> ask exactly what will change and put the agreed change on the drawing as a revision</label>
+        <label><input type="radio" name="q4" value="d"> cancel the order</label>
+        <p class="explain" hidden>Supplier adjustments are engineering changes; uncontrolled ones surface at first article or in the field.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>5. AS9102 revision C, published in 2023, governs</legend>
+        <label><input type="radio" name="q5" value="a"> first article inspection in the aerospace supply chain</label>
+        <label><input type="radio" name="q5" value="b"> solder joint acceptability</label>
+        <label><input type="radio" name="q5" value="c"> ingress protection ratings</label>
+        <label><input type="radio" name="q5" value="d"> sheet metal bend allowances</label>
+        <p class="explain" hidden>FAI verifies that the process can produce parts meeting the engineering requirements; three forms on a ballooned drawing.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>6. Which of these belongs in an ECO impact assessment?</legend>
+        <label><input type="radio" name="q6" value="a"> Only the CAD file size</label>
+        <label><input type="radio" name="q6" value="b"> Tooling, fixtures, inventory, test programs, certification, cost, and schedule</label>
+        <label><input type="radio" name="q6" value="c"> Only the drawing revision letter</label>
+        <label><input type="radio" name="q6" value="d"> Nothing; ECOs are approved first and assessed later</label>
+        <p class="explain" hidden>The impact list is Module 0's cost-of-change table filled in for the real program.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>7. The APQP manual describes three control plans. They are</legend>
+        <label><input type="radio" name="q7" value="a"> mechanical, electrical, software</label>
+        <label><input type="radio" name="q7" value="b"> supplier, customer, regulator</label>
+        <label><input type="radio" name="q7" value="c"> EVT, DVT, PVT</label>
+        <label><input type="radio" name="q7" value="d"> prototype, pre-launch, production</label>
+        <p class="explain" hidden>Controls mature with the process; the production control plan says how each critical characteristic is held in volume.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>8. A BOM line reading "connector, TBD" most likely results in</legend>
+        <label><input type="radio" name="q8" value="a"> a lower quote</label>
+        <label><input type="radio" name="q8" value="b"> a faster build</label>
+        <label><input type="radio" name="q8" value="c"> a contingency added to the quote and a build that may not match the prototype</label>
+        <label><input type="radio" name="q8" value="d"> automatic selection of the best part</label>
+        <p class="explain" hidden>Suppliers price what they cannot see as risk. Complete every line before the RFQ.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>b. STEP model plus PDF drawing.</li>
+        <li>d. Load essentially doubled.</li>
+        <li>18.</li>
+        <li>c. Ask, then revise the drawing.</li>
+        <li>a. Aerospace first article inspection.</li>
+        <li>b. The full impact list.</li>
+        <li>d. Prototype, pre-launch, production.</li>
+        <li>c. Contingency and mismatch.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>Send a complete package: model and drawing per part with the same revision, assembly drawing and BOM, quantities with breaks, material, finish, inspection, and compliance requirements. What is missing is priced as risk.</li>
+      <li>Keep drawings for what suppliers consume from drawings (tolerances, finish, threads) even when the model carries the geometry; state which governs.</li>
+      <li>Disposition every DFM finding in writing as accept, negotiate, or reject. Accepted findings become revisions; "will be adjusted" becomes a question.</li>
+      <li>First article inspection proves the process against the ballooned drawing; PPAP's eighteen elements and the control plan prove it can be held in volume. Design so both can be done.</li>
+      <li>A supplier-proposed change is an engineering change. Assess its impact, approve it, release it, and record it. The Hyatt connection was approved with a stamp and no calculation.</li>
+      <li>Release reference geometry before dependent parts are built, and route every change to every dependent supplier. The A380 harnesses did not get theirs in time.</li>
+      <li>A BOM with blanks produces a quote with contingency. Complete the lines before the RFQ.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07.</p>
+    <ol class="references">
+      <li id="ref-1">Fictiv. "How to Prepare Your Request for Quote Package." n.d. <a href="https://www.fictiv.com/articles/preparing-your-request-for-quote-package">https://www.fictiv.com/articles/preparing-your-request-for-quote-package</a></li>
+      <li id="ref-2">Quality-One International. "PPAP: Production Part Approval Process." n.d. <a href="https://quality-one.com/ppap/">https://quality-one.com/ppap/</a> <span class="tag">(summary of the AIAG PPAP manual, 4th ed., 2006; the capability acceptance criteria are taken from industry summaries and are secondary)</span></li>
+      <li id="ref-3">Automotive Industry Action Group. <em>Advanced Product Quality Planning and Control Plan (APQP)</em>, 2nd ed., November 2008. ANSI Webstore listing. <a href="https://webstore.ansi.org/standards/aiag/aiagapqp2008">https://webstore.ansi.org/standards/aiag/aiagapqp2008</a> <span class="tag">(secondary: the three control plan types are taken from published summaries of the manual)</span></li>
+      <li id="ref-4">High QA. "AS9102 Rev. C for FAI is Here." n.d. <a href="https://highqa.com/high-qa-blog-as9102-rev-c/">https://highqa.com/high-qa-blog-as9102-rev-c/</a> <span class="tag">(software vendor's summary of the SAE standard)</span></li>
+      <li id="ref-5">ASME. <em>ASME Y14.41 Digital Product Definition Data Practices.</em> ASME catalogue page. <a href="https://www.asme.org/codes-standards/find-codes-standards/y14-41-digital-product-definition-data-practices">https://www.asme.org/codes-standards/find-codes-standards/y14-41-digital-product-definition-data-practices</a></li>
+      <li id="ref-6">Texas A&amp;M University, Department of Philosophy and Department of Mechanical Engineering. <em>Engineering Ethics: The Kansas City Hyatt Regency Walkways Collapse</em> (NSF Grant DIR-9012252), quoting NBS Building Science Series 143 and the Missouri Administrative Hearing Commission record. <a href="https://ethics.tamu.edu/wp-content/uploads/sites/7/2017/04/HyattRegency.pdf">https://ethics.tamu.edu/wp-content/uploads/sites/7/2017/04/HyattRegency.pdf</a></li>
+      <li id="ref-7">National Institute of Standards and Technology. "Walkway Collapse, Kansas City, Missouri, 1981." <a href="https://www.nist.gov/el/walkway-collapse-kansas-city-missouri-1981">https://www.nist.gov/el/walkway-collapse-kansas-city-missouri-1981</a></li>
+      <li id="ref-8">The Register. "Airbus admits A380 delay." 4 October 2006. <a href="https://www.theregister.com/2006/10/04/another_a380_delay/">https://www.theregister.com/2006/10/04/another_a380_delay/</a></li>
+      <li id="ref-9">Sierra Circuits. "DFM Rules." n.d. <a href="https://www.protoexpress.com/kb/dfm-rules/">https://www.protoexpress.com/kb/dfm-rules/</a></li>
+      <li id="ref-10">Protolabs Network (formerly Hubs). "Injection molding design guide." n.d. <a href="https://www.hubs.com/guides/injection-molding/">https://www.hubs.com/guides/injection-molding/</a></li>
+      <li id="ref-11">Xometry. <em>Design Guidelines and Best Practices for Sheet Metal Fabrication.</em> n.d. <a href="https://f.hubspotusercontent00.net/hubfs/340051/Xometry%20Sheet%20Metal%20Design%20Guide%202020.pdf">https://f.hubspotusercontent00.net/hubfs/340051/Xometry%20Sheet%20Metal%20Design%20Guide%202020.pdf</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Automotive Industry Action Group. <em>Production Part Approval Process (PPAP)</em>, 4th ed., 2006, and <em>APQP and Control Plan</em>, 2nd ed., 2008. The manuals themselves.</li>
+      <li>SAE International. <em>AS9102C Aerospace First Article Inspection Requirement</em>, 2023.</li>
+      <li>Ulrich, K. T., Eppinger, S. D., Yang, M. C. <em>Product Design and Development</em>, 7th ed. McGraw-Hill, 2020. Chapters on design for manufacturing and on managing projects.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>
