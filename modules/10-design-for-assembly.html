@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 10: Design for assembly · DFx Course</title>
+<meta name="description" content="Design for assembly: the Boothroyd Dewhurst method, the three questions for part elimination, minimum part count, the DFA index, handling and insertion, self-locating and self-fastening features, fastener reduction, poka-yoke, and assembly sequence.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="10">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 10</p>
+    <h1>Design for assembly</h1>
+    <p class="lead">Every part you draw has to be picked up, oriented, brought to the assembly, and fixed there, by a person or a machine, thousands of times. Design for assembly (DFA) is the discipline of asking whether each part needs to exist, and of making the ones that do easy to handle and insert. It is the most quantified of the DFx methods, and its numbers are the ones that get a redesign approved.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Apply</strong> the three Boothroyd Dewhurst questions to every part in an assembly and compute the theoretical minimum part count.</li>
+      <li><strong>Calculate</strong> the DFA index from estimated handling and insertion times and use it to compare design alternatives.</li>
+      <li><strong>Identify</strong> handling and insertion difficulties (symmetry, size, tangling, access, alignment, holding down, fastening) and the design features that remove them.</li>
+      <li><strong>Replace</strong> fasteners with self-locating and self-fastening features where function allows, and estimate what each screw costs.</li>
+      <li><strong>Design</strong> poka-yoke features that make wrong assembly impossible rather than merely unlikely.</li>
+      <li><strong>Sequence</strong> an assembly so that parts stack from one direction with test and service access preserved.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>When Tesla's Model 3 line failed to reach its rate in 2018, the company's chief executive gave a diagnosis in one sentence: "Yes, excessive automation at Tesla was a mistake. To be precise, my mistake. Humans are underrated."<sup class="cite"><a href="#ref-7">[7]</a></sup> In an interview the same week he said an overly complex automated conveyor system had been removed because "it was not working".<sup class="cite"><a href="#ref-7">[7]</a></sup> Module 1 read that as a validation lesson. Read as a DFA lesson it says something else: an assembly that is hard for a robot is usually hard for a person too, and an assembly that is easy for a person, few parts, obvious orientation, one direction of insertion, is the one that automates. The remedy for a line that will not run is rarely more automation; it is fewer and better parts.</p>
+    <p>The record on the other side is unusually good. The consultancy that formalised DFA publishes case results with numbers: a medical instrument's maintenance access door redesigned from 183 parts to 31, from 63 fasteners to none, and from 45 minutes of assembly to 11.<sup class="cite"><a href="#ref-1">[1]</a></sup> A defence electronics engineer's published walkthrough of the method on a simple enclosure shows the same arithmetic at small scale: eleven parts, three of which were necessary, and a redesign that removed the screws and cut assembly time by about a third.<sup class="cite"><a href="#ref-5">[5]</a></sup> These are vendor-published and practitioner-published results, and this module labels them as such; but they are specific, dated, and consistent with each other, which is more than most DFM claims can say.</p>
+    <p>You will meet DFA the first time you watch someone build your design. The screw that needs a third hand, the cover that fits two ways and only one of them works, the cable that must be routed before the bracket goes on but the bracket is what holds the cable: these are DFA findings, and they are far cheaper to fix in CAD than on the line.</p>
+
+    <h2 id="method">The Boothroyd Dewhurst method</h2>
+    <p>Geoffrey Boothroyd began the work at the University of Massachusetts Amherst in 1967; a systematic coding system for classifying parts for assembly followed in 1976, the company Boothroyd Dewhurst was founded in 1983, design-for-manufacture costing was added in 1985 to make the method DFMA, and the work received the U.S. National Medal of Technology in 1991.<sup class="cite"><a href="#ref-3">[3]</a></sup> A 1987 trade-press article comparing an IBM printer with an Epson one made the method famous by showing how a quantitative assembly analysis exposed structural design differences between competing products.<sup class="cite"><a href="#ref-3">[3]</a></sup> (The specific part counts and times quoted for that comparison circulate widely, but this course could not read the original article and does not repeat them.)</p>
+    <p>The method has two halves. DFA "reduces the number of parts in a product and makes the remaining parts easier to assemble"; DFM then optimises the parts that remain so they "can be made more easily, consistently, and cost-effectively at the target production volume".<sup class="cite"><a href="#ref-2">[2]</a></sup> The DFA half works like this.</p>
+    <ol>
+      <li>List every part and operation in the assembly sequence.</li>
+      <li>For each part, decide whether it is theoretically necessary (the three questions, next section). Count the necessary ones: N<sub>min</sub>.</li>
+      <li>For each part, estimate the time to handle it (pick up, orient) and insert it (place, align, secure), using time charts that add penalties for each difficulty.<sup class="cite"><a href="#ref-6">[6]</a></sup> Sum to the total assembly time t<sub>ma</sub>.</li>
+      <li>Compute the DFA index (also called design efficiency): the theoretically ideal time, N<sub>min</sub> multiplied by an ideal time per part t<sub>a</sub>, divided by the actual time. The published ideal time is 2.93 seconds per part, from the method's time studies, often rounded to 3 seconds.<sup class="cite"><a href="#ref-5">[5]</a>,<a href="#ref-6">[6]</a></sup></li>
+      <li>Redesign: eliminate unnecessary parts, remove handling and insertion difficulties, recompute. Then hand the surviving parts to DFM (Modules 4 to 9) to check that the consolidated part is still cheap to make.</li>
+    </ol>
+    <p><strong>E<sub>ma</sub> = N<sub>min</sub> × t<sub>a</sub> / t<sub>ma</sub></strong>, with t<sub>a</sub> = 2.93 s.</p>
+    <p>The index is a ratio, so it is most useful for comparing alternatives of the same product. A low index says there is time to remove; the analysis says where.</p>
+
+    <h2 id="questions">The three questions</h2>
+    <p>A part earns the right to exist by answering yes to at least one of three questions, asked about it in relation to the parts already assembled:<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <ol>
+      <li><strong>Material or process.</strong> Does it need a different material or process from its neighbours, for insulation, wear, sealing, heat, conductivity, or chemistry?</li>
+      <li><strong>Relative motion.</strong> Must it move relative to the parts it connects to in order to perform its function? Only gross motion counts, not elastic deflection or thermal expansion.</li>
+      <li><strong>Assembly or service.</strong> Must it stay separate to allow the assembly sequence, serviceability, or adjustment of other parts?</li>
+    </ol>
+    <p>"If a part cannot justify itself on any of these three fundamentals, it is a prime candidate to combine or eliminate."<sup class="cite"><a href="#ref-1">[1]</a></sup> Fasteners never pass: a screw does not need a different material for function, does not move, and does not have to be separate for assembly of anything except itself, so every fastener is automatically a candidate for elimination.<sup class="cite"><a href="#ref-5">[5]</a></sup> So are brackets that exist only to hold two parts that could be one, labels that could be moulded in, and covers that exist because something else was not designed to be its own enclosure.</p>
+    <p>The count of parts that pass is the theoretical minimum. It is theoretical: you may keep more parts for good reasons (a purchased motor is one part whatever the theory says; a serviceable fuse must stay separate). The value of the number is that every part above it now needs a reason written down.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 280" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">A simple electronics enclosure before and after DFA</title>
+        <desc id="fig1-desc">Left: an exploded stack of a housing, a circuit card fixed by four screws, and a cover fixed by four more screws, labelled eleven parts, three theoretically necessary, DFA index about 12. Right: the same housing with the circuit card on snap features and the cover snapped on, labelled three parts plus two retained screws if needed, DFA index about 18 after the first redesign in the published example.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- left stack -->
+          <path d="M60 200 L60 240 L240 240 L240 200" class="diagram-accent" stroke-width="3"/>
+          <rect x="80" y="150" width="140" height="10" class="diagram-accent"/>
+          <path d="M90 130 v20 M120 130 v20 M180 130 v20 M210 130 v20" />
+          <rect x="60" y="80" width="180" height="12" class="diagram-accent"/>
+          <path d="M70 60 v20 M110 60 v20 M190 60 v20 M230 60 v20"/>
+          <!-- right stack -->
+          <path d="M380 200 L380 240 L560 240 L560 200" class="diagram-accent" stroke-width="3"/>
+          <path d="M395 200 v-30 l6 -6 M545 200 v-30 l-6 -6" class="diagram-accent"/>
+          <rect x="400" y="160" width="140" height="10" class="diagram-accent"/>
+          <rect x="380" y="100" width="180" height="12" class="diagram-accent"/>
+          <path d="M380 112 v18 l8 4 M560 112 v18 l-8 4" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="60" y="40" font-weight="600">Before: 11 parts</text>
+          <text x="60" y="56" class="diagram-text-muted">Housing, card, cover, 8 screws</text>
+          <text x="250" y="70">4 screws</text>
+          <text x="250" y="140">4 screws</text>
+          <text x="250" y="158">Card</text>
+          <text x="250" y="230">Housing</text>
+          <text x="60" y="265">N<tspan font-size="9" dy="3">min</tspan><tspan dy="-3"> = 3; 87.6 s; DFA index 11.8</tspan></text>
+          <text x="380" y="40" font-weight="600">After first redesign</text>
+          <text x="380" y="56" class="diagram-text-muted">Cover snaps on; cover screws removed</text>
+          <text x="565" y="110">Snap cover</text>
+          <text x="565" y="168">Card</text>
+          <text x="565" y="230">Housing</text>
+          <text x="380" y="265">Index 17.6; about 29 s and $0.95 saved</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. The published L3Harris walkthrough: an eleven-part enclosure with three necessary parts, and the first redesign replacing cover screws with snap features.<sup class="cite"><a href="#ref-5">[5]</a></sup></figcaption>
+    </figure>
+
+    <h2 id="handling">Handling and insertion</h2>
+    <p>Once the part list is right, the time goes into how each part is handled and inserted. The method's time charts assign a base time and add penalties for difficulties; one practitioner's summary lists additive factors for part weight, fastener type and length of engagement, difficulty of insertion, and geometric handling constraints, plus multiple passes where the same operation is repeated (a pattern of screws inserted, then a second pass to tighten them).<sup class="cite"><a href="#ref-6">[6]</a></sup> You do not need the charts to design well; you need to know what they penalise.</p>
+    <h3>Handling difficulties</h3>
+    <ul>
+      <li><strong>Orientation.</strong> A part that must be oriented about its axis of insertion (alpha symmetry) and about its own axis (beta symmetry) takes longer to pick up correctly. Make parts fully symmetric so any orientation works, or make them clearly asymmetric so the wrong orientation is obvious and, ideally, impossible.<sup class="cite"><a href="#ref-1">[1]</a></sup></li>
+      <li><strong>Size and grip.</strong> Very small parts need tweezers; very large or heavy ones need two hands or a hoist. Parts should be "easy to grasp, orient, and insert (not tiny, flexible, or slippery)".<sup class="cite"><a href="#ref-1">[1]</a></sup></li>
+      <li><strong>Tangling and nesting.</strong> Open springs, cables, and parts with hooks tangle in the bin; cups nest so tightly they must be separated. Closed-end springs, retained cables, and nesting stops fix this.</li>
+      <li><strong>Flexibility.</strong> Gaskets, cables, and thin sheet parts deform in the hand and must be straightened before insertion.</li>
+    </ul>
+    <h3>Insertion difficulties</h3>
+    <ul>
+      <li><strong>Access.</strong> Can the part, and the hand or tool holding it, reach the location? Obstructed access is a large penalty and the usual reason a screw needs a special driver.</li>
+      <li><strong>Alignment.</strong> Does the part find its own position, or must it be aligned by eye? Chamfers, lead-ins, tapered pins, and locating features do the work; the guide's phrase is "self-locating".<sup class="cite"><a href="#ref-1">[1]</a></sup></li>
+      <li><strong>Holding down.</strong> Does the part stay put when released, or does it have to be held while the next part or fastener is added? A part that stays in place when the assembly is turned upside down is secured; one that does not is "added not secured" and costs a hand.<sup class="cite"><a href="#ref-5">[5]</a></sup></li>
+      <li><strong>Resistance and securing.</strong> Press fits, screws, and anything that must be pushed against resistance take longer than parts that drop into place and snap.</li>
+      <li><strong>Direction.</strong> Every change of assembly direction means reorienting the assembly or the operator. Assemble "from a single direction" wherever possible.<sup class="cite"><a href="#ref-1">[1]</a></sup></li>
+    </ul>
+
+    <figure>
+      <svg viewBox="0 0 640 220" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Symmetry and self-location in part design</title>
+        <desc id="fig2-desc">Three pairs of parts. Left pair: a rectangular part with one off-centre hole that fits two ways, versus the same part with a corner chamfer that makes the wrong orientation obvious. Middle pair: a plain pin entering a plain hole, versus a chamfered pin entering a countersunk hole that guides it in. Right pair: a cover with a symmetric outline that fits four ways, versus one with a single notch keyed to a rib so it fits one way only.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- pair 1 -->
+          <rect x="30" y="60" width="80" height="50"/><circle cx="55" cy="85" r="8"/>
+          <path d="M130 60 h60 l20 20 v30 h-80 z" class="diagram-accent"/><circle cx="155" cy="85" r="8" class="diagram-accent"/>
+          <!-- pair 2 -->
+          <rect x="250" y="40" width="16" height="50"/><path d="M230 110 h56 v40 h-56 z M258 110 v40" />
+          <path d="M320 40 h16 v44 l-8 8 l-8 -8 z" class="diagram-accent"/><path d="M300 110 h56 v40 h-56 z M312 110 l16 12 l16 -12" class="diagram-accent"/>
+          <!-- pair 3 -->
+          <rect x="420" y="60" width="80" height="50"/>
+          <path d="M520 60 h80 v50 h-80 z M560 60 v10 h10 v-10" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="30" y="135">Fits two ways</text>
+          <text x="130" y="135">Chamfer: wrong way is obvious</text>
+          <text x="225" y="175">Plain pin: align by eye</text>
+          <text x="300" y="175">Chamfer plus lead-in: self-locating</text>
+          <text x="420" y="135">Fits four ways</text>
+          <text x="500" y="135">Notch keyed to rib: one way</text>
+          <text x="30" y="205" class="diagram-text-muted">Symmetry or clear asymmetry for orientation; chamfers and lead-ins for location; keys for poka-yoke.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. The features that remove handling and insertion penalties cost almost nothing in the tool and are paid back on every unit.<sup class="cite"><a href="#ref-1">[1]</a></sup></figcaption>
+    </figure>
+
+    <h2 id="fasteners">Self-fastening features and the cost of a screw</h2>
+    <p>A screw is cheap to buy and expensive to install. It must be picked, oriented, brought to the hole with a driver, started without cross-threading, driven, and often torque-checked; a pattern of screws is usually two passes.<sup class="cite"><a href="#ref-6">[6]</a></sup> The published enclosure walkthrough puts numbers on it: removing four cover screws and replacing them with a snap-fit cover raised the DFA index from 11.76 to 17.63 and cut about 29 seconds and $0.95 of process cost from the assembly at the labour rate assumed in the model.<sup class="cite"><a href="#ref-5">[5]</a></sup> That is roughly 7 seconds and $0.24 per screw in that example, before the cost of the screw itself, its purchase order, its inventory, and its failure modes (cross-threaded, missing, loose). Your numbers will differ; the order of magnitude will not.</p>
+    <p>The alternatives, roughly in order of preference: integrate the function so no joint exists (the GE fuel nozzle tip consolidated about 20 welded and brazed pieces into one part<sup class="cite"><a href="#ref-8">[8]</a></sup>; Apple's unibody replaced a multi-part notebook chassis with one machined part<sup class="cite"><a href="#ref-9">[9]</a></sup>); snap fits and integral hooks, designed to the moulding rules of Module 6 so they do not become undercuts; press fits and heat stakes; adhesives and welding where the joint is permanent (Module 13); and, when a threaded fastener is genuinely needed for service or load, the fewest, largest, most standard fasteners that will do, all the same type, driven from one direction.</p>
+    <p>A caution: DFA reduces fasteners; DFS (Module 12) sometimes needs them back. A snap-fit cover that a technician cannot open without breaking it has traded assembly time for service cost. The third question, "must it stay separate for service", is where the two disciplines negotiate.</p>
+
+    <h2 id="pokayoke">Poka-yoke: making wrong assembly impossible</h2>
+    <p>Poka-yoke (roughly, mistake-proofing) is the practice of designing parts and processes so that an error cannot be made, or is detected the instant it is made, rather than found at inspection. It comes from the Toyota-era quality work of Shigeo Shingo, whose 1986 book on the subject is in the further reading. In part design it reduces to a few moves.</p>
+    <ul>
+      <li><strong>Make the wrong way impossible.</strong> Key a cover with one notch that matches one rib; give a connector an asymmetric shell; put the mounting holes in a pattern that fits only one orientation. Full symmetry is the other correct answer: if every orientation is right, none is wrong.</li>
+      <li><strong>Make the wrong way obvious.</strong> Where impossibility costs too much, a chamfer, a colour, or a size difference that makes a wrong orientation visibly wrong at arm's length.</li>
+      <li><strong>Make omission visible.</strong> A part whose absence leaves an obvious gap, or a process that cannot proceed without it (the cover will not close until the gasket is in its groove).</li>
+      <li><strong>Make the count self-checking.</strong> Screws dispensed in kits of exactly the right number; a fixture with a pocket for every part.</li>
+    </ul>
+    <p>Every poka-yoke feature is also a handling or insertion improvement, because a part that can only go one way needs no decision. The two ideas are the same design habit seen from the quality side and the time side.</p>
+
+    <h2 id="sequence">Assembly sequence and access</h2>
+    <p>Write the assembly sequence before the parts are detailed, and design the parts to the sequence. The habits that follow:</p>
+    <ol>
+      <li><strong>One direction.</strong> Build on a stable base part and stack everything downward onto it, so gravity helps and the assembly never needs to be turned over.<sup class="cite"><a href="#ref-1">[1]</a></sup></li>
+      <li><strong>Base part first.</strong> The largest, heaviest part is the fixture; it should locate on the bench or pallet without a jig.</li>
+      <li><strong>No blind operations.</strong> Every part is inserted where the operator can see it and the tool can reach it.</li>
+      <li><strong>Sub-assemblies where they test.</strong> Split the product into sub-assemblies at the points where a test can catch a fault before it is buried (Module 11). A sub-assembly that cannot be tested until the housing is closed is a rework generator.</li>
+      <li><strong>Cables last, routed once.</strong> Cables are flexible, tangle, and are hard to hold; give them retention features and a path that does not cross a later part.</li>
+      <li><strong>Service access preserved.</strong> The field-replaceable unit (Module 12) should come out by reversing the last few steps, not the first few.</li>
+    </ol>
+
+    <h2 id="running">Running a DFA analysis in practice</h2>
+    <p>The published walkthrough is a good template.<sup class="cite"><a href="#ref-5">[5]</a></sup> List parts, and mark purchased sub-assemblies (a circuit card, a motor) as "sub not analysed" so that their internal parts do not distort the count. Apply the three questions and record the answer for each part. For each part, record its handling difficulties (symmetry, size, tangling, flexibility) and insertion difficulties (access, alignment, holding down, resistance, securing method: threaded, snap, press, added not secured). Total the time and compute the index. Then generate redesign ideas in order: eliminate parts, combine parts, remove handling and insertion difficulties, add alignment features; recompute after each. Finally, hand the consolidated parts to DFM costing to check that a snap-fit cover does not cost more to mould than the flat cover and screws it replaced.<sup class="cite"><a href="#ref-5">[5]</a></sup> The published results across industries, from the method's vendor and its users, are large: typical part-count reductions of 20 to 50 percent, assembly-time reductions of 10 to 30 percent, and total cost reductions of 15 to 40 percent are the ranges the vendor quotes; individual cases report more.<sup class="cite"><a href="#ref-2">[2]</a>,<a href="#ref-4">[4]</a></sup> Treat the ranges as vendor claims and the individual cases as what they are, but expect the method to find time in any assembly that has not been through it.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Quantitative reference points for design for assembly. Case results are vendor- or practitioner-published and labelled as such.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Ideal assembly time per part</td><td>Basis of the DFA index</td><td>2.93 s (often rounded to 3 s)</td><td>Time study of an easy part handled and inserted without difficulty</td><td><a href="#ref-5">[5]</a>, <a href="#ref-6">[6]</a></td></tr>
+          <tr><td>DFA index</td><td>Ideal over actual</td><td>E<sub>ma</sub> = N<sub>min</sub> × 2.93 s / t<sub>ma</sub></td><td>Compares alternatives; shows removable time</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Minimum part criteria</td><td>Three questions</td><td>Different material or process; relative motion; separate for assembly, service, or adjustment</td><td>Everything else is a candidate for elimination</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Fasteners</td><td>Never pass the criteria</td><td>Automatic candidates for elimination</td><td>No functional reason to be separate</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Cost of a screw (one published model)</td><td>Seconds, not cents</td><td>About 7 s and $0.24 per screw removed in the enclosure example (29 s and $0.95 for four)</td><td>Pick, orient, start, drive, check</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Handling penalties</td><td>Design them out</td><td>Weight, symmetry, size, tangling, flexibility</td><td>Each adds time in the charts</td><td><a href="#ref-1">[1]</a>, <a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Insertion penalties</td><td>Design them out</td><td>Access, alignment, holding down, resistance, fastener type and engagement, repeated passes</td><td>Each adds time in the charts</td><td><a href="#ref-5">[5]</a>, <a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Direction of assembly</td><td>One</td><td>Stack downward on a base part</td><td>No reorientation, gravity assists</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Enclosure walkthrough</td><td>Published example</td><td>11 parts, N<sub>min</sub> 3, 87.6 s, index 11.76; redesign 1 index 17.63</td><td>Snap-fit cover replaces screws</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>IDEXX Catalyst Dx door</td><td>Vendor case</td><td>183 → 31 parts; 63 → 0 fasteners; 45 → 11 min; index 3.8 → 35.8</td><td>Part elimination and self-fastening</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Other vendor cases</td><td>Vendor-published</td><td>Computer mouse 31 → 16 parts, 17 → 6 min; flashlight 30 → 10 parts; NCR terminal 85 % fewer parts, 75 % faster</td><td>Consistent pattern across products</td><td><a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Typical outcomes</td><td>Vendor claim</td><td>20 to 50 % fewer parts; 10 to 30 % less assembly time; 15 to 40 % lower total cost</td><td>Aggregate of case history</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Consolidation by process</td><td>Remove the joint, not just the screw</td><td>Fuel nozzle tip about 20 → 1; notebook chassis many → 1</td><td>AM and machining from billet remove joints</td><td><a href="#ref-8">[8]</a>, <a href="#ref-9">[9]</a></td></tr>
+          <tr><td>Method history</td><td>Mature</td><td>Research 1967; coding 1976; company 1983; DFMA 1985; National Medal of Technology 1991</td><td>Decades of time-study data</td><td><a href="#ref-3">[3]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: a door with 183 parts</h2>
+    <p>The IDEXX Catalyst Dx is a veterinary blood analyser. Its maintenance access door, as published by Boothroyd Dewhurst, went from 183 parts to 31 (an 83 percent reduction), from 63 fasteners to none, and from 45 minutes of assembly time to 11 (a 75 percent reduction); the DFA index rose from 3.8 to 35.8.<sup class="cite"><a href="#ref-1">[1]</a></sup> The same page reports an ITT aerospace program with 55 percent fewer parts and 58 percent less labour, and Motorola's average of 35 percent part-count reduction on new products.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>Read the door numbers against the three questions. A door needs a panel, a hinge or pivot that moves relative to it, a latch that moves, perhaps a seal in a different material, and whatever it mounts to. That is a theoretical minimum in the single digits. The original had 183 parts, 63 of them fasteners, and a DFA index of 3.8 percent: about 96 percent of the assembly time was spent on parts and operations the function did not require. The redesign did not reach the theoretical minimum, and it did not need to; it removed the fasteners entirely and consolidated the brackets and spacers that had held them, which is where the time was.</p>
+    <p>The smaller L3Harris example shows the same thing at the scale you will actually meet: a housing, a card, and a cover need three parts and had eleven; the eight screws were 73 percent of the part count and most of the time.<sup class="cite"><a href="#ref-5">[5]</a></sup> When you run the analysis on your own product, expect the fasteners and the brackets that carry them to be the answer, and expect the arithmetic to be what gets the redesign approved.</p>
+    <!-- AUTHOR: optional personal note here (a DFA finding from watching a first build, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Counting parts without asking the three questions.</strong> Consequence: parts are removed that had a reason (a seal, a service access) and parts are kept that had none. Fix: record the answer for every part, and keep the ones that pass.</li>
+      <li><strong>Treating a fastener as free because it is cheap.</strong> Consequence: assembly time and quality problems that never appear on the BOM cost. Fix: cost each fastener at its installation time, not its purchase price.</li>
+      <li><strong>Parts that fit two ways.</strong> Consequence: a percentage of every batch assembled wrong. Fix: full symmetry or a keyed asymmetry; if neither, a visible cue.</li>
+      <li><strong>Parts that must be held while the next part is added.</strong> Consequence: a third hand, a fixture, or a dropped part. Fix: locating features so every part is secured when released.</li>
+      <li><strong>Assembly from several directions.</strong> Consequence: the assembly is turned over repeatedly, and parts fall out. Fix: stack on a base part from one direction.</li>
+      <li><strong>Snap fits that break at service.</strong> Consequence: DFA saved a screw and DFS pays for a housing. Fix: ask the third question honestly; a serviceable joint may need a fastener, one, large, and standard.</li>
+      <li><strong>Consolidating into a part the process cannot make.</strong> Consequence: a snap-fit cover that needs a side action, or a bracket that is now a five-axis machining job. Fix: run the consolidated parts through the DFM rules of Modules 4 to 9 before declaring victory.</li>
+      <li><strong>Running DFA after the tooling is cut.</strong> Consequence: findings that cannot be acted on. Fix: run it on the concept, during EVT, before the DVT tools (Module 1).</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: a sensor housing before and after</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>A small sensor module is assembled as follows: a moulded housing (base part); a gasket laid into the housing; a circuit board placed in and fixed with four M2 screws; a moulded cover fixed with four more M2 screws; and an adhesive label. Estimated handling plus insertion times from the team's chart: housing 3 s (base), gasket 8 s (flexible, must be seated), board 6 s (aligned by eye against two edges), each screw 7 s (two passes included), cover 5 s, label 6 s (peel and align).</p>
+    <p><strong>Tasks.</strong> (a) Apply the three questions and state the theoretical minimum part count. (b) Compute the total assembly time and the DFA index. (c) Propose a redesign that keeps the product serviceable (the board must be replaceable in the field) and recompute. (d) At 50,000 units per year and an illustrative assembly labour cost of 0.75 euros per minute, what is the annual saving?</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a) Three questions.</strong> Housing: base part, yes (1). Gasket: different material for sealing, yes (1). Board: different material and process, yes (1). Cover: must be separate to allow the board to be inserted and, for service, removed, yes (1). Eight screws: no on all three questions (0). Label: no, the marking could be moulded or laser-marked (0). N<sub>min</sub> = 4.</p>
+      <p><strong>(b) Before.</strong> t<sub>ma</sub> = 3 + 8 + 6 + 8 × 7 + 5 + 6 = 84 s. E<sub>ma</sub> = 4 × 2.93 / 84 = 11.72 / 84 = 0.14, or 14 percent. The eight screws are 56 of the 84 seconds.</p>
+      <p><strong>(c) Redesign.</strong> Board: add two moulded locating pins and a rest ledge in the housing so the board self-locates and is held by the cover; keep two screws only if the board must be retained during service (the third question says the board must be replaceable, so it must be releasable, which a cover already gives; assume two screws are kept for vibration retention, a conservative choice). Cover: snap fits designed to Module 6 rules (hooks facing the opening direction, no side action), releasable with a flat tool for service. Gasket: retained in a groove so it seats itself; time falls to 6 s. Label: laser mark on the cover; 0 s. New times: housing 3, gasket 6, board 4 (self-locating), two screws 14, cover 5. t<sub>ma</sub> = 32 s. E<sub>ma</sub> = 11.72 / 32 = 0.37, or 37 percent. Parts: 13 → 7.</p>
+      <p><strong>(d) Saving.</strong> 84 − 32 = 52 s per unit = 0.867 min × 0.75 €/min = 0.65 € per unit. At 50,000 units: about 32,500 € per year, before the purchase and inventory cost of six screws and a label per unit, and before the quality cost of the screws that were cross-threaded or missing. Check the consolidated parts against Module 6 (snap hooks, locating pins, gasket groove) before claiming the saving; if the snap-fit cover needed a side action, the tool cost would eat part of it.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="10">
+      <fieldset class="q" data-answer="b">
+        <legend>1. Which of these is NOT one of the three Boothroyd Dewhurst questions for whether a part must exist?</legend>
+        <label><input type="radio" name="q1" value="a"> Does it need a different material or process?</label>
+        <label><input type="radio" name="q1" value="b"> Is it cheaper to buy than to make?</label>
+        <label><input type="radio" name="q1" value="c"> Must it move relative to the parts it connects to?</label>
+        <label><input type="radio" name="q1" value="d"> Must it stay separate for assembly, service, or adjustment?</label>
+        <p class="explain" hidden>Cost is not one of the criteria; a part that fails all three is a candidate for elimination regardless of its price.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.293" data-tolerance="0.01">
+        <legend>2. An assembly has a theoretical minimum of 5 parts and an estimated assembly time of 50 s. What is its DFA index (as a fraction, using 2.93 s per part)?</legend>
+        <label>Answer: <input type="number" name="q2" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>5 × 2.93 / 50 = 14.65 / 50 = 0.293.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>3. Why do fasteners never pass the minimum-part criteria?</legend>
+        <label><input type="radio" name="q3" value="a"> They are too small to count</label>
+        <label><input type="radio" name="q3" value="b"> They are purchased parts</label>
+        <label><input type="radio" name="q3" value="c"> They are always made of steel</label>
+        <label><input type="radio" name="q3" value="d"> They need no different material for function, do not move, and need not be separate for the assembly of anything but themselves</label>
+        <p class="explain" hidden>Every fastener is therefore an automatic candidate for elimination.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>4. In the published IDEXX door case, the fastener count went from</legend>
+        <label><input type="radio" name="q4" value="a"> 63 to 0</label>
+        <label><input type="radio" name="q4" value="b"> 183 to 31</label>
+        <label><input type="radio" name="q4" value="c"> 45 to 11</label>
+        <label><input type="radio" name="q4" value="d"> 8 to 2</label>
+        <p class="explain" hidden>Parts went 183 to 31, minutes 45 to 11, fasteners 63 to 0.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>5. A part that must be held in place while the next part is added is classified in the method as</legend>
+        <label><input type="radio" name="q5" value="a"> self-locating</label>
+        <label><input type="radio" name="q5" value="b"> theoretically necessary</label>
+        <label><input type="radio" name="q5" value="c"> added but not secured, which adds insertion time</label>
+        <label><input type="radio" name="q5" value="d"> a sub-assembly</label>
+        <p class="explain" hidden>The test is whether the part stays put when the assembly is turned over; if not, it costs a hand or a fixture.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>6. The best poka-yoke for a cover that could be fitted in two orientations is</legend>
+        <label><input type="radio" name="q6" value="a"> an inspection step after assembly</label>
+        <label><input type="radio" name="q6" value="b"> a keyed feature that makes the wrong orientation impossible, or full symmetry so both orientations are right</label>
+        <label><input type="radio" name="q6" value="c"> a written work instruction</label>
+        <label><input type="radio" name="q6" value="d"> a smaller cover</label>
+        <p class="explain" hidden>Make the error impossible first; make it obvious second; inspect last.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="29" data-tolerance="1">
+        <legend>7. In the published enclosure walkthrough, replacing four cover screws with snap features saved approximately how many seconds of assembly time?</legend>
+        <label>Answer (s): <input type="number" name="q7" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>About 29 s and $0.95, raising the DFA index from 11.76 to 17.63.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>8. After consolidating parts in a DFA redesign, the next step is to</legend>
+        <label><input type="radio" name="q8" value="a"> release the drawings immediately</label>
+        <label><input type="radio" name="q8" value="b"> add fasteners back for safety</label>
+        <label><input type="radio" name="q8" value="c"> increase the tolerance on every part</label>
+        <label><input type="radio" name="q8" value="d"> check the consolidated parts against the DFM rules of their processes to confirm they are still cheap to make</label>
+        <p class="explain" hidden>DFA then DFM: a snap-fit cover that needs a side action may cost more than the screws it saved.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>b. Cost is not a criterion.</li>
+        <li>0.293.</li>
+        <li>d. No functional reason to be separate.</li>
+        <li>a. 63 to 0.</li>
+        <li>c. Added but not secured.</li>
+        <li>b. Keyed feature or full symmetry.</li>
+        <li>About 29 s.</li>
+        <li>d. Run DFM on the consolidated parts.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>Ask the three questions of every part. A part earns its place by material, motion, or the need to be separate for assembly or service. Fasteners never qualify.</li>
+      <li>The DFA index, N<sub>min</sub> × 2.93 s over actual time, turns an opinion into a comparison. Use it to rank alternatives, not as an absolute score.</li>
+      <li>Time hides in handling (orientation, size, tangling, flexibility) and insertion (access, alignment, holding down, resistance, fastening). Symmetry or clear asymmetry, chamfers and lead-ins, and stacking from one direction remove most of it.</li>
+      <li>A screw costs seconds, not cents. In one published model, about 7 seconds and a quarter of a dollar each, before its purchase, inventory, and failure costs.</li>
+      <li>Poka-yoke and DFA are the same habit: a part that can only go one way needs no decision and cannot be assembled wrong.</li>
+      <li>DFA reduces parts; DFS sometimes needs them back. Decide serviceability before you remove the last fastener.</li>
+      <li>After consolidation, run DFM on what remains. Then run the analysis again during EVT, before the tools are cut.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07. Case results from the method's vendor and its users are labelled as such.</p>
+    <ol class="references">
+      <li id="ref-1">Boothroyd Dewhurst, Inc. "What Is Design for Assembly (DFA)? Principles, Examples &amp; Checklist." n.d. <a href="https://www.dfma.com/design-for-assembly.asp">https://www.dfma.com/design-for-assembly.asp</a> <span class="tag">(vendor page; case results are vendor-published)</span></li>
+      <li id="ref-2">Boothroyd Dewhurst, Inc. "DFMA Explained: Design for Manufacture and Assembly." n.d. <a href="https://www.dfma.com/resources/what-is-dfma.asp">https://www.dfma.com/resources/what-is-dfma.asp</a> <span class="tag">(vendor page; outcome ranges are vendor claims)</span></li>
+      <li id="ref-3">Boothroyd Dewhurst, Inc. "History of DFMA." n.d. <a href="https://www.dfma.com/about-history.asp">https://www.dfma.com/about-history.asp</a></li>
+      <li id="ref-4">Boothroyd Dewhurst, Inc. "Case Studies." n.d. <a href="https://www.dfma.com/resources/studies.asp">https://www.dfma.com/resources/studies.asp</a> <span class="tag">(vendor-published case summaries)</span></li>
+      <li id="ref-5">Devenish, B. "Conducting a Step-by-Step DFA Analysis." L3Harris Technologies, International Forum on Design for Manufacture and Assembly, 2019. <a href="https://www.dfma.com/forum/2019pdf/devenish.pdf">https://www.dfma.com/forum/2019pdf/devenish.pdf</a></li>
+      <li id="ref-6">Range, B. "Hand-Calculated Savings: Case Studies in the Application of a Simplified Boothroyd-Dewhurst Methodology in the Design and Manufacture of Complex Assemblies." Acorn Product Development, International Forum on Design for Manufacture and Assembly, 13 to 14 June 2013. <a href="https://www.dfma.com/forum/2013pdf/Range.pdf">https://www.dfma.com/forum/2013pdf/Range.pdf</a></li>
+      <li id="ref-7">Etherington, D. "Elon Musk says 'humans are underrated,' calls Tesla's 'excessive automation' a 'mistake'." TechCrunch, 13 April 2018. <a href="https://techcrunch.com/2018/04/13/elon-musk-says-humans-are-underrated-calls-teslas-excessive-automation-a-mistake/">https://techcrunch.com/2018/04/13/elon-musk-says-humans-are-underrated-calls-teslas-excessive-automation-a-mistake/</a></li>
+      <li id="ref-8">Kellner, T. "Transformation In 3D: How A Walnut-Sized Part Changed The Way GE Aviation Builds Jet Engines." GE Reports, 19 November 2018. <a href="https://www.ge.com/news/reports/transformation-3d-walnut-sized-part-changed-way-ge-aviation-builds-jet-engines">https://www.ge.com/news/reports/transformation-3d-walnut-sized-part-changed-way-ge-aviation-builds-jet-engines</a></li>
+      <li id="ref-9">Apple Inc. "New MacBook Family Redefines Notebook Design." Press release, 14 October 2008. <a href="https://www.apple.com/newsroom/2008/10/14New-MacBook-Family-Redefines-Notebook-Design/">https://www.apple.com/newsroom/2008/10/14New-MacBook-Family-Redefines-Notebook-Design/</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Boothroyd, G., Dewhurst, P., Knight, W. A. <em>Product Design for Manufacture and Assembly</em>, 3rd ed. CRC Press, 2011. The method's textbook, with the handling and insertion time charts and the minimum-part criteria in full.</li>
+      <li>Shingo, S. <em>Zero Quality Control: Source Inspection and the Poka-yoke System.</em> Productivity Press, 1986. The origin of poka-yoke, with shop-floor examples.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>

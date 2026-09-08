@@ -9,7 +9,7 @@ Spec: CLAUDE.md. Source register: SOURCES.md.
 |-------|--------|------|
 | A – Research and outline | Complete, approved by author | 2026-09-07 |
 | B – Scaffold + reference module (06) | Complete, approved by author (4,900 words accepted) | 2026-09-07 |
-| C – Remaining modules | **In progress**: 00 to 09 done | 2026-09-07 |
+| C – Remaining modules | **In progress**: 00 to 10 done | 2026-09-07 |
 | D – Verification pass | Not started | |
 | E – Ship (README, final summary) | Not started | |
 
@@ -31,6 +31,7 @@ Author instruction (2026-09-07): no em or en dashes anywhere in the course, incl
 | 07 Casting and forging | 2026-09-07 | 4,080 | 10 | 2 | 8 | 10 OK | NADCA draft formula recovered as D = √L / C (the PDF text lost the root sign; verified against NADCA's own 1 in example giving about 2°). Sioux City fan disk (FAA Lessons Learned, read in browser) as the inspection lesson; Tesla casting as the case. |
 | 08 Additive | 2026-09-07 | 3,281 | 13 | 2 | 8 | 12 OK; ISO catalogue 403 to scripts | Machine-specific rule variance (Formlabs Form 2 vs Form 3) used as the cautionary example; GE nozzle as the case. |
 | 09 PCB and PCBA | 2026-09-07 | 4,272 | 16 | 2 | 8 | 14 OK; ANSI webstore (2) and GlobalSpec return 403 to scripts | Trace-width arithmetic recomputed in Python; Galaxy IV tin whisker as the case. |
+| 10 Design for assembly | 2026-09-07 | 3,851 | 9 | 2 | 8 | 9 OK | IBM Proprinter numbers deliberately omitted (unverifiable); IDEXX and L3Harris cases used, labelled vendor/practitioner-published. |
 
 Links that return 403 to scripts are recorded here rather than as dead; they will be re-checked by hand in Phase D.
 
