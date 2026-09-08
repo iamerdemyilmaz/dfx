@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 13: Materials, finishes, and joining · DFx Course</title>
+<meta name="description" content="Material selection trade-offs by process, surface finish specification, coatings and plating (anodising, powder coat, zinc, e-coat), welding, brazing, adhesives, press fits, plastics joining, and galvanic compatibility.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="13">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 13</p>
+    <h1>Materials, finishes, and joining</h1>
+    <p class="lead">A part is a material, a shape, a surface, and a set of joints to the parts around it. Modules 4 to 9 covered the shape. This module covers the rest: choosing a material the process can make and the environment will tolerate, specifying a surface that costs what it earns, picking a coating that does the job it is asked to do, and joining parts so that the joint is not the weakest thing in the product.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Choose</strong> a material and process together, and name the material properties each common process depends on.</li>
+      <li><strong>Specify</strong> surface finish only where it is functional, using Ra values that match what the process delivers.</li>
+      <li><strong>Select</strong> anodising, zinc plating, or powder coating by type and thickness class, and account for coating build-up in dimensions and threads.</li>
+      <li><strong>Assess</strong> galvanic compatibility of dissimilar-metal couples using the current military standard's approach, and design the isolation where a couple cannot be avoided.</li>
+      <li><strong>Design</strong> brazed, adhesive, press-fit, and plastic joints to published clearance, overlap, and bond-line rules, and choose the joint type by the stress it must carry.</li>
+      <li><strong>Explain</strong> what a salt-spray test does and does not tell you.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>The Statue of Liberty is a copper skin hung on an iron armature. Its builders knew the two metals would corrode in contact, and separated them with shellac-coated asbestos. A century later the National Institute of Standards and Technology, asked by the National Park Service to help plan the 1980s restoration, found that "the shellac had disintegrated over time, and the asbestos had become dry and porous"; with moisture and salt from the harbour air reactivating the joint, "the two metals produced electric currents like a battery, causing corrosion" of the iron.<sup class="cite"><a href="#ref-1">[1]</a></sup> The skin is attached to the armature by about 1,500 U-shaped copper saddles and 300,000 copper rivets, so every saddle was a place where iron and copper met.<sup class="cite"><a href="#ref-2">[2]</a></sup> The restoration, begun in 1981 and finished in 1986, replaced the iron with a chromium-nickel-molybdenum stainless steel selected by testing and coated with PTFE to prevent friction and wear; an inspection in 1996 confirmed the fix had worked.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>Every element of this module is in that story. A material pair chosen for reasons that had nothing to do with corrosion. An isolation scheme that depended on a coating with a finite life. A mechanical consequence (a swelling, rusting frame inside a thin skin) of an electrochemical cause. And a fix that changed the material, the isolation, and the interface at the same time, because those three are one decision. The scale is unusual; the design error is the one a junior engineer makes with a stainless screw in an aluminium bracket on a product that lives outdoors.</p>
+    <p>You will make material, finish, and joining decisions on every drawing, usually by copying the last one. This module is the set of questions to ask instead.</p>
+
+    <h2 id="materials">Material and process, chosen together</h2>
+    <p>Module 2 made the point that a material callout is a process decision. Here is the evidence from earlier modules, collected. In sheet metal, 5052 aluminium is the common grade because it bends without cracking, while 6061, the machining favourite, "can be brittle and prone to cracking when bent".<sup class="cite"><a href="#ref-16">[16]</a></sup> In moulding, polypropylene dominated the coffee makers Ulrich and Pearson took apart, with polycarbonate used only where its stiffness or clarity justified a price two to three times higher.<sup class="cite"><a href="#ref-17">[17]</a></sup> In die casting, the draft an alloy needs depends on how hard it grips the die: zinc, aluminium, magnesium, and copper alloys each have their own constant (Module 7). In machining, cycle time is set by machinability, and a free-machining grade can cut the time in ways no geometry change can.</p>
+    <p>The discipline is to write the requirements first (loads, temperature, environment, contact with food or water, appearance, cost, volume), screen the materials that meet them, and only then screen the processes that can shape each surviving material at the volume. Ashby's method, in the further reading, formalises this with property charts; you can do it on a whiteboard. The point is order: requirements, then material and process together, then geometry. A part drawn before its material is chosen has a wall thickness that is wrong for whatever material it ends up in.</p>
+
+    <h2 id="finish">Surface finish specification</h2>
+    <p>Surface texture is specified by parameters defined in ASME B46.1-2019, of which the arithmetic mean roughness Ra is the one most drawings use.<sup class="cite"><a href="#ref-15">[15]</a></sup> The rule from Module 4 applies everywhere: specify finish only where it is functional (a seal, a bearing, a visible face, a surface to be bonded or coated) and accept the process's default elsewhere. Machining delivers about Ra 3.2 µm as standard, and finer values of 1.6, 0.8, or 0.4 µm each require additional passes and inspection.<sup class="cite"><a href="#ref-14">[14]</a></sup> Castings come rough and are machined where finish matters (Module 7); mouldings carry the mould's SPI finish (Module 6). A finish callout is also an inspection callout: someone has to measure it, on every part or by sample, and the drawing should say where.</p>
+    <p>Two finish decisions interact with this module's other topics. Coatings need a surface they can adhere to, and a blasted or etched surface bonds better than a polished one; an adhesive joint likewise wants a prepared, roughened, clean surface. And a very smooth surface is not always the low-friction one: it is the combination of finish and coating that sets wear behaviour, which is why the Statue's stainless armature was coated with PTFE where it bears on the copper.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+
+    <h2 id="coatings">Coatings and plating</h2>
+    <p>Coatings do three jobs: corrosion protection, wear or hardness, and appearance. Each coating does one or two of them well, and every coating adds thickness that the design must account for in holes, threads, and fits.</p>
+
+    <h3>Anodising (aluminium)</h3>
+    <p>Anodising grows an aluminium oxide layer electrolytically. The controlling specification in North America is MIL-A-8625F (1993, with amendments), which covers "six types and two classes of electrolytically formed anodic coatings on aluminum and aluminum alloys for non-architectural applications".<sup class="cite"><a href="#ref-4">[4]</a></sup> The three types you will specify most, with thicknesses as summarised by an anodiser: Type I, chromic acid, about 0.5 to 2.5 µm (0.00002 to 0.0001 in), thin and dimensionally gentle; Type II, sulfuric acid, about 2.5 to 25 µm (0.0001 to 0.001 in), the common decorative and corrosion-resistant finish, dyeable; Type III, hard anodising at lower temperature and higher current, about 13 to 100 µm (0.0005 to 0.004 in), very hard and wear-resistant. Class 1 is undyed and Class 2 is dyed.<sup class="cite"><a href="#ref-5">[5]</a></sup> Design consequences: part of the coating grows outward from the original surface, so a hard-anodised bore closes up and a shaft grows; state whether dimensions apply before or after coating, mask threads or specify them cut after anodising, and remember that sharp edges anodise thin and corners may craze in thick Type III coatings. The alloy matters: high-copper and high-silicon alloys anodise darker and less uniformly.</p>
+
+    <h3>Zinc plating (steel)</h3>
+    <p>Electrodeposited zinc protects steel sacrificially: the zinc corrodes instead of the iron. ASTM B633-23 covers "material and process requirements for electrodeposited zinc coatings applied to iron or steel articles to protect them from corrosion", in four thickness classes, and excludes steels above 1,700 MPa tensile strength (hydrogen embrittlement risk) and mechanical fasteners, which have their own specification.<sup class="cite"><a href="#ref-6">[6]</a></sup> The thickness classes map to service conditions: SC1 mild, 5 µm (0.0002 in) minimum; SC2 moderate, 8 µm (0.0003 in); SC3 severe, 12 µm (0.0005 in); SC4 very severe, 25 µm (0.0010 in).<sup class="cite"><a href="#ref-7">[7]</a></sup> Supplementary finishes run from Type I (as plated, no chromate) through coloured and colourless chromates (II, III), phosphate (IV), and the non-chromate passivates (V colourless, VI coloured) added to give alternatives to hexavalent chromium.<sup class="cite"><a href="#ref-6">[6]</a>,<a href="#ref-7">[7]</a></sup> That last point connects to Module 12: hexavalent chromium is a RoHS-restricted substance, so the passivate type is a compliance decision. Specify the class by environment, the type by colour and compliance, and state the plating thickness where it matters for a fit.</p>
+
+    <h3>Powder coating</h3>
+    <p>Powder coating is an electrostatically applied, oven-cured organic finish for metal parts. One manufacturer's data sheet for a polyester TGIC exterior powder gives a recommended film thickness of 60 to 80 µm (2.5 to 3.5 mils), measured to ISO 2360, with mechanical properties quoted at 60 µm and a warning that a two-coat system's extra thickness reduces mechanical properties.<sup class="cite"><a href="#ref-9">[9]</a></sup> Design consequences: 60 to 80 µm on both sides of a clearance hole closes it by up to 0.16 mm (Module 5); threads and datum faces must be masked or specified free of coating; deep recesses coat thin because the electrostatic field does not reach into them (the Faraday cage effect), so design recesses shallow and open or accept thin coverage there; and every part needs a place to hang from that will show a bare mark. Powder coat is a good general-purpose finish and a poor one for tight fits, precise threads, or parts that will be welded afterwards.</p>
+
+    <h3>Electrocoat (e-coat)</h3>
+    <p>Electrocoating deposits an organic primer from a water bath by applying a voltage to the part, so that coverage follows the electric field into recesses and onto edges that spray cannot reach. It is the standard automotive underbody primer and a common base coat under powder. Its film is thin and uniform, and its design consequences are drainage and venting: a part that traps bath liquid or air in a pocket will not coat there. Provide drain holes and orient the hanging so that every cavity drains.</p>
+
+    <h3>Salt spray and what it means</h3>
+    <p>Coatings are compared in salt-fog cabinets to ASTM B117, whose current edition is B117-26.<sup class="cite"><a href="#ref-8">[8]</a></sup> The practice is comparative: hours to first red rust let you rank two coatings under one aggressive, artificial condition. It does not predict service life, because real environments cycle temperature and humidity, dry out, and carry different contaminants. Use it to compare, and use the service-condition class of the plating specification (SC1 to SC4) or an environmental test that reproduces the actual exposure to decide.</p>
+
+    <h2 id="galvanic">Galvanic compatibility</h2>
+    <p>When two dissimilar metals are in electrical contact in the presence of an electrolyte (rain, condensation, salt spray), the more active one corrodes faster than it would alone. The current U.S. military standard, MIL-STD-889D (2021), "defines and classifies galvanic compatibility of electrically conductive materials and establishes requirements for protecting electrically conductive materials in a dissimilar couple against galvanic corrosion".<sup class="cite"><a href="#ref-3">[3]</a></sup> Its method changed from earlier revisions: instead of the old anodic-index voltage differences, it ranks each couple by the measured corrosion rate of the anodic member in artificial seawater, with a ranking of 0 meaning compatible and rankings 1 to 6 meaning incompatible and requiring protection; the threshold is a corrosion rate of 0.009 mil (about 0.23 µm) per year.<sup class="cite"><a href="#ref-3">[3]</a></sup> Incompatible couples "shall not be paired without protection", and the protection schemes it lists include applying a sacrificial coating to the cathodic member with a potential close to the anode, and isolating the metals.<sup class="cite"><a href="#ref-3">[3]</a></sup> (The older "0.15, 0.25, 0.50 V anodic index" rule you may see quoted comes from the superseded B and C revisions; the D revision replaced it with the corrosion-rate ranking.)</p>
+    <p>The design habits follow. Prefer the same metal, or metals the standard ranks compatible, wherever they touch. Where a couple cannot be avoided, break the electrical path with an insulating washer, sleeve, or gasket, or break the electrolyte path with a sealant or a coating on the cathode (coating the anode alone is dangerous: a scratch concentrates all the corrosion on a small area). Make the anodic part the large one and the cathodic part the small one, so the current density on the anode is low. And design the isolation to last: the Statue's shellac-and-asbestos barrier failed in decades, and the replacement is a stainless steel that is itself compatible, isolated by a PTFE layer that also handles wear.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+
+    <figure>
+      <svg viewBox="0 0 640 240" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">A dissimilar-metal joint with and without isolation</title>
+        <desc id="fig1-desc">Left: an aluminium bracket bolted to a steel frame with a bare steel bolt; water film bridges the metals, and arrows show current flow and corrosion concentrated on the aluminium at the contact. Right: the same joint with an insulating sleeve and washer under the bolt, a sealant bead at the joint edge, and a coated bolt, so no electrical or electrolyte path connects the metals.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- left joint -->
+          <rect x="40" y="120" width="240" height="40" class="diagram-soft"/>
+          <rect x="60" y="90" width="120" height="30" class="diagram-accent" stroke-width="3"/>
+          <path d="M110 70 v100 M96 70 h28 M96 175 h28" stroke-width="3"/>
+          <path d="M60 120 q30 -8 60 0 q30 8 60 0" class="diagram-accent" stroke-dasharray="4 3"/>
+          <path d="M80 195 l0 -20 M80 175 l-4 6 M80 175 l4 6" class="diagram-accent"/>
+          <!-- right joint -->
+          <rect x="360" y="120" width="240" height="40" class="diagram-soft"/>
+          <rect x="380" y="90" width="120" height="30" class="diagram-accent" stroke-width="3"/>
+          <path d="M430 70 v100 M416 70 h28 M416 175 h28" stroke-width="3"/>
+          <rect x="422" y="90" width="16" height="30" fill="var(--bg)" stroke="currentColor" stroke-dasharray="3 2"/>
+          <path d="M408 86 h44" stroke-width="4"/>
+          <path d="M500 120 q6 -6 6 0 M380 120 q-6 -6 -6 0" stroke-width="4" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="40" y="60" font-weight="600">Bare couple</text>
+          <text x="190" y="105">Aluminium bracket</text>
+          <text x="190" y="150">Steel frame, bare bolt</text>
+          <text x="40" y="215" class="diagram-text-muted">Water film plus metal contact: current flows, aluminium corrodes at the joint.</text>
+          <text x="360" y="60" font-weight="600">Isolated couple</text>
+          <text x="470" y="105">Insulating sleeve and washer</text>
+          <text x="470" y="150">Sealant at the joint edge</text>
+          <text x="340" y="215" class="diagram-text-muted">No electrical path at the bolt, no electrolyte at the edge.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. Galvanic corrosion needs an electrical path and an electrolyte path. Break either, and design the break to outlast the product.<sup class="cite"><a href="#ref-3">[3]</a></sup></figcaption>
+    </figure>
+
+    <h2 id="joining">Joining</h2>
+    <p>Module 10 asked whether a joint should exist. This section covers how to make the ones that must. The rule that spans all methods: design the joint for the stress it will see, and put the load in shear or compression rather than peel or cleavage.</p>
+
+    <h3>Welding</h3>
+    <p>Welding fuses the parent metals and is the strongest permanent joint in steel and aluminium structures. Its design consequences are access (the torch or electrode must reach the joint, and a fillet in a corner needs room), distortion (heat input shrinks the weld zone and pulls the part; balance welds about the neutral axis and sequence them), joint preparation (fit-up gaps and edge preparation are part of the drawing), and the heat-affected zone, whose properties differ from the parent metal, which matters most for heat-treated aluminium and for high-strength steels. Welded fabrications carry the coarse general tolerances of Module 3 and are machined afterwards where a fit is needed.</p>
+
+    <h3>Brazing</h3>
+    <p>Brazing joins metals with a filler that melts below the parent metals and is drawn into the joint by capillary action. Joint geometry is therefore everything. One filler-metal maker gives an ideal clearance of 0.051 to 0.127 mm (0.002 to 0.005 in) for joints brazed with paste or powder flux, with the strongest joint in its tests at about 0.038 mm (0.0015 in); too narrow a gap makes it harder for flux and filler to flow, which inhibits the capillary action, and too wide a gap also reduces strength.<sup class="cite"><a href="#ref-11">[11]</a></sup> Lap joints are preferred to butt joints because a butt joint's bonding area "can't be any larger than the cross-section of the thinner member", while a lap joint's area is chosen by the designer and the joint is self-supporting during heating; the published rule is to make the lap three times the thickness of the thinner member.<sup class="cite"><a href="#ref-10">[10]</a></sup> Design also for the filler's path: a place to put the ring or paste, a route for the flux to escape, and a stop that holds clearance during heating.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 220" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Brazed lap joint proportions</title>
+        <desc id="fig2-desc">Section through a tube brazed into a fitting. The overlap length is marked as at least three times the wall thickness of the thinner member. The radial clearance between tube and fitting is marked as about 0.04 to 0.13 mm, filled by braze alloy drawn in by capillary action from a filler ring at the mouth of the joint.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- fitting -->
+          <path d="M100 60 h240 v30 h-160 v40 h160 v30 h-240 z" class="diagram-soft"/>
+          <!-- tube -->
+          <path d="M40 92 h300 M40 128 h300" class="diagram-accent" stroke-width="3"/>
+          <path d="M40 100 h300 M40 120 h300" class="diagram-accent" stroke-width="1" stroke-dasharray="2 2"/>
+          <!-- filler ring -->
+          <circle cx="345" cy="96" r="4" fill="currentColor" stroke="none"/>
+          <circle cx="345" cy="124" r="4" fill="currentColor" stroke="none"/>
+          <!-- overlap dim -->
+          <path d="M180 40 h160 M180 36 v8 M340 36 v8"/>
+          <!-- clearance dim -->
+          <path d="M370 92 v8 M366 92 h8 M366 100 h8"/>
+        </g>
+        <g class="diagram-text">
+          <text x="150" y="30">Overlap ≥ 3 × wall thickness of the thinner member</text>
+          <text x="380" y="100">Clearance about 0.04 to 0.13 mm, capillary filled</text>
+          <text x="355" y="145">Filler ring at the joint mouth</text>
+          <text x="40" y="190" class="diagram-text-muted">Tube wall 1.5 mm gives an overlap of at least 4.5 mm. Dimensions in mm.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. Brazing lives on capillary flow: a slip-fit clearance and a lap of at least three wall thicknesses.<sup class="cite"><a href="#ref-10">[10]</a>,<a href="#ref-11">[11]</a></sup></figcaption>
+    </figure>
+
+    <h3>Adhesives</h3>
+    <p>Structural adhesives join dissimilar materials, distribute load over an area, seal, and isolate galvanically, and they fail when the joint puts them in the wrong stress. 3M's joint-design bulletin sets the two guidelines: design so that the basic stress is primarily shear or tensile "with cleavage and peel minimized or eliminated", and account for joint thickness, "typically, 0.1-0.5mm depending on joint design and stresses".<sup class="cite"><a href="#ref-12">[12]</a></sup> A simple lap joint is offset and so produces cleavage and peel at its ends; a straight butt joint "has poor resistance to cleavage", and recessed forms (landed scarf tongue and groove, tongue and groove, scarf tongue and groove) are recommended, with the landed scarf acting as a stop that controls bond-line thickness.<sup class="cite"><a href="#ref-12">[12]</a></sup> Stiffening sections bonded to thin sheet should have flanges that bend with the sheet to minimise peel; extrusions and slip joints want a void-filling adhesive.<sup class="cite"><a href="#ref-12">[12]</a></sup> Design consequences: bond area sized for shear, features that set the bond line (stops, shims, or beads), surfaces prepared and clean, and a fixture that holds the parts through cure. Adhesive joints are permanent; Module 12's service rules apply.</p>
+
+    <h3>Press fits</h3>
+    <p>A press fit holds by elastic interference between a shaft and a hole; Module 3's ISO 286 fits (H7/p6 locational interference, H7/s6 medium drive, H7/u6 force fit) give the standard interference ranges.<sup class="cite"><a href="#ref-18">[18]</a></sup> The holding force depends on the interference, the diameter, the engagement length, the friction coefficient, and the elastic moduli, through the thick-cylinder relations tabulated in Machinery's Handbook (further reading). Design consequences: the hub must be strong enough not to yield or crack (thin-walled and brittle hubs are the usual failures), a chamfer on the shaft and a lead-in on the hole guide assembly, the interference must be re-checked at temperature when the two materials differ in expansion, and the assembly force must be within what the line can apply. In plastics, Covestro's joining guide covers press fits alongside snap fits, with the caution that creep relaxes the interference over time.<sup class="cite"><a href="#ref-13">[13]</a></sup></p>
+
+    <h3>Joining plastics</h3>
+    <p>Covestro's joining-techniques guide for engineering thermoplastics covers the methods you will choose among: molded-in threads (avoid them where possible, and never use tapered pipe threads, which split the boss), self-tapping screws (thread-forming for ductile resins, thread-cutting for brittle ones), thread lockers, ultrasonic welding, staking, and inserts, coil and thread-cutting inserts, snap fits, press fits, and solvent and adhesive bonding.<sup class="cite"><a href="#ref-13">[13]</a></sup> The DFM logic from Module 6 applies to every one: a snap hook is an undercut unless it faces the opening direction, an ultrasonic weld needs an energy director moulded in, a heat-staked boss needs its own draft and wall ratio, and an insert needs a boss designed to the insert maker's hole and wall dimensions. Choose the method at architecture and put its features in the tool.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Quantitative rules for materials, finishes, and joining.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range (metric)</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Sheet alloy for bending</td><td>Ductile grade</td><td>5052 aluminium bends; 6061 can crack</td><td>Formability differs by temper and alloy</td><td><a href="#ref-16">[16]</a></td></tr>
+          <tr><td>Resin cost tiers</td><td>Cheap material, clever design</td><td>Polycarbonate about 2 to 3 × polypropylene (1993 estimate)</td><td>Material is a large share of moulded-part cost</td><td><a href="#ref-17">[17]</a></td></tr>
+          <tr><td>Surface roughness parameter</td><td>Ra per ASME B46.1</td><td>Machining standard 3.2 µm; 1.6, 0.8, 0.4 µm with extra passes</td><td>Each finer step is an operation and an inspection</td><td><a href="#ref-14">[14]</a>, <a href="#ref-15">[15]</a></td></tr>
+          <tr><td>Anodising, Type I (chromic)</td><td>Thin, dimensionally gentle</td><td>About 0.5 to 2.5 µm</td><td>Corrosion protection with minimal build-up</td><td><a href="#ref-4">[4]</a>, <a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Anodising, Type II (sulfuric)</td><td>General decorative and protective</td><td>About 2.5 to 25 µm; Class 1 undyed, Class 2 dyed</td><td>Porous layer takes dye</td><td><a href="#ref-4">[4]</a>, <a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Anodising, Type III (hard)</td><td>Wear surfaces</td><td>About 13 to 100 µm; part of the thickness grows outward</td><td>Hard oxide; affects fits, threads, edges</td><td><a href="#ref-4">[4]</a>, <a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Zinc plating thickness class</td><td>By service condition</td><td>SC1 5 µm; SC2 8 µm; SC3 12 µm; SC4 25 µm (minimums)</td><td>Sacrificial protection scales with thickness</td><td><a href="#ref-6">[6]</a>, <a href="#ref-7">[7]</a></td></tr>
+          <tr><td>Zinc plating finish type</td><td>Non-chromate where RoHS applies</td><td>Types I to VI; V and VI are non-chromate passivates</td><td>Hexavalent chromium restricted</td><td><a href="#ref-6">[6]</a>, <a href="#ref-7">[7]</a></td></tr>
+          <tr><td>Zinc plating exclusions</td><td>Not for very high-strength steel</td><td>Excluded above 1,700 MPa tensile</td><td>Hydrogen embrittlement</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Powder coat film</td><td>Account for thickness</td><td>60 to 80 µm recommended (one polyester TGIC data sheet); up to 0.16 mm closure on a through-hole</td><td>Mechanical properties quoted at 60 µm; two coats reduce them</td><td><a href="#ref-9">[9]</a></td></tr>
+          <tr><td>Salt spray</td><td>Comparative, not predictive</td><td>ASTM B117-26</td><td>Artificial, constant condition</td><td><a href="#ref-8">[8]</a></td></tr>
+          <tr><td>Galvanic compatibility</td><td>Rank the couple</td><td>MIL-STD-889D: rank 0 compatible; 1 to 6 need protection; threshold 0.009 mil/yr</td><td>Corrosion rate of the anodic member in artificial seawater</td><td><a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Galvanic protection</td><td>Break a path</td><td>Insulate the joint; seal the electrolyte path; sacrificial coating on the cathode</td><td>Coating the anode alone concentrates attack at defects</td><td><a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Brazing clearance</td><td>Slip fit</td><td>Ideal 0.051 to 0.127 mm with paste flux; strongest at about 0.038 mm</td><td>Capillary flow of filler</td><td><a href="#ref-11">[11]</a></td></tr>
+          <tr><td>Brazed lap length</td><td>Rule of three</td><td>≥ 3 × thickness of the thinner member</td><td>Bond area beyond the member cross-section</td><td><a href="#ref-10">[10]</a></td></tr>
+          <tr><td>Adhesive bond line</td><td>Control it with a feature</td><td>0.1 to 0.5 mm typical</td><td>Too thin starves, too thick weakens</td><td><a href="#ref-12">[12]</a></td></tr>
+          <tr><td>Adhesive joint stress</td><td>Shear or tension, not peel or cleavage</td><td>Recessed butt joints (tongue and groove, landed scarf) instead of straight butt</td><td>Cleavage and peel concentrate stress at an edge</td><td><a href="#ref-12">[12]</a></td></tr>
+          <tr><td>Press fit</td><td>Standard interference fits</td><td>H7/p6 locational; H7/s6 medium drive; H7/u6 force</td><td>Predictable interference range</td><td><a href="#ref-18">[18]</a></td></tr>
+          <tr><td>Plastic threads</td><td>Avoid molded-in; never tapered</td><td>Use self-tapping screws or inserts</td><td>Tapered threads split bosses; plastic threads loosen</td><td><a href="#ref-13">[13]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: reclothing the Statue of Liberty</h2>
+    <p>NIST's account of its role in the restoration is short and specific. The original designers separated iron and copper with shellac-coated asbestos; by the 1980s the shellac had disintegrated and the asbestos had become dry and porous, and with harbour moisture and salt the metals "produced electric currents like a battery, causing corrosion".<sup class="cite"><a href="#ref-1">[1]</a></sup> The Copper Development Association gives the scale of the joint: the copper skin, hammered to about 2.4 mm (3/32 in), is attached to the armature by about 1,500 U-shaped copper saddles using 300,000 copper rivets, each saddle a bimetallic contact.<sup class="cite"><a href="#ref-2">[2]</a></sup> NIST tested candidate replacement materials and selected a chromium-nickel-molybdenum stainless steel, coated with PTFE where it contacts the copper to prevent friction and wear; the National Park Service project began in 1981 and finished in 1986, and a 1996 inspection found the corrosion reversed and no new problems.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>The design reading: the original isolation scheme was correct in principle and had a service life shorter than the structure. The fix did not rely on isolation alone; it changed the anodic member to a material compatible with copper in that environment, and kept a low-friction barrier for the mechanical interface. When you cannot avoid a dissimilar couple, do the same: choose the most compatible pair the function allows, isolate it, and make sure the isolation is a material that lasts as long as the product, not a coating that lasts as long as the warranty.</p>
+    <!-- AUTHOR: optional personal note here (a coating build-up, galvanic, or joint-design lesson from your own experience, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Material chosen after the geometry.</strong> Consequence: a wall thickness, draft, or bend radius wrong for the material that ends up in the part. Fix: requirements, then material and process together, then geometry.</li>
+      <li><strong>Finish callouts everywhere.</strong> Consequence: finishing passes and inspection on faces that do nothing. Fix: Ra only on functional surfaces, at the value the process delivers.</li>
+      <li><strong>Coating thickness ignored in fits and threads.</strong> Consequence: hard-anodised bores that will not accept their shafts, powder-coated holes 0.16 mm small, painted threads. Fix: state before- or after-coating dimensions, mask or post-machine threads, size holes for the coated condition.</li>
+      <li><strong>Stainless fasteners in aluminium outdoors, bare.</strong> Consequence: the aluminium corrodes around every fastener. Fix: check the couple against MIL-STD-889D's ranking, isolate with sleeves and washers, seal the joint edge.</li>
+      <li><strong>Coating only the anode.</strong> Consequence: every scratch becomes a concentrated corrosion site. Fix: coat the cathode, or isolate the joint.</li>
+      <li><strong>Brazed joints with the wrong clearance or a butt configuration.</strong> Consequence: starved or weak joints. Fix: a clearance of about 0.04 to 0.13 mm and a lap of at least three thicknesses, with a place for the filler.</li>
+      <li><strong>Adhesive joints in peel.</strong> Consequence: failure at a fraction of the adhesive's shear strength. Fix: redesign the joint for shear, add a stop for bond-line thickness, prepare the surfaces.</li>
+      <li><strong>Reading salt spray as service life.</strong> Consequence: a coating that survives 1,000 hours of fog and fails in a year of cycling humidity. Fix: use salt spray to compare, and the plating specification's service class or a representative environmental test to decide.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: an aluminium bracket on a steel frame, outdoors</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>A 3 mm 5052 aluminium bracket is bolted to a powder-coated steel frame on a product installed outdoors in a coastal town. The bracket carries a 6 mm diameter clearance hole for an M5 bolt. A 1.5 mm wall copper tube must be brazed into a brass fitting on the same product, and a plastic cover is to be bonded to a sheet-metal panel.</p>
+    <p><strong>Tasks.</strong> (a) Specify the bracket's finish and the bolted joint so that the aluminium-to-steel couple does not corrode, and size the hole for the coated condition. (b) Specify the brazed joint's overlap and clearance. (c) Specify the adhesive joint's type and bond line and say what controls it. (d) State which salt-spray result would and would not settle the coating choice.</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a) Bracket and bolted joint.</strong> Aluminium against steel with a coastal electrolyte is a couple MIL-STD-889D would require protection for; the design should not rely on the frame's powder coat alone, because the bolt and the hole edge break the coating. Isolate: an insulating sleeve in the bracket hole and an insulating washer under the bolt head break the electrical path, and a sealant bead around the joint edge breaks the electrolyte path. Finish the bracket with Type II anodising (about 2.5 to 25 µm) for corrosion resistance; hard anodising is not needed for a static bracket. Use a zinc-plated steel bolt to at least SC3 (12 µm) with a non-chromate passivate (Type V or VI) for RoHS, or a stainless bolt if the sleeve and washer fully isolate it. Hole: the frame's powder coat at 60 to 80 µm reduces the frame hole by up to 0.16 mm, so a 6.0 mm drawing hole in the frame may be about 5.85 mm coated; if the bolt needs 6.0 mm, draw 6.2 mm or mask the hole. The bracket's own anodised hole grows less than 0.05 mm at Type II and can stay at 6.0 mm, but the insulating sleeve needs its own clearance, so the bracket hole is sized for the sleeve outer diameter, not the bolt.</p>
+      <p><strong>(b) Brazed joint.</strong> Thinner member is the 1.5 mm tube wall: overlap at least 3 × 1.5 = 4.5 mm; make the fitting socket 5 mm deep. Radial clearance between tube outside diameter and fitting bore in the 0.05 to 0.13 mm range: for a 12.0 mm tube, a bore of 12.10 to 12.25 mm, tolerances permitting; specify the fit, not just the nominal, because a tube at its maximum in a bore at its minimum must still leave the minimum clearance. Provide a stop at the socket bottom and a chamfer at the mouth for the filler ring.</p>
+      <p><strong>(c) Adhesive joint.</strong> A cover bonded to a panel sees shear from vibration and peel if a corner is lifted. Design a flange joint loaded in shear with the bond area sized for the shear load, add a small moulded stop or three shims to hold a 0.2 mm bond line (inside the typical 0.1 to 0.5 mm), and avoid a straight butt edge; if the cover edge must be bonded, use a tongue-and-groove form so the load is not cleavage. Prepare both surfaces (the anodised aluminium and the plastic) as the adhesive maker specifies and fixture the cover until cure. Note for Module 12: this joint is permanent; the cover is not a field-replaceable unit.</p>
+      <p><strong>(d) Salt spray.</strong> A B117 result that ranks Type II anodising plus sealant above bare aluminium, or SC3 zinc above SC1, is useful and expected. A result of "1,000 hours to red rust" does not translate into years of coastal service, because the test is a constant fog rather than the wet-dry cycling of the real site. The decision rests on the service-condition class (SC3 or SC4 for a coastal exposure), the isolation design, and, if the program can afford it, an environmental test that cycles temperature, humidity, and salt the way the site does.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="13">
+      <fieldset class="q" data-answer="c">
+        <legend>1. NIST found that the Statue of Liberty's iron armature corroded because</legend>
+        <label><input type="radio" name="q1" value="a"> the copper skin was too thin</label>
+        <label><input type="radio" name="q1" value="b"> the iron was the wrong grade</label>
+        <label><input type="radio" name="q1" value="c"> the shellac-coated asbestos insulation between iron and copper had failed, allowing galvanic corrosion</label>
+        <label><input type="radio" name="q1" value="d"> lightning strikes</label>
+        <p class="explain" hidden>The shellac disintegrated and the asbestos became porous; moisture and salt completed the galvanic cell.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>2. Under MIL-STD-889D, a galvanic couple ranked 0 is</legend>
+        <label><input type="radio" name="q2" value="a"> the most dangerous couple</label>
+        <label><input type="radio" name="q2" value="b"> compatible and does not require galvanic protection</label>
+        <label><input type="radio" name="q2" value="c"> forbidden in all designs</label>
+        <label><input type="radio" name="q2" value="d"> a couple with 0.50 V anodic index difference</label>
+        <p class="explain" hidden>Rankings 1 to 6 are incompatible and need protection; the D revision uses corrosion rate, not the old anodic-index voltages.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>3. Which ASTM B633 service condition class requires the thickest zinc, and how thick?</legend>
+        <label><input type="radio" name="q3" value="a"> SC1, 5 µm</label>
+        <label><input type="radio" name="q3" value="b"> SC2, 8 µm</label>
+        <label><input type="radio" name="q3" value="c"> SC3, 12 µm</label>
+        <label><input type="radio" name="q3" value="d"> SC4, 25 µm</label>
+        <p class="explain" hidden>SC4 very severe, 0.0010 in (25 µm) minimum.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.16" data-tolerance="0.005">
+        <legend>4. A powder coat of 80 µm is applied to both sides of a through-hole's wall. By how much (mm) does the hole diameter shrink?</legend>
+        <label>Answer (mm): <input type="number" name="q4" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>2 × 0.080 mm = 0.16 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="6" data-tolerance="0.05">
+        <legend>5. Using the brazing rule of three, what is the minimum lap length in mm for a joint whose thinner member is 2.0 mm thick?</legend>
+        <label>Answer (mm): <input type="number" name="q5" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>3 × 2.0 = 6 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>6. The strongest brazed joints have a clearance of about</legend>
+        <label><input type="radio" name="q6" value="a"> a few hundredths of a millimetre, about 0.04 to 0.13 mm, roughly a slip fit</label>
+        <label><input type="radio" name="q6" value="b"> zero, an interference fit</label>
+        <label><input type="radio" name="q6" value="c"> 1 to 2 mm</label>
+        <label><input type="radio" name="q6" value="d"> any clearance; it does not matter</label>
+        <p class="explain" hidden>Capillary action needs a small, uniform gap; too tight starves the joint and too loose weakens it.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>7. 3M's joint-design guidance says structural adhesive joints should be designed so that the stress is primarily</legend>
+        <label><input type="radio" name="q7" value="a"> peel</label>
+        <label><input type="radio" name="q7" value="b"> cleavage</label>
+        <label><input type="radio" name="q7" value="c"> shear or tensile, with cleavage and peel minimised or eliminated</label>
+        <label><input type="radio" name="q7" value="d"> torsion</label>
+        <p class="explain" hidden>Bond line typically 0.1 to 0.5 mm; recessed butt joints replace straight butt joints to resist cleavage.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>8. Which MIL-A-8625F anodising type is the hard, wear-resistant coating with the greatest thickness?</legend>
+        <label><input type="radio" name="q8" value="a"> Type I (chromic acid)</label>
+        <label><input type="radio" name="q8" value="b"> Type III (hard anodic)</label>
+        <label><input type="radio" name="q8" value="c"> Type II Class 2 (dyed sulfuric)</label>
+        <label><input type="radio" name="q8" value="d"> Class 1</label>
+        <p class="explain" hidden>Type III runs to about 100 µm and is used on wear surfaces; account for its build-up in fits.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>c. Failed insulation, galvanic corrosion.</li>
+        <li>b. Compatible.</li>
+        <li>d. SC4, 25 µm.</li>
+        <li>0.16 mm.</li>
+        <li>6 mm.</li>
+        <li>a. About 0.04 to 0.13 mm.</li>
+        <li>c. Shear or tensile.</li>
+        <li>b. Type III.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>Requirements first, then material and process together, then geometry. The alloy or resin decides the wall, the draft, and the bend radius.</li>
+      <li>Specify surface finish only where it is functional, at the Ra the process delivers by default; every finer step is an operation and an inspection.</li>
+      <li>Coatings add thickness. State before- or after-coating dimensions, mask threads and datums, and size holes for the coated condition.</li>
+      <li>Anodise by type (I thin, II general, III hard) and class; zinc-plate by service condition (SC1 to SC4) with a non-chromate passivate where RoHS applies; powder coat at about 60 to 80 µm and keep it out of fits.</li>
+      <li>Dissimilar metals need a compatibility check (MIL-STD-889D) and, if incompatible, an isolation that lasts as long as the product. The Statue's shellac did not.</li>
+      <li>Braze with a slip-fit clearance of a few hundredths of a millimetre and a lap of three thicknesses; bond in shear with a controlled 0.1 to 0.5 mm bond line; press-fit with standard interference fits and a hub that will not crack; join plastics with the feature moulded into the tool.</li>
+      <li>Salt spray compares coatings. It does not predict life.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07. Standards are cited from publishers' catalogue pages or public index pages; their body text is not reproduced.</p>
+    <ol class="references">
+      <li id="ref-1">National Institute of Standards and Technology. "The Statue of Liberty Still Stands Tall, Thanks to Science." NIST, n.d. <a href="https://www.nist.gov/preserving-past/buildings-and-structures/statue-liberty-still-stands-tall-thanks-science">https://www.nist.gov/preserving-past/buildings-and-structures/statue-liberty-still-stands-tall-thanks-science</a></li>
+      <li id="ref-2">Copper Development Association. "The Mettle of Metal: Copper Keeps the Statue of Liberty Standing Tall for 123 Years." Press release, 15 July 2009. <a href="https://copper.org/the-mettle-of-metal-copper-keeps-the-statue-of-liberty-standing-tall-for-123-years/">https://copper.org/the-mettle-of-metal-copper-keeps-the-statue-of-liberty-standing-tall-for-123-years/</a></li>
+      <li id="ref-3">U.S. Department of Defense. <em>MIL-STD-889D, Galvanic Compatibility of Electrically Conductive Materials</em>, 21 July 2021. Hosted copy. <a href="https://corrdesa.com/wp-content/uploads/2024/04/MIL-STD-889D-2021-Release.pdf">https://corrdesa.com/wp-content/uploads/2024/04/MIL-STD-889D-2021-Release.pdf</a></li>
+      <li id="ref-4">U.S. Department of Defense. <em>MIL-A-8625F, Anodic Coatings for Aluminum and Aluminum Alloys</em>, 10 September 1993. EverySpec index page. <a href="https://everyspec.com/MIL-SPECS/MIL-SPECS-MIL-A/MIL-A-8625F_2377/">https://everyspec.com/MIL-SPECS/MIL-SPECS-MIL-A/MIL-A-8625F_2377/</a></li>
+      <li id="ref-5">MPO of Cincinnati. "MIL-A-8625F: Everything You Need to Know." n.d. <a href="https://mpofcinci.com/blog/mil-a-8625f/">https://mpofcinci.com/blog/mil-a-8625f/</a> <span class="tag">(anodiser's summary; thickness ranges in inches, converted)</span></li>
+      <li id="ref-6">ASTM International. <em>ASTM B633-23 Standard Specification for Electrodeposited Coatings of Zinc on Iron and Steel.</em> ASTM catalogue page. <a href="https://store.astm.org/b0633-23.html">https://store.astm.org/b0633-23.html</a></li>
+      <li id="ref-7">Gatto Industrial Platers. "ASTM B633 Zinc Electroplating Services." n.d. <a href="https://www.gattoplaters.com/astm-b633.html">https://www.gattoplaters.com/astm-b633.html</a> <span class="tag">(plater's summary of the service-condition thicknesses, in inches, converted)</span></li>
+      <li id="ref-8">ASTM International. <em>ASTM B117-26 Standard Practice for Operating Salt Spray (Fog) Apparatus.</em> ASTM catalogue page. <a href="https://store.astm.org/standards/b117">https://store.astm.org/standards/b117</a> <span class="tag">(secondary: current designation from catalogue listings)</span></li>
+      <li id="ref-9">TIGER Coatings. <em>TIGER Drylac Series 49 Technical Data Sheet</em>, version 10-18. <a href="https://www.tiger-coatings.com/fileadmin/user_upload/msds/user_upload/TIGER_Drylac_Series_49_Interior_and_Exterior_TDC_EN.pdf">https://www.tiger-coatings.com/fileadmin/user_upload/msds/user_upload/TIGER_Drylac_Series_49_Interior_and_Exterior_TDC_EN.pdf</a></li>
+      <li id="ref-10">Lucas-Milhaupt. "Principles of Joint Design." Brazing Academy, n.d. <a href="https://www.lucasmilhaupt.com/Brazing-Academy/Principles-of-Joint-Design">https://www.lucasmilhaupt.com/Brazing-Academy/Principles-of-Joint-Design</a></li>
+      <li id="ref-11">Lucas-Milhaupt. "The Effect of Joint Clearance on Braze Joint Strength." Blog, n.d. <a href="https://blog.lucasmilhaupt.com/en-us/about/blog/joint-clearance-and-joint-strength">https://blog.lucasmilhaupt.com/en-us/about/blog/joint-clearance-and-joint-strength</a></li>
+      <li id="ref-12">3M. <em>Joint Design for Structural Adhesives</em> (technical bulletin). n.d. <a href="https://multimedia.3m.com/mws/media/79082O/joint-design-for-structural-adhesives-technical-bulletin.pdf">https://multimedia.3m.com/mws/media/79082O/joint-design-for-structural-adhesives-technical-bulletin.pdf</a></li>
+      <li id="ref-13">Covestro. <em>Engineering Polymers: Joining Techniques: A Design Guide.</em> n.d. <a href="https://solutions.covestro.com/-/media/covestro/solution-center/brands/downloads/imported/1556890495.pdf">https://solutions.covestro.com/-/media/covestro/solution-center/brands/downloads/imported/1556890495.pdf</a></li>
+      <li id="ref-14">Protolabs Network (formerly Hubs). "What are the types of surface finishes for CNC machining?" n.d. <a href="https://www.hubs.com/knowledge-base/surface-finishes-cnc-machinings/">https://www.hubs.com/knowledge-base/surface-finishes-cnc-machinings/</a></li>
+      <li id="ref-15">ASME. <em>ASME B46.1-2019 Surface Texture (Surface Roughness, Waviness, and Lay).</em> ASME catalogue page. <a href="https://www.asme.org/codes-standards/find-codes-standards/b46-1-surface-texture">https://www.asme.org/codes-standards/find-codes-standards/b46-1-surface-texture</a></li>
+      <li id="ref-16">Xometry. <em>Design Guidelines and Best Practices for Sheet Metal Fabrication.</em> n.d. <a href="https://f.hubspotusercontent00.net/hubfs/340051/Xometry%20Sheet%20Metal%20Design%20Guide%202020.pdf">https://f.hubspotusercontent00.net/hubfs/340051/Xometry%20Sheet%20Metal%20Design%20Guide%202020.pdf</a></li>
+      <li id="ref-17">Ulrich, K. T., and Pearson, S. A. "Does Product Design Really Determine 80% of Manufacturing Cost?" Working Paper 3601-93-MSA, MIT Sloan School of Management, August 1993. <a href="https://dspace.mit.edu/handle/1721.1/47202">https://dspace.mit.edu/handle/1721.1/47202</a></li>
+      <li id="ref-18">AmesWeb. "Preferred Fits and Tolerances Charts (ISO &amp; ANSI Metric Standards)." n.d. <a href="https://amesweb.info/fits-tolerances/preferred-tolerances-table.aspx">https://amesweb.info/fits-tolerances/preferred-tolerances-table.aspx</a> <span class="tag">(secondary: public reproduction of ISO 286 preferred fits)</span></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Ashby, M. F. <em>Materials Selection in Mechanical Design</em>, 5th ed. Butterworth-Heinemann, 2017. The screening-and-ranking method with property charts.</li>
+      <li>Oberg, E. et al. <em>Machinery's Handbook</em>, 31st ed. Industrial Press, 2020. Press-fit and interference calculations, plating and finish data.</li>
+      <li>U.S. Department of Defense. <em>MIL-STD-889D.</em> The compatibility tables themselves, for specific couples.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>
