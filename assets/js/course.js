@@ -20,7 +20,7 @@
     { num: "08", slug: "08-additive", title: "DFM for additive manufacturing", built: true },
     { num: "09", slug: "09-pcb-pcba", title: "DFM for PCB and PCBA", built: true },
     { num: "10", slug: "10-design-for-assembly", title: "Design for assembly", built: true },
-    { num: "11", slug: "11-design-for-test", title: "Design for test", built: false },
+    { num: "11", slug: "11-design-for-test", title: "Design for test", built: true },
     { num: "12", slug: "12-service-reliability-compliance", title: "Design for service, reliability, and compliance", built: false },
     { num: "13", slug: "13-materials-finishes-joining", title: "Materials, finishes, and joining", built: false },
     { num: "14", slug: "14-suppliers", title: "Working with suppliers and contract manufacturers", built: false },

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 11: Design for test · DFx Course</title>
+<meta name="description" content="Design for test: test strategy through EVT, DVT, and PVT; in-circuit test, functional test, flying probe, and boundary scan; test points and fixture access; test coverage and escapes; leak and pressure testing of mechanical assemblies; designing the fixture alongside the product.">
+<link rel="stylesheet" href="../assets/css/course.css">
+</head>
+<body data-root="../" data-module="11">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 11</p>
+    <h1>Design for test</h1>
+    <p class="lead">A product that cannot be tested cannot be trusted, and a product that can only be tested after it is sealed will be reworked. Design for test (DFT) decides, while the layout and the housing are still soft, where the probes land, where the pressure goes in, and which faults the production line will catch before the customer does. This module covers electrical test from in-circuit to boundary scan, mechanical test from leak to function, and the arithmetic of coverage and escapes.</p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Distinguish</strong> the tests that validate a design (EVT, DVT) from the tests that catch manufacturing defects (PVT and production), and place each in the right phase.</li>
+      <li><strong>Select</strong> among in-circuit test, flying probe, boundary scan, functional test, optical, and X-ray inspection by the defects each finds and the access each needs.</li>
+      <li><strong>Specify</strong> test points, probe clearances, tooling holes, and board support so that a bed-of-nails fixture can be built and will work.</li>
+      <li><strong>Estimate</strong> test coverage and the escapes that follow from the nets and faults left untested.</li>
+      <li><strong>Design</strong> mechanical assemblies for leak and pressure testing, including ports, seal-offs, and test volume.</li>
+      <li><strong>Plan</strong> the test fixture alongside the product so that datums, access, and sequence are shared.</li>
+    </ul>
+
+    <h2 id="why">Why this matters</h2>
+    <p>On 7 January 2013 a lithium-ion battery in the auxiliary power unit of a Boeing 787 caught fire on the ground in Boston. The National Transportation Safety Board's probable cause was "an internal short circuit within a cell of the APU lithium-ion battery, which led to thermal runaway that cascaded to adjacent cells", resulting from "Boeing's failure to incorporate design requirements to mitigate the most severe effects of an internal short circuit within an APU battery cell and the FAA's failure to identify this design deficiency during the type design certification process".<sup class="cite"><a href="#ref-7">[7]</a></sup> The report's findings read as a design-for-test post-mortem. The safety assessment assumed that an internal short in one cell would be limited to that cell venting; the cell manufacturer "did not test the battery under the most severe conditions possible in service"; the possibility of cascading thermal runaway "was not considered"; and as a result the certification engineers did not require a thermal-runaway test.<sup class="cite"><a href="#ref-7">[7]</a></sup> Investigators also found manufacturing conditions at the cell plant, including foreign object debris generated during welding, and an inspection process that could not reliably detect the defects that could cause an internal short.<sup class="cite"><a href="#ref-7">[7]</a></sup></p>
+    <p>Two lessons transfer to any product. A test only validates the assumption it was designed around; if the worst credible case is not in the test plan, the test passes and the product does not. And inspection is itself a process with a detection capability; a defect the inspection cannot see is a defect that ships. Both lessons apply as much to a bed-of-nails fixture on a controller board or a leak test on a valve body as to an aircraft battery.</p>
+    <p>The 1996 Ariane 5 maiden flight makes the same point from the software side: the inquiry board found that the development programme "did not include adequate analysis and testing of the inertial reference system or of the complete flight control system, which could have detected the potential failure", and that the equipment and system tests "were not sufficiently representative".<sup class="cite"><a href="#ref-8">[8]</a></sup> Representative test conditions are a design deliverable.</p>
+
+    <h2 id="strategy">Test strategy through the phases</h2>
+    <p>Module 1 gave the builds; each one tests something different, and DFT has to serve all of them.</p>
+    <ul>
+      <li><strong>EVT tests</strong> ask whether the engineering works: bench tests of functions, components, and margins, run by engineers with instruments. They need access to signals and adjustments that production units may not expose; plan how that access is removed or disabled later.</li>
+      <li><strong>DVT tests</strong> ask whether the complete design meets its requirements: performance, durability, environmental, and pre-compliance testing on production-intent parts.<sup class="cite"><a href="#ref-9">[9]</a></sup> These validate the design once. Their conditions must include the most severe credible case, which is the 787 lesson.</li>
+      <li><strong>PVT and production tests</strong> ask a narrower question of every unit: was this one built correctly? They do not re-validate the design. They catch manufacturing defects (a missing part, a bridged joint, a leaking seal, a mis-wired connector) fast, repeatably, in a fixture, by an operator. This is the test that DFT designs for, and it has to exist before PVT, not after.</li>
+    </ul>
+    <p>Production test is organised as a hierarchy: incoming inspection of parts, in-process inspection during assembly (optical inspection after reflow, for instance), sub-assembly test where a fault is still cheap to find, and final functional test. The design decision is where to put the sub-assembly tests. A board tested before it goes into a sealed housing is reworked at the bench; the same fault found at final test means opening the housing and, often, scrapping the seal.</p>
+
+    <h2 id="methods">Electrical test methods</h2>
+    <p>The methods differ in what they find, what access they need, and what they cost per board. Most production lines use several.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Electrical inspection and test methods for printed circuit board assemblies.</caption>
+        <thead><tr><th>Method</th><th>What it does</th><th>Finds</th><th>Misses</th><th>Design needs</th></tr></thead>
+        <tbody>
+          <tr><td>Automated optical inspection (AOI)</td><td>Cameras compare the assembled board with a reference</td><td>Lifted and misplaced parts, opens, solder shorts, insufficient or excess solder, on visible joints<sup class="cite"><a href="#ref-2">[2]</a></sup></td><td>Anything hidden under a component; "only surface defects can be detected"<sup class="cite"><a href="#ref-2">[2]</a></sup></td><td>Line of sight to joints; reference designators readable</td></tr>
+          <tr><td>X-ray inspection</td><td>Images joints through the part</td><td>Voids, bridges, and opens under bottom-terminated parts and BGAs<sup class="cite"><a href="#ref-2">[2]</a></sup></td><td>Electrical value errors</td><td>Nothing on the far side of the board directly behind the joint of interest, if possible</td></tr>
+          <tr><td>In-circuit test (ICT)</td><td>Bed-of-nails fixture contacts test points; tester injects signals and measures each component and net<sup class="cite"><a href="#ref-1">[1]</a></sup></td><td>Missing components, shorts, tombstoning, lifted pins, poor solder, wrong component values<sup class="cite"><a href="#ref-1">[1]</a></sup></td><td>Nets with no test point; high-frequency behaviour; anything requiring the board to run<sup class="cite"><a href="#ref-1">[1]</a></sup></td><td>One test point per net, probe clearances, tooling holes, support (below)</td></tr>
+          <tr><td>Flying probe</td><td>Movable probes positioned programmatically at test points<sup class="cite"><a href="#ref-1">[1]</a></sup></td><td>Similar to ICT for opens and shorts and passive values</td><td>Slow per board; fewer simultaneous contacts</td><td>Smaller test points acceptable (6 mil minimum, 20 mil recommended); clearance from tall parts by formula<sup class="cite"><a href="#ref-2">[2]</a></sup></td></tr>
+          <tr><td>Boundary scan (IEEE 1149.1)</td><td>Test logic built into the ICs shifts data around device peripheries through a four- or five-wire test access port<sup class="cite"><a href="#ref-3">[3]</a>,<a href="#ref-4">[4]</a></sup></td><td>Opens, shorts, and stuck pins on interconnects between scan-capable devices, without physical probes</td><td>Nets with no scan-capable device on them; analogue values</td><td>Scan-capable parts chained; TAP accessible on a connector or test points</td></tr>
+          <tr><td>Functional test (FCT)</td><td>Powers the board and exercises it as it will be used</td><td>Faults that affect behaviour; interactions ICT cannot see</td><td>Latent defects that do not affect behaviour yet; poor diagnosis (a failure says the board is bad, not which joint)</td><td>Connectors and interfaces reachable; a way to load firmware and read results</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>In-circuit test deserves a closer look because it drives the most layout rules. The fixture is a plate of spring-loaded pins aligned to test points on the board; pressing the board onto the pins makes contact with every test point at once, and the tester measures resistance, capacitance, and continuity net by net.<sup class="cite"><a href="#ref-1">[1]</a></sup> Its limitations are also the design rules: limited access on dense boards, difficulty with high-frequency designs, potential bottlenecks in production, and fixture design and programming effort.<sup class="cite"><a href="#ref-1">[1]</a></sup> ICT finds the manufacturing defect and names the component; functional test finds that something is wrong. Most lines want both, and a board with good ICT coverage spends far less time at the functional station being diagnosed.</p>
+    <p>Boundary scan reaches where probes cannot. IEEE Std 1149.1 defines a Test Access Port of four signals (TDI, TMS, TCK, TDO) plus an optional reset, and a boundary-scan cell on each pin of a compliant device that passes data transparently in normal operation and can capture and shift it in test mode.<sup class="cite"><a href="#ref-3">[3]</a>,<a href="#ref-4">[4]</a></sup> Chained through several devices, it tests the interconnects between them for opens and shorts with no test points at all, which is the answer for nets under BGAs. The 2013 revision added features for power management and initialisation.<sup class="cite"><a href="#ref-4">[4]</a></sup> The design cost is small: choose scan-capable parts, chain them, and bring the TAP to a connector or five test points.</p>
+
+    <h2 id="testpoints">Test points and fixture access</h2>
+    <p>The bed-of-nails fixture is a mechanical assembly, and it has dimensional rules. The following are one contract manufacturer's published guidelines and will differ in detail at yours.<sup class="cite"><a href="#ref-2">[2]</a></sup></p>
+    <ul>
+      <li><strong>Test point size.</strong> 1.0 mm diameter gives the most reliable contact; 0.9 mm is the minimum recommended on the top side and 0.7 mm on the bottom; 0.6 mm is permitted on the bottom only. Test points must be free of solder mask, and the mask must not be tangent to them.</li>
+      <li><strong>Probe pitch.</strong> The spacing between adjacent probes sets fixture cost and reliability: 2.54 mm (100 mil) pitch is the baseline (cost factor 1, most reliable); 1.905 mm (75 mil) roughly doubles the fixture cost; 1.27 mm (50 mil) roughly quadruples it and is the least reliable.</li>
+      <li><strong>Clearance to components.</strong> A probe needs room beside components: 0.7 mm from parts under 2 mm tall, 1.91 mm from parts over 4 mm tall, 0.9 mm from the board or hole edge, and 3 mm from tooling holes. Leave a 5.08 mm gap on all four sides of a BGA.</li>
+      <li><strong>Tooling holes.</strong> Two or three, preferably 2.7 mm diameter at ±0.05 mm, located to ±0.1 mm, at least 3 mm from the board edge, with a 0.3 mm solder-mask-free ring.</li>
+      <li><strong>Support and rails.</strong> The board must be supported against probe force; the guideline calls for support about every 150 mm. Keep a 3 mm strip along the edges clear for handling and clamps.</li>
+      <li><strong>Coverage rule.</strong> "At least one probable point for each network", and four test points on each power supply net so the tester can source current (under 1 A per point).</li>
+    </ul>
+    <p>For flying probe, the same source gives the clearance a probe needs beside a component of height H as L = 0.29 × H + 0.7 mm (about 1.86 mm beside a 4 mm part), test points as small as 6 mil with 20 mil recommended, and a 2.8 mm allowance between probe and sensor.<sup class="cite"><a href="#ref-2">[2]</a></sup> Flying probe removes the fixture cost and is the usual choice for prototypes and low volume; ICT wins when volume amortises the fixture and cycle time matters.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 260" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">In-circuit test probe clearances on a board</title>
+        <desc id="fig1-desc">Section through a board sitting on spring probes. Two test pads on the underside receive probes at a 2.54 mm pitch. A short component under 2 mm tall sits 0.7 mm from a probe; a tall component over 4 mm sits 1.91 mm from another probe. A tooling hole of 2.7 mm diameter is at least 3 mm from the board edge. A support post under the board is labelled support every 150 mm.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <!-- board -->
+          <rect x="60" y="120" width="520" height="14" class="diagram-soft"/>
+          <!-- components on bottom -->
+          <rect x="150" y="134" width="30" height="10" class="diagram-accent"/>
+          <rect x="360" y="134" width="60" height="30" class="diagram-accent"/>
+          <!-- test pads -->
+          <path d="M200 134 h12 M232 134 h12 M300 134 h12" stroke-width="5" class="diagram-accent"/>
+          <!-- probes -->
+          <path d="M206 134 v60 M238 134 v60 M306 134 v60" stroke-width="3"/>
+          <path d="M198 194 h16 M230 194 h16 M298 194 h16"/>
+          <!-- tooling hole -->
+          <path d="M500 118 v18 M520 118 v18" />
+          <!-- support post -->
+          <path d="M470 134 v60 M462 194 h16"/>
+          <!-- dims -->
+          <path d="M206 210 L238 210 M206 206 v8 M238 206 v8"/>
+          <path d="M180 150 L200 150 M180 146 v8 M200 146 v8"/>
+          <path d="M312 150 L360 150 M312 146 v8 M360 146 v8"/>
+          <path d="M520 100 L580 100 M520 96 v8 M580 96 v8"/>
+        </g>
+        <g class="diagram-text">
+          <text x="196" y="228">Pitch 2.54 (cost 1); 1.905 (×2); 1.27 (×4)</text>
+          <text x="120" y="176">0.7 to a part &lt; 2 tall</text>
+          <text x="300" y="185">1.91 to a part &gt; 4 tall</text>
+          <text x="470" y="90">≥ 3 to edge</text>
+          <text x="480" y="112">Tooling hole 2.7</text>
+          <text x="430" y="228">Support every 150</text>
+          <text x="60" y="60" font-weight="600">Board on bed-of-nails probes, seen from the side</text>
+          <text x="60" y="250" class="diagram-text-muted">Test pads 1.0 mm (0.9 min top, 0.7 min bottom), mask-free. Dimensions in mm, one contract manufacturer's guideline.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. The fixture is a mechanical assembly with its own tolerances. Probe pitch sets its cost; clearances to components decide whether it can be built at all.<sup class="cite"><a href="#ref-2">[2]</a></sup></figcaption>
+    </figure>
+
+    <h2 id="coverage">Test coverage and escapes</h2>
+    <p>Coverage is the fraction of what could go wrong that the test can detect. For ICT it is usually stated as the fraction of nets with a test point, or more carefully as the fraction of possible faults (opens, shorts, wrong values, missing parts) the program can catch. An escape is a defect that passes the test and moves downstream, where it costs more at every step (Module 0). The two are connected by simple arithmetic that is worth doing early.</p>
+    <p>Suppose a board has 2,000 solder joints and the process runs at a defect rate of 200 defects per million opportunities (DPMO). The expected number of defects per board is 2,000 × 200 × 10<sup>−6</sup> = 0.4. If ICT covers 90 percent of the joints, 0.04 defects per board escape ICT; at 20,000 boards a year that is 800 defective boards reaching functional test. If functional test catches 80 percent of them, 160 reach the customer. The numbers are illustrative; the shape is general. Every net you cannot probe, and every fault type the test cannot see, is a fraction of the process defect rate that ships. Boundary scan on the nets under the BGAs, X-ray on the hidden joints, and a functional test that exercises the untested nets are how the fraction is driven down.</p>
+    <p>Set the coverage target before layout, because layout is where coverage is won or lost. The published guideline of one test point per net is the minimum for full ICT coverage;<sup class="cite"><a href="#ref-2">[2]</a></sup> every net that ends up without one is a conscious decision to test it some other way, or not at all, and the decision should be written down.</p>
+
+    <h2 id="mechanical">Testability of mechanical assemblies</h2>
+    <p>Mechanical products are tested too, and the same logic applies: decide at architecture what the production test is, and design the parts to allow it.</p>
+    <h3>Leak and pressure testing</h3>
+    <p>Anything that holds fluid or gas gets a leak test, and two standard practices cover most cases. ASTM E2930 describes the pressure decay method: the vessel is pressurised, and the leak rate is determined from the change of mass inside, computed from measured pressure, temperature, and time using the ideal gas relationship; the practice does not apply to deformable vessels.<sup class="cite"><a href="#ref-5">[5]</a></sup> ASTM E1003 describes hydrostatic leak testing: components such as piping, valves, and containers are pressurised internally with a liquid; it is useful for quality control of items designed for internal pressure and expected to retain liquids, and is not sensitive enough where toxic or explosive gas is to be retained.<sup class="cite"><a href="#ref-6">[6]</a></sup></p>
+    <p>The design consequences of pressure decay follow from the physics. For a gas at pressure P in a test volume V, a small leak Q over time t produces a pressure drop of roughly Δp ≈ P · Q · t / V. So a smaller test volume gives a larger, faster signal for the same leak; a stiff vessel is needed because a deforming wall changes V and masks the leak; and temperature must be stable because a small warming looks like a leak in reverse. Design for it by keeping the tested volume small (test the sub-assembly, not the whole product; block off large dead volumes with the fixture), by providing a test port that can be sealed with a quick connector and that becomes a plugged or capped feature in the finished product, by giving the fixture a clamping surface and a datum, and by choosing materials and geometry that do not creep under test pressure.</p>
+
+    <figure>
+      <svg viewBox="0 0 640 240" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Pressure decay leak test: signal versus test volume</title>
+        <desc id="fig2-desc">A chart of pressure against time during a pressure decay test. After a fill and stabilisation period the pressure is held and then monitored. Two decay lines are shown for the same leak rate: a steep line labelled small test volume and a shallow line labelled large test volume. A horizontal band marks the sensor resolution; the small volume line crosses it much sooner, labelled shorter test time.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M60 200 L600 200 M60 200 L60 30"/>
+          <!-- fill and stabilise -->
+          <path d="M60 195 L120 60 L200 60" class="diagram-accent" stroke-width="3"/>
+          <!-- decay lines -->
+          <path d="M200 60 L600 160" class="diagram-accent" stroke-width="3"/>
+          <path d="M200 60 L600 85" class="diagram-accent" stroke-width="3" stroke-dasharray="6 4"/>
+          <!-- resolution band -->
+          <path d="M200 80 L600 80" stroke-dasharray="3 3"/>
+          <!-- markers -->
+          <path d="M280 200 v-8 M600 200 v-8 M200 200 v-8"/>
+        </g>
+        <g class="diagram-text">
+          <text x="70" y="45">Pressure</text>
+          <text x="540" y="220">Time</text>
+          <text x="120" y="215">Fill</text>
+          <text x="170" y="215">Hold</text>
+          <text x="330" y="150">Small volume: Δp ≈ P·Q·t / V, steep</text>
+          <text x="400" y="105" class="diagram-text-muted">Large volume, same leak: shallow</text>
+          <text x="210" y="76" class="diagram-text-muted">Sensor resolution</text>
+          <text x="240" y="230" class="diagram-text-muted">Detects here</text>
+          <text x="60" y="30" class="diagram-text-muted"> </text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. For a given leak, a smaller test volume produces a larger pressure drop in the same time. Test the sub-assembly, block dead volume, and keep the vessel stiff.<sup class="cite"><a href="#ref-5">[5]</a></sup></figcaption>
+    </figure>
+
+    <h3>Functional checks</h3>
+    <p>Mechanical functional tests (a valve strokes fully, a latch holds a load, a motor draws its expected current, a fan delivers flow) need the same three things as an electrical test: access to apply the stimulus, access to measure the response, and a repeatable way to hold the part. Design them in: a drive feature that a fixture can engage, a port where a pressure or flow gauge can attach, a flat where a load cell can push, and a way to reach the connector before the cover goes on. A product whose only functional test is "switch it on and see" has no diagnosis when it fails.</p>
+
+    <h2 id="fixture">Designing the fixture alongside the product</h2>
+    <p>Fixtures designed after the product are designed around obstacles. Fixtures designed with it share its datums and its sequence. The habits:</p>
+    <ol>
+      <li><strong>Same datums.</strong> The fixture locates the board on the tooling holes and the housing on the mounting features that the assembly uses (Module 3). A fixture that locates on a cosmetic surface tests a slightly different part every time.</li>
+      <li><strong>Reserve the zones.</strong> Probe clearances, tooling holes, clamp areas, the 3 mm edge strip, and the leak-test port are keep-outs on the layout and the housing from the first concept.</li>
+      <li><strong>Test before you seal.</strong> Put the sub-assembly test at the point in the assembly sequence (Module 10) just before the fault becomes expensive to reach.</li>
+      <li><strong>Build the fixture during EVT.</strong> A printed or machined bench fixture (Module 8) used on the first thirty units teaches the production fixture what it needs to hold, reach, and measure, and it exists before the DVT tools are cut (Module 1).</li>
+      <li><strong>Prove the test can see the fault.</strong> Seed known defects (a lifted pin, a missing part, a pinhole leak) and confirm the test catches them. This is the inspection-capability lesson of the 787: an inspection that has never been shown to detect the defect is an assumption, not a test.</li>
+    </ol>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Quantitative design-for-test rules. Fixture values are one contract manufacturer's published guidelines and will differ at yours.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range (metric)</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>ICT test point diameter</td><td>Bigger is more reliable</td><td>1.0 mm best; 0.9 mm min top; 0.7 mm min bottom; 0.6 mm bottom only</td><td>Probe tip must land on copper every cycle</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>ICT probe pitch</td><td>Coarser is cheaper</td><td>2.54 mm cost ×1; 1.905 mm ×2; 1.27 mm ×4</td><td>Smaller probes cost more and fail more</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Probe clearance to components</td><td>Height-dependent</td><td>0.7 mm (part &lt; 2 mm tall); 1.91 mm (part &gt; 4 mm); 0.9 mm to board or hole edge; 3 mm to tooling hole</td><td>Probe body and fixture plate</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>BGA clearance</td><td>Leave a ring</td><td>5.08 mm on all four sides</td><td>Rework and probe access</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Tooling holes</td><td>Two or three, precise</td><td>2.7 mm ±0.05; located ±0.1 mm; ≥ 3 mm from edge; 0.3 mm mask-free ring</td><td>Fixture registration</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Board support</td><td>Against probe force</td><td>Support about every 150 mm; 3 mm clear edge strip</td><td>Board flexes under hundreds of springs</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Coverage</td><td>One point per net</td><td>≥ 1 test point per net; 4 per power net at &lt; 1 A each</td><td>Untested nets are escapes</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Solder mask on test points</td><td>None</td><td>Mask not on or tangent to the pad</td><td>Insulated pad, no contact</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Flying probe clearance</td><td>Formula</td><td>L = 0.29 × H + 0.7 mm; pads 6 mil min, 20 mil recommended</td><td>Angled probe body</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Boundary scan</td><td>For nets probes cannot reach</td><td>TAP: TDI, TMS, TCK, TDO (+ TRST); IEEE 1149.1-2013</td><td>Tests interconnects without test points</td><td><a href="#ref-3">[3]</a>, <a href="#ref-4">[4]</a></td></tr>
+          <tr><td>AOI limits</td><td>Surface only</td><td>Hidden joints need X-ray</td><td>Cameras cannot see under parts</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Pressure decay</td><td>ASTM E2930</td><td>Δp ≈ P·Q·t / V; non-deformable vessels only</td><td>Ideal gas: mass loss from pressure, temperature, time</td><td><a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Hydrostatic test</td><td>ASTM E1003</td><td>Liquid pressurisation of piping, valves, containers; not for toxic or explosive gas retention</td><td>Sensitivity limits</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Escapes</td><td>Untested share of the defect rate</td><td>Escapes per unit ≈ opportunities × DPMO × (1 − coverage)</td><td>Arithmetic</td><td>Course</td></tr>
+          <tr><td>Test conditions</td><td>Most severe credible case</td><td>787 battery: cell-to-cell propagation not tested</td><td>A test validates only the assumption it was built around</td><td><a href="#ref-7">[7]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: the 787 battery certification tests</h2>
+    <p>The NTSB report on the Boston fire (NTSB/AIR-14/01, adopted 21 November 2014) is a study in test design.<sup class="cite"><a href="#ref-7">[7]</a></sup> The battery had eight cells. The safety assessment used for certification assumed that an internal short circuit within a cell would be limited to venting of that cell; the possibility that thermal runaway in one cell could cascade to the others "was not considered", and so the certification engineers did not require a thermal-runaway test.<sup class="cite"><a href="#ref-7">[7]</a></sup> The cell manufacturer "did not test the battery under the most severe conditions possible in service".<sup class="cite"><a href="#ref-7">[7]</a></sup> After the event, independent testing induced internal shorts in single cells by indentation, nail penetration, and heating, and in every case the cell entered thermal runaway.<sup class="cite"><a href="#ref-7">[7]</a></sup></p>
+    <p>On the manufacturing side, investigators visiting the cell plant found conditions including foreign object debris generated during cell welding operations and an inspection process that could not reliably detect defects that could lead to an internal short circuit; oversight of the supply chain did not ensure that the cell manufacturing conditions were adequate.<sup class="cite"><a href="#ref-7">[7]</a></sup> The NTSB's safety issues included both "cell internal short circuiting and the potential for thermal runaway" and "cell manufacturing defects and oversight of cell manufacturing processes".<sup class="cite"><a href="#ref-7">[7]</a></sup></p>
+    <p>Three transferable lessons. First, list the failure modes before you list the tests, and make sure the worst credible one has a test; the absent test here was the one for propagation between cells. Second, treat inspection as a process with a measurable detection capability, and prove it on seeded defects. Third, test conditions must be representative of service, which is the same finding the Ariane 5 board made about its simulations two decades earlier.<sup class="cite"><a href="#ref-8">[8]</a></sup> None of this is specific to aviation. A leak test that never sees a pinhole, an ICT program that skips the nets under a BGA, and a functional test that runs at room temperature when the product lives in a boiler cupboard all share the same flaw.</p>
+    <!-- AUTHOR: optional personal note here (a test that passed while the product failed, or a fixture designed too late, from your own experience, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Laying out the board, then asking for a fixture.</strong> Consequence: test points squeezed in where they fit, nets untestable, a fixture at fine pitch that costs four times as much. Fix: reserve test points, tooling holes, and clearances before routing.</li>
+      <li><strong>Test points with solder mask over or tangent to them.</strong> Consequence: intermittent contact and false failures. Fix: mask-free pads with clearance, 1.0 mm where possible.</li>
+      <li><strong>No test point on a net because it is under a BGA.</strong> Consequence: an untested interconnect. Fix: boundary scan through the BGA and its neighbours, or a via brought out to a pad.</li>
+      <li><strong>Functional test as the only test.</strong> Consequence: failures with no diagnosis, long debug at the station, and latent defects that pass. Fix: ICT or flying probe for structural faults, functional test for behaviour.</li>
+      <li><strong>Testing after the product is sealed.</strong> Consequence: every rework opens a housing and scraps a seal. Fix: sub-assembly test before the sealing step.</li>
+      <li><strong>Leak testing the whole product volume.</strong> Consequence: a small leak gives a tiny pressure drop; the test is long or insensitive. Fix: test the pressure-bearing sub-assembly; block dead volume; keep the vessel stiff and the temperature stable.</li>
+      <li><strong>Assuming the inspection sees the defect.</strong> Consequence: defects ship with a passed inspection record. Fix: seed known defects and measure detection.</li>
+      <li><strong>Test conditions that are not the worst credible case.</strong> Consequence: the design passes and the product fails. Fix: derive test conditions from the failure mode list, not from convenience.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: coverage, escapes, and a leak test</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program.</em></p>
+    <p>A controller board has 480 nets and 2,000 solder joints. Twenty nets exist only under a BGA and cannot be probed. Thirty more nets are in an area where the test points would need 1.27 mm pitch. The assembly process runs at 200 DPMO on solder joints. Annual volume is 20,000 boards. The board sits in a housing that is leak tested by pressure decay at a gauge pressure of 300 kPa; the housing's internal volume is 500 cm³; the acceptance limit is a leak of 1 cm³/min at test pressure; the pressure sensor resolves 20 Pa.</p>
+    <p><strong>Tasks.</strong> (a) Compute ICT net coverage if the BGA nets and the dense nets are left unprobed, and then if boundary scan covers the BGA nets. (b) Estimate escapes from ICT per year in each case, assuming joint coverage equals net coverage. (c) Compare the fixture cost factor of probing the dense nets at 1.27 mm pitch against leaving them to functional test. (d) Compute the pressure drop for the limit leak over a 30 s hold, and what a 200 cm³ test volume would do to the test time.</p>
+
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>(a) Coverage.</strong> Without the BGA and dense nets: (480 − 20 − 30) / 480 = 430 / 480 = 89.6 percent. With boundary scan covering the 20 BGA nets: 450 / 480 = 93.75 percent.</p>
+      <p><strong>(b) Escapes.</strong> Expected defects per board = 2,000 × 200 × 10<sup>−6</sup> = 0.40. Uncovered share 10.4 percent: escapes = 0.40 × 0.104 = 0.042 per board, or about 830 defective boards per year reaching the next station. With boundary scan, uncovered share 6.25 percent: 0.025 per board, about 500 per year. If functional test then catches 80 percent, the field sees about 166 or 100 boards respectively. Each of those is a warranty return that started as a layout decision.</p>
+      <p><strong>(c) Fixture cost.</strong> Probing the 30 dense nets at 1.27 mm pitch raises the fixture cost factor from about 1 to about 4 for that region (and the reliability falls). Alternatives: move the test points for those nets to a less dense area by adding vias to pads at 2.54 mm pitch, which costs layout time and a little board area but keeps the fixture cheap and reliable; or leave them to functional test and accept the escape arithmetic in (b) for 30 nets. The layout change is almost always the right answer when it is made before routing is complete.</p>
+      <p><strong>(d) Leak test.</strong> Δp ≈ P · Q · t / V. Use absolute pressure for the ideal gas relationship: about 300 + 101 = 401 kPa. Q · t = 1 cm³/min × 0.5 min = 0.5 cm³. Δp ≈ 401 kPa × 0.5 / 500 = 0.40 kPa = 400 Pa, twenty times the 20 Pa resolution, so the 30 s hold detects the limit leak with margin. With a 200 cm³ test volume (a fixture insert filling the dead space), the same leak gives 1,000 Pa in 30 s, or 400 Pa in 12 s; the hold can be shortened to about 12 s for the same margin, which at 20,000 units a year is 100 hours of test time saved. The stabilisation time before the hold (temperature settling after fill) does not shrink with volume and is often the larger part of the cycle; measure it on the first fixture rather than assuming it.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+
+    <form class="quiz" data-module="11">
+      <fieldset class="q" data-answer="c">
+        <legend>1. What does production test (PVT and beyond) primarily ask?</legend>
+        <label><input type="radio" name="q1" value="a"> Does the design meet its requirements?</label>
+        <label><input type="radio" name="q1" value="b"> Is the engineering concept feasible?</label>
+        <label><input type="radio" name="q1" value="c"> Was this unit built correctly?</label>
+        <label><input type="radio" name="q1" value="d"> Is the product profitable?</label>
+        <p class="explain" hidden>Design validation happens once at DVT; production test catches manufacturing defects on every unit.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>2. According to the guideline in this module, moving ICT probe pitch from 2.54 mm to 1.27 mm changes the fixture cost by roughly</legend>
+        <label><input type="radio" name="q2" value="a"> no change</label>
+        <label><input type="radio" name="q2" value="b"> a factor of about 4</label>
+        <label><input type="radio" name="q2" value="c"> a factor of about 0.5</label>
+        <label><input type="radio" name="q2" value="d"> a factor of about 20</label>
+        <p class="explain" hidden>2.54 mm is cost factor 1, 1.905 mm about 2, 1.27 mm about 4, with reliability falling as pitch shrinks.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="1.86" data-tolerance="0.02">
+        <legend>3. Using L = 0.29 × H + 0.7 mm, what clearance in mm does a flying probe need beside a 4 mm tall component?</legend>
+        <label>Answer (mm): <input type="number" name="q3" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>0.29 × 4 + 0.7 = 1.86 mm.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="d">
+        <legend>4. Boundary scan (IEEE 1149.1) is most useful for</legend>
+        <label><input type="radio" name="q4" value="a"> measuring resistor values</label>
+        <label><input type="radio" name="q4" value="b"> inspecting solder joint appearance</label>
+        <label><input type="radio" name="q4" value="c"> leak testing</label>
+        <label><input type="radio" name="q4" value="d"> testing interconnects between scan-capable devices, such as nets under a BGA, without physical test points</label>
+        <p class="explain" hidden>Data is shifted through boundary-scan cells via the TAP (TDI, TMS, TCK, TDO), so opens and shorts are found with no probes.</p>
+      </fieldset>
+
+      <fieldset class="q" data-type="numeric" data-answer="0.03" data-tolerance="0.002">
+        <legend>5. A board has 1,500 solder joints, the process runs at 100 DPMO, and ICT covers 80 percent of joints. How many defects per board escape ICT?</legend>
+        <label>Answer (defects per board): <input type="number" name="q5" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>1,500 × 100 × 10⁻⁶ = 0.15 defects per board; 20 % uncovered gives 0.03.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="a">
+        <legend>6. For a pressure-decay leak test, halving the test volume for the same leak rate and hold time</legend>
+        <label><input type="radio" name="q6" value="a"> roughly doubles the pressure drop, making the leak easier to detect</label>
+        <label><input type="radio" name="q6" value="b"> halves the pressure drop</label>
+        <label><input type="radio" name="q6" value="c"> has no effect</label>
+        <label><input type="radio" name="q6" value="d"> requires a liquid instead of a gas</label>
+        <p class="explain" hidden>Δp ≈ P·Q·t / V, so the signal scales inversely with volume.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="c">
+        <legend>7. ASTM E2930 (pressure decay) states that the method does not apply to</legend>
+        <label><input type="radio" name="q7" value="a"> aluminium vessels</label>
+        <label><input type="radio" name="q7" value="b"> vessels larger than one litre</label>
+        <label><input type="radio" name="q7" value="c"> deformable vessels</label>
+        <label><input type="radio" name="q7" value="d"> vessels tested with air</label>
+        <p class="explain" hidden>A wall that deforms under pressure changes the volume and masks the leak signal.</p>
+      </fieldset>
+
+      <fieldset class="q" data-answer="b">
+        <legend>8. The NTSB found that the 787 battery certification did not include a thermal-runaway test because</legend>
+        <label><input type="radio" name="q8" value="a"> the test was too expensive</label>
+        <label><input type="radio" name="q8" value="b"> the safety assessment assumed an internal short would be limited to one cell venting, and cascading to other cells was not considered</label>
+        <label><input type="radio" name="q8" value="c"> lithium-ion batteries cannot be tested</label>
+        <label><input type="radio" name="q8" value="d"> the battery had only one cell</label>
+        <p class="explain" hidden>A test validates only the assumption it is built around; the worst credible case was missing from the assessment.</p>
+      </fieldset>
+
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>c. Was this unit built correctly?</li>
+        <li>b. About 4×.</li>
+        <li>1.86 mm.</li>
+        <li>d. Interconnects without test points.</li>
+        <li>0.03 defects per board.</li>
+        <li>a. Roughly doubles the pressure drop.</li>
+        <li>c. Deformable vessels.</li>
+        <li>b. Propagation was not considered.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>DVT validates the design once; production test asks every unit whether it was built correctly. Design for the second one, and make sure the first one includes the worst credible case.</li>
+      <li>Use the method that finds the fault: AOI and X-ray for joints, ICT or flying probe for structure and values, boundary scan for nets probes cannot reach, functional test for behaviour.</li>
+      <li>The fixture is a mechanical assembly with its own rules: 1.0 mm pads, 2.54 mm pitch where possible, height-dependent clearances, precise tooling holes, support, and a clear edge strip. Reserve them before routing.</li>
+      <li>Coverage is decided in layout. Escapes are the untested share of the defect rate, and they cost more at every downstream step.</li>
+      <li>For leak testing, keep the test volume small, the vessel stiff, and the temperature stable; provide a port and a clamping datum; test the sub-assembly before it is buried.</li>
+      <li>Design the fixture with the product, on the same datums, and build a bench version during EVT.</li>
+      <li>Prove the test can see the fault. Seed defects. An inspection that has never caught the defect is an assumption.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-07.</p>
+    <ol class="references">
+      <li id="ref-1">Keysight Technologies. "How In-Circuit Tests Ensure PCBA Quality and Reliability." Keysight blog, 2024. <a href="https://www.keysight.com/blogs/en/tech/educ/2024/in-circuit-test">https://www.keysight.com/blogs/en/tech/educ/2024/in-circuit-test</a></li>
+      <li id="ref-2">Sierra Circuits. "Design for Testing (DFT) Guidelines for PCB Manufacturing." n.d. <a href="https://www.protoexpress.com/blog/design-for-testing-guidelines-pcb-manufacturing/">https://www.protoexpress.com/blog/design-for-testing-guidelines-pcb-manufacturing/</a> <span class="tag">(one contract manufacturer's guideline; some values in mils, converted)</span></li>
+      <li id="ref-3">IEEE. <em>IEEE Std 1149.1-2013, IEEE Standard for Test Access Port and Boundary-Scan Architecture.</em> IEEE Xplore listing. <a href="https://ieeexplore.ieee.org/document/6515989">https://ieeexplore.ieee.org/document/6515989</a></li>
+      <li id="ref-4">ASSET InterTech. "The IEEE 1149.1-2013 Standard for Test Access Port and Boundary-Scan Architecture: An Overview." n.d. <a href="https://asset-intertech.com/the-ieee-1149-1-standard-for-test-access-port-and-boundary-scan-architecture/">https://asset-intertech.com/the-ieee-1149-1-standard-for-test-access-port-and-boundary-scan-architecture/</a></li>
+      <li id="ref-5">ASTM International. <em>ASTM E2930-13(2021) Standard Practice for Pressure Decay Leak Test Method.</em> ASTM catalogue page. <a href="https://www.astm.org/Standards/E2930.htm">https://www.astm.org/Standards/E2930.htm</a></li>
+      <li id="ref-6">ASTM International. <em>ASTM E1003-13(2022) Standard Practice for Hydrostatic Leak Testing.</em> ASTM catalogue page. <a href="https://store.astm.org/e1003-13r22.html">https://store.astm.org/e1003-13r22.html</a></li>
+      <li id="ref-7">National Transportation Safety Board. <em>Auxiliary Power Unit Battery Fire, Japan Airlines Boeing 787-8, JA829J, Boston, Massachusetts, January 7, 2013.</em> Aircraft Incident Report NTSB/AIR-14/01, adopted 21 November 2014. <a href="https://www.ntsb.gov/investigations/AccidentReports/Reports/AIR1401.pdf">https://www.ntsb.gov/investigations/AccidentReports/Reports/AIR1401.pdf</a></li>
+      <li id="ref-8">European Space Agency. "Ariane 501: Presentation of Inquiry Board report." Press release, 1996. <a href="https://www.esa.int/Newsroom/Press_Releases/Ariane_501_-_Presentation_of_Inquiry_Board_report">https://www.esa.int/Newsroom/Press_Releases/Ariane_501_-_Presentation_of_Inquiry_Board_report</a></li>
+      <li id="ref-9">Haw, J. "EVT vs DVT vs PVT: Understanding the Stages of Product Development." OpenBOM blog, 1 September 2023. <a href="https://www.openbom.com/blog/evt-vs-dvt-vs-pvt-understanding-the-stages-of-product-development">https://www.openbom.com/blog/evt-vs-dvt-vs-pvt-understanding-the-stages-of-product-development</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>IEEE. <em>IEEE Std 1149.1-2013.</em> The boundary-scan standard itself, including the Boundary-Scan Description Language.</li>
+      <li>IPC. <em>IPC-2231A DFX Guidelines.</em> Includes design-for-test practice for printed board assemblies alongside the other DFX disciplines.</li>
+      <li>Bralla, J. G. (ed.). <em>Design for Manufacturability Handbook</em>, 2nd ed. McGraw-Hill, 1999. Chapters on DFM for electronics and on inspection and test.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-07.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>

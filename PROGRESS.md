@@ -9,7 +9,7 @@ Spec: CLAUDE.md. Source register: SOURCES.md.
 |-------|--------|------|
 | A – Research and outline | Complete, approved by author | 2026-09-07 |
 | B – Scaffold + reference module (06) | Complete, approved by author (4,900 words accepted) | 2026-09-07 |
-| C – Remaining modules | **In progress**: 00 to 10 done | 2026-09-07 |
+| C – Remaining modules | **In progress**: 00 to 11 done | 2026-09-07 |
 | D – Verification pass | Not started | |
 | E – Ship (README, final summary) | Not started | |
 
@@ -32,6 +32,7 @@ Author instruction (2026-09-07): no em or en dashes anywhere in the course, incl
 | 08 Additive | 2026-09-07 | 3,281 | 13 | 2 | 8 | 12 OK; ISO catalogue 403 to scripts | Machine-specific rule variance (Formlabs Form 2 vs Form 3) used as the cautionary example; GE nozzle as the case. |
 | 09 PCB and PCBA | 2026-09-07 | 4,272 | 16 | 2 | 8 | 14 OK; ANSI webstore (2) and GlobalSpec return 403 to scripts | Trace-width arithmetic recomputed in Python; Galaxy IV tin whisker as the case. |
 | 10 Design for assembly | 2026-09-07 | 3,851 | 9 | 2 | 8 | 9 OK | IBM Proprinter numbers deliberately omitted (unverifiable); IDEXX and L3Harris cases used, labelled vendor/practitioner-published. |
+| 11 Design for test | 2026-09-07 | 3,838 | 9 | 2 | 8 | 8 OK; Keysight blog 403 to scripts (read during research) | 787 battery (NTSB) as the case; Ariane 5 as the second example; escape and leak arithmetic recomputed. |
 
 Links that return 403 to scripts are recorded here rather than as dead; they will be re-checked by hand in Phase D.
 
