@@ -14,6 +14,7 @@ for f in sorted(glob.glob("modules/*.html")):
     dm = re.search(r'data-module="(\d+)"', s).group(1)
     if dm != num: problems.append((name, "data-module mismatch", dm))
     for sec in sections:
+        if sec == "quiz" and 'class="quiz' not in s: continue
         if f'id="{sec}"' not in s: problems.append((name, "missing section id", sec))
     if 'data-pager' not in s: problems.append((name, "missing pager", ""))
     if '<footer' not in s: problems.append((name, "missing footer", ""))

@@ -33,37 +33,6 @@
       <li><strong>Calculate</strong> the break-even between engineering time spent early and a per-unit cost avoided later.</li>
     </ul>
 
-    <h2 id="precheck">Before you start</h2>
-    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
-    <form class="quiz quiz-pre" data-pre data-module="00">
-        <fieldset class="q" data-answer="b">
-          <legend>1. What does DFA stand for?</legend>
-          <label><input type="radio" name="p1" value="a"> Design for accuracy</label>
-          <label><input type="radio" name="p1" value="b"> Design for assembly</label>
-          <label><input type="radio" name="p1" value="c"> Drawing for approval</label>
-          <label><input type="radio" name="p1" value="d"> Design failure analysis</label>
-          <p class="explain" hidden>Design for assembly: fewest parts consistent with function, each easy to handle and insert.</p>
-        </fieldset>
-        <fieldset class="q" data-answer="c">
-          <legend>2. The claim that "design determines about 80 percent of product cost" is best described as</legend>
-          <label><input type="radio" name="p2" value="a"> a measured result from a large industry study</label>
-          <label><input type="radio" name="p2" value="b"> a requirement of ISO 9001</label>
-          <label><input type="radio" name="p2" value="c"> a widely repeated rule of thumb whose original data is hard to trace</label>
-          <label><input type="radio" name="p2" value="d"> false; design has no effect on cost</label>
-          <p class="explain" hidden>Ulrich and Pearson traced it to folklore and then measured the design effect on coffee makers; this module explains what they found.</p>
-        </fieldset>
-        <fieldset class="q" data-answer="c">
-          <legend>3. As a product moves from concept to mass production, the cost of fixing a design problem generally</legend>
-          <label><input type="radio" name="p3" value="a"> falls, because more people are available</label>
-          <label><input type="radio" name="p3" value="b"> stays about constant</label>
-          <label><input type="radio" name="p3" value="c"> rises sharply, because tooling, inventory, and certification become involved</label>
-          <label><input type="radio" name="p3" value="d"> depends only on part size</label>
-          <p class="explain" hidden>The cost-of-change curve is the reason DFx work is done early; the module discusses the rule of ten and what evidence exists for it.</p>
-        </fieldset>
-      <button type="submit">Check</button>
-      <button type="reset" class="secondary">Clear</button>
-      <output class="quiz-score" aria-live="polite"></output>
-    </form>
 
     <h2 id="why">Why this matters</h2>
     <p>In June 2006, and again in October 2006, Airbus announced delays to the A380 programme. The company's stated root cause was that the three-dimensional digital mock-up used to design the installation of electrical harnesses "was implemented late", and that the people working on it were still on their learning curve when the aircraft was already being built.<sup class="cite"><a href="#ref-7">[7]</a></sup> Harnesses designed against one representation of the airframe did not fit the airframe as built, and installed wiring had to be reworked in the final assembly hall. EADS put the earnings impact of the October announcement at 2.8 billion euros over four years, on top of the 2 billion euros already announced in June, and first delivery slipped a full year to October 2007.<sup class="cite"><a href="#ref-7">[7]</a>,<a href="#ref-8">[8]</a></sup></p>
@@ -204,85 +173,6 @@
       <p><strong>(a)</strong> Early review: 8 h × 90 €/h = 720 €. Avoidable feature: 0.20 € × 60,000 × 4 = 48,000 €. The early review costs 1.5 % of what it avoids.</p>
       <p><strong>(b)</strong> Fixing at quote: 3 × 720 = 2,160 €. At first article: 10 × 720 = 7,200 €. After production start: 30 × 720 = 21,600 €. Every one of these is still far below the 48,000 € of living with the feature, which is the usual situation: the change is worth making at every phase, but each phase you wait costs more and, in the last two, also delays the schedule. The multipliers here are illustrative; Module 6 shows that for a moulded part the tooling step alone can be the dominant one.</p>
       <p><strong>(c)</strong> Break-even per-part penalty p satisfies p × 240,000 = 720 €, so p = 0.003 €. Below three tenths of a cent per part, the review does not pay for itself in this bracket alone. Almost any real manufacturing penalty exceeds that, which is why the early review is the default rather than the exception. The realistic risk is not that the review costs too much but that it is skipped for schedule reasons and the finding arrives at first article.</p>
-    </details>
-
-    <h2 id="quiz">Quiz</h2>
-    <p>Seven questions. Score 70 % or more to mark this module complete on this device.</p>
-
-    <form class="quiz" data-module="00">
-      <fieldset class="q" data-answer="c">
-        <legend>1. Which statement best describes what Ulrich and Pearson found when they tested the "80 percent" claim on coffee makers?</legend>
-        <label><input type="radio" name="q1" value="a"> Design determined exactly 80 percent of cost.</label>
-        <label><input type="radio" name="q1" value="b"> Manufacturing system differences explained far more cost variation than design.</label>
-        <label><input type="radio" name="q1" value="c"> Design explained somewhat more cost variation than the manufacturing system, and the two were of the same order.</label>
-        <label><input type="radio" name="q1" value="d"> Design had no measurable effect on cost.</label>
-        <p class="explain" hidden>Under their assumptions the design range was about 48 % of average cost and the manufacturing-system range about 31 %.</p>
-      </fieldset>
-
-      <fieldset class="q" data-answer="b">
-        <legend>2. The "rule of ten" for cost of change originates in</legend>
-        <label><input type="radio" name="q2" value="a"> a NIST study of machined parts</label>
-        <label><input type="radio" name="q2" value="b"> Barry Boehm's software defect cost data</label>
-        <label><input type="radio" name="q2" value="c"> the Boothroyd Dewhurst DFA method</label>
-        <label><input type="radio" name="q2" value="d"> an Airbus internal report</label>
-        <p class="explain" hidden>Boehm's 1976 and 1981 data, summarised by Boehm and Basili in 2001, give up to 100:1 after delivery versus design; hardware borrows the curve by analogy.</p>
-      </fieldset>
-
-      <fieldset class="q" data-answer="a">
-        <legend>3. DFA, as described by Boothroyd Dewhurst, primarily</legend>
-        <label><input type="radio" name="q3" value="a"> reduces the number of parts and makes the remaining parts easier to assemble</label>
-        <label><input type="radio" name="q3" value="b"> selects the cheapest material for each part</label>
-        <label><input type="radio" name="q3" value="c"> specifies test points for in-circuit test</label>
-        <label><input type="radio" name="q3" value="d"> defines the regulatory approvals a product needs</label>
-        <p class="explain" hidden>Part count and ease of handling and insertion are the two levers of DFA.</p>
-      </fieldset>
-
-      <fieldset class="q" data-answer="d">
-        <legend>4. Airbus's own stated root cause for the 2006 A380 harness problem was</legend>
-        <label><input type="radio" name="q4" value="a"> defective wire insulation</label>
-        <label><input type="radio" name="q4" value="b"> a supplier that missed delivery dates</label>
-        <label><input type="radio" name="q4" value="c"> a change in aircraft certification rules</label>
-        <label><input type="radio" name="q4" value="d"> the 3D digital mock-up for harness installation was implemented late</label>
-        <p class="explain" hidden>EADS said the digital mock-up was implemented late and its users were on a learning curve; the CAD-version story is press reporting.</p>
-      </fieldset>
-
-      <fieldset class="q" data-type="numeric" data-answer="4800" data-tolerance="1">
-        <legend>5. EADS announced 2.8 billion euros of earnings impact in October 2006 on top of 2 billion in June. What is the combined figure, in millions of euros?</legend>
-        <label>Answer (million €): <input type="number" name="q5" step="any" inputmode="decimal"></label>
-        <p class="explain" hidden>2,800 + 2,000 = 4,800 million euros.</p>
-      </fieldset>
-
-      <fieldset class="q" data-type="numeric" data-answer="24000" data-tolerance="1">
-        <legend>6. A feature adds 0.10 € per part on 80,000 parts per year for three years. What does it cost over the three years, in euros?</legend>
-        <label>Answer (€): <input type="number" name="q6" step="any" inputmode="decimal"></label>
-        <p class="explain" hidden>0.10 × 80,000 × 3 = 24,000 €.</p>
-      </fieldset>
-
-      <fieldset class="q" data-answer="b">
-        <legend>7. Which build is normally the last one made before production-intent tooling is committed, and therefore the last cheap point for a DFM change?</legend>
-        <label><input type="radio" name="q7" value="a"> PVT</label>
-        <label><input type="radio" name="q7" value="b"> EVT</label>
-        <label><input type="radio" name="q7" value="c"> Mass production</label>
-        <label><input type="radio" name="q7" value="d"> Field service</label>
-        <p class="explain" hidden>DVT is normally built from production-intent tooling, so the review before DVT (that is, during and after EVT) is the last cheap point.</p>
-      </fieldset>
-
-      <button type="submit">Check answers</button>
-      <button type="reset" class="secondary">Clear</button>
-      <output class="quiz-score" aria-live="polite"></output>
-    </form>
-
-    <details>
-      <summary>Answer key</summary>
-      <ol>
-        <li>c. Design range 48 %, manufacturing range 31 %, same order of magnitude.</li>
-        <li>b. Boehm's software defect data, applied to hardware by analogy.</li>
-        <li>a. Fewer parts, easier handling and insertion.</li>
-        <li>d. The digital mock-up was implemented late.</li>
-        <li>4,800 million euros.</li>
-        <li>24,000 euros.</li>
-        <li>b. EVT; DVT is built from production-intent tooling.</li>
-      </ol>
     </details>
 
     <h2 id="takeaways">Key takeaways</h2>

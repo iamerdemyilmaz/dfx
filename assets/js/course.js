@@ -6,10 +6,10 @@
   "use strict";
 
   /* ---------- Curriculum ----------
-     `built` controls whether the module is linked in navigation.
+     `built` controls whether the module is linked in navigation; `quiz: false` marks a module without a quiz (excluded from progress).
      Only finished modules are linked (no placeholder pages). */
   var MODULES = [
-    { num: "00", slug: "00-introduction", title: "Introduction: Why DFx", built: true },
+    { num: "00", slug: "00-introduction", title: "Introduction: Why DFx", built: true, quiz: false },
     { num: "01", slug: "01-npi-process", title: "The product development and NPI process", built: true },
     { num: "02", slug: "02-process-selection", title: "Process selection and cost drivers", built: true },
     { num: "03", slug: "03-tolerancing", title: "Tolerancing for manufacturability", built: true },
@@ -165,7 +165,7 @@
     var box = document.querySelector("[data-progress]");
     if (!box) { return; }
     var progress = loadProgress();
-    var built = MODULES.filter(function (m) { return m.built; });
+    var built = MODULES.filter(function (m) { return m.built && m.quiz !== false; });
     var done = built.filter(function (m) { return progress[m.num]; }).length;
     var pct = built.length ? Math.round(100 * done / built.length) : 0;
 
@@ -174,7 +174,7 @@
     fill.style.width = pct + "%";
     bar.appendChild(fill);
     box.appendChild(bar);
-    var p = el("p", null, done + " of " + built.length + " published module" + (built.length === 1 ? "" : "s") + " completed (" + pct + "%). A module is marked complete when you score at least " + Math.round(PASS_MARK * 100) + "% on its quiz.");
+    var p = el("p", null, done + " of " + built.length + " module" + (built.length === 1 ? "" : "s") + " with a quiz completed (" + pct + "%). A module is marked complete when you score at least " + Math.round(PASS_MARK * 100) + "% on its quiz. The introduction has no quiz.");
     box.appendChild(p);
 
     if (done > 0) {
@@ -213,6 +213,8 @@
       var status;
       if (!m.built) {
         status = el("span", { "class": "status" }, "In preparation");
+      } else if (m.quiz === false) {
+        status = el("span", { "class": "status" }, "Reading, no quiz");
       } else if (progress[m.num]) {
         status = el("span", { "class": "status done" }, "Completed");
       } else {

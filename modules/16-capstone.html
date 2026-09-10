@@ -46,20 +46,20 @@
           <p class="explain" hidden>Each review works on a design the previous one has simplified.</p>
         </fieldset>
         <fieldset class="q" data-answer="c">
-          <legend>2. A finding scored as severity 3 &times; likelihood 3 = 9 in this module means</legend>
-          <label><input type="radio" name="p2" value="a"> cosmetic only</label>
-          <label><input type="radio" name="p2" value="b"> fix at the next cost-down</label>
-          <label><input type="radio" name="p2" value="c"> cannot be made as drawn or a compliance failure, on every part; fix before tooling</label>
-          <label><input type="radio" name="p2" value="d"> ignore it</label>
-          <p class="explain" hidden>The scoring method is explained at the start of the review.</p>
+          <legend>2. In a scored findings list, a finding rated at the top of both severity and likelihood should be</legend>
+          <label><input type="radio" name="p2" value="a"> treated as cosmetic</label>
+          <label><input type="radio" name="p2" value="b"> deferred to the next cost-down</label>
+          <label><input type="radio" name="p2" value="c"> fixed before tooling is cut or boards are fabricated</label>
+          <label><input type="radio" name="p2" value="d"> ignored</label>
+          <p class="explain" hidden>Score = severity times likelihood; the highest scores are the ones that would otherwise become tool changes, board respins, or compliance failures.</p>
         </fieldset>
         <fieldset class="q" data-answer="b">
-          <legend>3. A steel bracket that holds a motor inside a moulded housing is a candidate for elimination if</legend>
+          <legend>3. A separate bracket whose only job is to hold a motor inside a moulded housing is a candidate for elimination when</legend>
           <label><input type="radio" name="p3" value="a"> it is painted</label>
-          <label><input type="radio" name="p3" value="b"> the housing can be moulded with a cradle that locates the motor</label>
+          <label><input type="radio" name="p3" value="b"> the housing can be moulded with features that locate and retain the motor</label>
           <label><input type="radio" name="p3" value="c"> it is heavy</label>
           <label><input type="radio" name="p3" value="d"> it is made in-house</label>
-          <p class="explain" hidden>Question three of the minimum-part criteria: separate only if required for assembly or service.</p>
+          <p class="explain" hidden>Third minimum-part question: a part is justified as separate only if assembly or service requires it.</p>
         </fieldset>
       <button type="submit">Check</button>
       <button type="reset" class="secondary">Clear</button>

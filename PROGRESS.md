@@ -51,6 +51,10 @@ Checks run over every module with `tools/verify_all.py`, `tools/checkmodule.py`,
 
 At the author's request each module now opens with a three-question "Before you start" form (`form.quiz[data-pre]`) placed after the learning objectives. It is graded in the browser with the same engine and shows explanations, but the engine returns before recording progress, so only the end-of-module quiz marks a module complete. 51 questions added (3 per module); verify_all.py checks their answer options like any other question. Browser test on Module 6: wrong answers give "You got 0 of 3" with explanations shown and no progress written; correct answers give "3 of 3"; the main quiz still records completion.
 
+## Post-ship change (2026-09-10): quizzes
+
+At the author's request Module 0 (introduction) has no quiz and no pre-check; it is flagged `quiz: false` and the progress bar counts the 16 quizzed modules. Pre-check questions were reworded so that none asks about a particular study, case, or named source: Module 1 question 3 (phase-gate purpose), Module 12 question 1 (derating), Module 15 question 3 (should-cost), Module 16 questions 2 and 3, and several explanations. End-of-module quizzes are unchanged and still include a question on each module's cited case where relevant.
+
 ## Phase C log
 
 Author instruction (2026-09-07): no em or en dashes anywhere in the course, including numeric ranges. `tools/checkdashes.py` enforces this; `tools/checkmodule.py` reports word count, citation cross-check, SVG accessibility, dashes, placeholders, and quiz count.
