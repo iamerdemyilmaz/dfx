@@ -27,8 +27,9 @@
     { num: "15", slug: "15-cost-modeling", title: "Cost modeling and should-cost", built: true },
     { num: "16", slug: "16-capstone", title: "Capstone: a full DFx review", built: true },
     { num: "17", slug: "17-actuators-gear-trains", title: "Actuators and gear trains: DFx and failure modes", built: true, part: "Part 8: Robotic systems" },
-    { num: "18", slug: "18-test-stations-fixtures", title: "Test stations, fixtures, and jigs for actuators and robots", built: false },
-    { num: "19", slug: "19-building-the-fleet", title: "Building the fleet: system-level DFx, safety certification, and the assembly line", built: false }
+    { num: "18", slug: "18-linear-drives", title: "Drive units for mobile and climbing robots: linear drives and their manufacturing", built: false },
+    { num: "19", slug: "19-test-stations-fixtures", title: "Test stations, fixtures, and jigs for actuators and robots", built: false },
+    { num: "20", slug: "20-building-the-fleet", title: "Building the fleet: system-level DFx, safety certification, and the assembly line", built: false }
   ];
 
   var PASS_MARK = 0.7; /* fraction of quiz questions needed to mark a module complete */

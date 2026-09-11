@@ -13,7 +13,8 @@ Spec: CLAUDE.md. Source register: SOURCES.md.
 | D – Verification pass | Complete (see Phase D record) | 2026-09-07 |
 | E – Ship (README, final summary) | Complete (see Phase E record) | 2026-09-07 |
 | Part 8 R1 – Robotics Phase A (Modules 17 to 19) | Complete, approved by author 2026-09-11 | 2026-09-11 |
-| Part 8 R2 – Module 17 | Built, verified, awaiting author review | 2026-09-11 |
+| Part 8 R2 – Module 17 | Built, verified, published; revision R2b pending (cable drives, low volume) | 2026-09-11 |
+| Part 8 R1b – Phase A for revised 17 and new 18 | Complete, awaiting author approval | 2026-09-11 |
 
 Author decisions (2026-09-07): outlines and examples approved; Module 11 uses the Boeing 787 battery case (Ariane 5 kept as alternative); capstone product is the portable 12 V tyre inflator; books appear only in an unnumbered "Further reading" list, never as numbered references; licence text shown in footers as "proposed" until confirmed.
 
@@ -97,6 +98,42 @@ What changes from ten to a thousand units: harness and connector wear (mating cy
 10. ODrive encoder and anti-cogging calibration: documentation inaccessible; encoder offset will be taught from the MathWorks example (S-192) and cogging described qualitatively.
 
 **Resume here (Part 8):** Phase A approved 2026-09-11. Session R2 built Module 17 (`modules/17-actuators-gear-trains.html`, linked, published); awaiting the author's review. Next is Session R3: build Module 18 (strongest model) using S-194 to S-205 plus the shared actuator sources, then stop for review; then R4 for Module 19 (mid-tier acceptable) and R5 for index text, glossary, references page, README, and the verification pass. Numbering: Module 16 remains the capstone of the process modules; the index gets a "Part 8: Robotic systems" heading; `course.js` gets three new entries with `built: false` until each module is complete.
+
+## Part 8 revision (2026-09-11, second session): four modules, cable drives added, linear drives module added
+
+**Model recommendation printed at session start:** strongest model (Fable 5.1).
+
+ROBOTICS.md now defines four modules: 17 rotary joints (with cable or tendon drive as a fifth architecture and a low-volume manufacturing section), 18 linear drives for mobile and climbing robots (new), 19 test stations (was 18), 20 fleet (was 19). Sessions become R2 (17), R3 to R5 (18, 19, 20), R6 (index, glossary, references, README, verification). The file's paragraph headed "Linear drive literature (primary for Module 17)" describes Module 18's sources and is treated as a label slip.
+
+**Research added this session:** 37 sources registered as S-224 to S-260 (10 for the Module 17 cable extension, 27 for Module 18); 35 verified, 2 secondary. Module 18 has 24 verified entries of its own plus the shared actuator and bearing sources from Module 17's register (ISO 15243, SKF atlas, ISO 281, NSK, AGMA 1010, Klüber, Junker, Blickle, Timken).
+
+### Module 17 (revised outline): Rotary actuators and gear trains for robot joints
+
+As built, plus two additions. (1) Cable or tendon drive with capstans as a fifth architecture row: motor remote from the joint, pretensioned cables over pulleys; transparency and low joint mass against friction that depends on tension, wrap angle, and pulley count rather than velocity (S-226, S-230); cable construction (1x19, 7x7, 7x19) trading fatigue life against abrasion (S-232); minimum pulley diameter of about 25× cable diameter for 7x19 and 40× for 7x7, groove mismatch cutting life by up to 90 %, fleet angle wear (S-231); constructional stretch removed by pre-stretching or proof loading, elastic stretch proportional to load (S-233); pretension setting and loss, termination by ball crimps and termination blocks, spring passive preload on capstans, redundant parallel cables, and the observation that earlier tensioning "required skill beyond that of standard field personnel" (S-228, S-229); why cable life is the service interval; cleanliness where the joint meets a sterile boundary (covered qualitatively, standards in Module 20). Raven-II and the dVRK as the public research platforms (S-224, S-225, S-227). (2) A low-volume manufacturing subsection: tens to hundreds of units a year means fixtures over automation, deeper first article and inspection, configuration control per serial, and the cost of a design change when every unit is installed; cable termination and pretensioning as controlled processes with measured results. The exercise gains a fourth part: size a cable for a stated joint torque, pulley diameter, and cycle life target using the D/d rule and a stated breaking strength. The built page needs a revision session (R2b) to add the row, the subsection, the exercise part, two quiz questions, and about 700 words; word count will be noted.
+
+### Module 18 (new outline): Drive units for mobile and climbing robots
+
+Scope: rotary-to-linear drives that move a robot along a structure; rotary reducers appear only in one upstream section pointing to Module 17. Architecture table rows and their sources: involute rack and pinion with hardened and ground racks in DIN quality classes, split-pinion and dual-pinion preload (S-242 to S-245, S-259); roller pinion on a generated rack with rollers in opposition, 99 % efficiency claimed, life in roller contacts with a 3.333 exponent, rack accuracy rounded to ±10 µm, lubrication interval, alignment tool for joints (S-234, S-235), with the 1907 roller-tooth patent and the Inventio elevator patent as the public family (S-236, S-237); roller worm or drum on rack tracks taught from that family only; ball screw and planetary roller screw with L10 = (C<sub>a</sub>/F<sub>a</sub>)^3, axial play 0.02 to 0.1 mm or preload, reversibility requiring a brake (S-246 to S-248); lead screw self-locking when backdrive efficiency is negative, with the 20° lead angle example (S-249); synchronous belts with low pre-tension, tension decay, tooth ratcheting, and profile-dependent backlash (S-250); friction and traction wheels limited by µN and by contamination (S-260 to be read, Blickle tread data). Core content: rolling versus sliding contact; Hertz line-contact stress as the sizing limit for rollers and rack flanks (S-251); the tolerance chain from motor to rack including pitch error per metre by class (±30 to ±60 µm/m) and joint error (25 µm example) accumulating over a tall structure (S-242 to S-244), with the joining procedure from the manuals (assembling jig, dial gauge, needle roller, joint case set); climbing specifics from the hoist world: the drive carries the weight, so back-driving, motor brakes, overspeed safety devices with a centrifugal weight on a pinion always in mesh, manual brake release, and what EN 12159 and EN 1495 cover (S-252 to S-256); failure modes: roller bearing wear, flat spotting, rack flank wear with caliper and gauge-rod limits (S-255), pitting from contact stress, fretting at joints, debris on open racks, lubricant starvation, preload loss, fastener loosening (Junker, Module 17), misalignment edge loading, and the upstream reducer and motor failures in one section. Manufacturing rules table: rack hardening and grinding by class, straightness, joining as a measured process, roller assembly bearings and runout, drive housing bore datum strategy, rack installation on the structure as a manufacturing process with alignment fixtures and acceptance checks, press fits with monitoring, grease dosing, run-in, traceability per drive unit and rack segment. Diagrams: roller pinion meshing with rollers in opposition; the tolerance chain from drive axis to rack across joints; contact stress versus roller radius.
+
+### Real-world examples intended for Module 18
+
+- Roller pinion system white paper and catalogue data on backlash, efficiency, accuracy, and life (S-234, S-235).
+- Rack-drive patents describing climbing storage robots and lifts: Attabotics pinion-wheel vehicle (S-240), Exotec chain-or-rack climbing trolley (S-241), the compliant pinion drive with counterwheels and rotational play (S-239), the roller pinion lift with a hydraulic speed limiter (S-238), the Inventio roller-pinion elevator (S-237), and the 1907 roller-tooth gear (S-236).
+- Rack and pinion hoists: Alimak's overspeed safety device and its published pinion and rack wear limits (S-255, S-256); the IPAF definitions (S-254).
+- The two OSHA mast climber collapse investigations (S-257, S-258): both attributed to ties, bolts, erection, and overload rather than the drive, which is itself the teaching point about where the risk in a climbing machine sits.
+- Rack manufacturers' joining procedures and pitch error classes (S-242 to S-244).
+
+### Claims not verified to the required standard (additional)
+
+11. Nexen's roller pinion patent number: not found; the catalogue's "patented" claim is cited, no number given.
+12. Split-pinion and dual-pinion electronic preload details: vendor pages seen only as search excerpts (S-259); secondary until read.
+13. Friction drive slip modelling paper (S-260): abstract not yet read; secondary.
+14. Magnitude of constructional stretch as a fraction of cable length: search excerpts quote 0.25 to 1 %, no page read gives it; taught qualitatively. The 60 % proof load is verified (S-233).
+15. Fleet angle numeric limits: no source gives a number; taught qualitatively.
+16. EN 12159:2024 edition: seen only in a webstore listing; the 2012 scope text is what was read.
+17. Rack-drive failure incident: no published incident attributing a collapse to rack or pinion failure was found; the module will say so rather than imply one.
+
+**Resume here (Part 8, revised):** Phase A for the revised Module 17 and the new Module 18 is complete and awaiting the author's approval. On approval: Session R2b revises the built Module 17 (cable drive row, low-volume section, exercise part 4, quiz); Session R3 builds Module 18 (`modules/18-linear-drives.html`); then R4 (19, test stations) and R5 (20, fleet) from the sources already registered as S-194 to S-223; R6 for index, glossary, references, README, and the verification pass. `course.js` already carries entries 18, 19, 20 with `built: false`.
 
 ## Phase C log
 
