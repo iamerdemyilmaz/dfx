@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 17: Actuators and gear trains: DFx and failure modes · DFx Course</title>
+<meta name="description" content="The robot actuator as a manufacturing problem: reading a gear and bearing specification, choosing between planetary, strain wave, cycloidal, and quasi-direct drive, the tolerance stack inside a joint, and the gear, bearing, lubrication, and fastener failure modes that decide whether it lasts.">
+<link rel="stylesheet" href="../assets/css/course.css">
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "cfd39382023243b08cf5932468455c77"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+<body data-root="../" data-module="17">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <a class="home-link" href="https://erdemyilmaz.me/">Back to erdemyilmaz.me</a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 17 · Part 8: Robotic systems</p>
+    <h1>Actuators and gear trains: DFx and failure modes</h1>
+    <p class="lead">A robot joint concentrates every problem in this course into one housing: a motor, a gear train, bearings with preload, an encoder, a brake, seals and grease, and a harness, all located by two bores whose alignment decides whether the assembly lasts a year or a month. Then the company has to build hundreds of them. This module reads the specification sheet the way a manufacturing engineer has to, names the failure modes by their standards, and turns both into design rules.</p>
+    <p><em>This module is written for a company building mobile or manipulating robots at fleet scale. No specific company's internal practice is described. Named products appear only where a published document says what is claimed.</em></p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Choose</strong> between planetary, strain wave, cycloidal, and direct or quasi-direct drive for a stated torque, speed, backlash, and cost target, and defend the choice.</li>
+      <li><strong>Read</strong> an actuator specification: rated, peak, and momentary peak torque; backlash and lost motion; torsional stiffness; efficiency; rated life.</li>
+      <li><strong>Compute</strong> a bearing L10 life under a load spectrum and a bore-to-bore alignment stack-up.</li>
+      <li><strong>Name</strong> gear and bearing failure modes in the terms of ANSI/AGMA 1010 and ISO 15243, and trace each to the design or process decision that causes it early.</li>
+      <li><strong>Specify</strong> the manufacturing controls a joint needs: bore datum strategy, fit selection, press-fit monitoring, preload setting, grease dosing, encoder alignment, traceability.</li>
+    </ul>
+
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="17">
+        <fieldset class="q" data-answer="b">
+          <legend>1. Backlash in a gear train is</legend>
+          <label><input type="radio" name="p1" value="a"> the maximum torque before the teeth break</label>
+          <label><input type="radio" name="p1" value="b"> the angular play at the output when the input is held and the torque passes through zero</label>
+          <label><input type="radio" name="p1" value="c"> the efficiency loss at full load</label>
+          <label><input type="radio" name="p1" value="d"> the temperature rise after one hour</label>
+          <p class="explain" hidden>Backlash is read at zero torque on the hysteresis curve; lost motion is read at a small fraction of rated torque and includes elastic wind-up.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>2. A bearing's L10 life is the life that</legend>
+          <label><input type="radio" name="p2" value="a"> every bearing of that type reaches</label>
+          <label><input type="radio" name="p2" value="b"> 10 percent of bearings reach</label>
+          <label><input type="radio" name="p2" value="c"> 90 percent of identical bearings reach before fatigue flaking appears</label>
+          <label><input type="radio" name="p2" value="d"> the bearing reaches at 10 percent of rated load</label>
+          <p class="explain" hidden>L10 is the 90 percent reliability life under ISO 281; it does not cover wear, corrosion, or electrical erosion.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="a">
+          <legend>3. Halving the load on a ball bearing changes its rating life by about</legend>
+          <label><input type="radio" name="p3" value="a"> eight times, because life goes with the cube of the load ratio</label>
+          <label><input type="radio" name="p3" value="b"> two times</label>
+          <label><input type="radio" name="p3" value="c"> no change; life depends only on speed</label>
+          <label><input type="radio" name="p3" value="d"> one and a half times</label>
+          <p class="explain" hidden>L10 = (C/P)^3 for ball bearings and (C/P)^(10/3) for roller bearings. Load, not speed, is the lever.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <h2 id="why">Why this matters</h2>
+    <p>The International Space Station's starboard Solar Alpha Rotary Joint is a bearing the size of a room: a nitrided steel race ring loaded by twelve trundle bearing arms spaced at 30° intervals, turning the solar arrays to track the sun. In 2008 it failed. The investigation that followed used spacewalks to collect debris and samples, structural and thermal analysis, and a review of the build records. NASA's report gives the root cause as "kinematic design vulnerability coupled with inadequate lubrication, and manufacturing flaws", corroborated by ground tests, metallurgy, and modelling; the recovery replaced worn components in orbit and applied lubricant.<sup class="cite"><a href="#ref-1">[1]</a></sup> The gold film that was meant to transfer onto the race and lower friction had worn away on the failed joint and was still pristine on the port joint's spare rollers.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>Nothing in that sentence is exotic. A kinematic arrangement that loaded the contact in a way the design did not intend, a lubricant that could not keep up, and a manufacturing flaw: those are the three ways a robot actuator fails early on Earth as well, and they are decided before the first unit is built. The rest of the course taught the processes. This module puts them together in the one assembly a robotics company builds more of than anything else.</p>
+
+    <h2 id="stack">The joint as a stack of tolerances</h2>
+    <p>Figure 1 is a generic rotary actuator: a frameless motor on a shaft, a reduction stage, an output bearing carrying the load, an input bearing, an encoder at each end, a brake, seals, and a housing. Every one of those parts is located by a bore or a face in the housing, and the housing is where the stack begins.</p>
+    <figure>
+      <svg viewBox="0 0 640 330" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Cross-section of a rotary actuator with the tolerance stack labelled</title>
+        <desc id="fig1-desc">A schematic half cross-section of a rotary actuator. From left to right: an input encoder, a frameless motor with stator in the housing and rotor on the shaft, an input bearing in bore A, a reduction stage, an output bearing in bore B, an output flange with an output encoder, and a brake at the input end. Callouts mark the tolerance contributors: bore A and bore B position to the datum axis, bore parallelism, bearing fits and preload, gear centre distance, encoder air gap, and the seal running surface. A note says that bores A and B should be machined in one setup.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M40 110 H600 V230 H40 Z" class="diagram-soft"/>
+          <path d="M40 150 H600 M40 190 H600" class="diagram-soft" stroke-dasharray="4 4"/>
+          <path d="M60 170 H580" stroke-dasharray="8 4"/>
+          <rect x="70" y="125" width="30" height="90" class="diagram-soft"/>
+          <rect x="120" y="120" width="120" height="100"/>
+          <rect x="130" y="150" width="100" height="40" class="diagram-accent-fill"/>
+          <rect x="255" y="118" width="20" height="104" class="diagram-accent"/>
+          <rect x="290" y="115" width="110" height="110"/>
+          <path d="M300 125 H390 M300 215 H390 M300 125 V215 M390 125 V215" stroke-dasharray="3 3"/>
+          <rect x="415" y="112" width="26" height="116" class="diagram-accent"/>
+          <rect x="460" y="130" width="60" height="80"/>
+          <rect x="535" y="140" width="30" height="60" class="diagram-soft"/>
+          <path d="M255 100 V118 M441 100 V112" class="diagram-accent"/>
+          <path d="M255 100 H441" class="diagram-accent" stroke-dasharray="4 3"/>
+        </g>
+        <g class="diagram-text">
+          <text x="66" y="250" class="diagram-text-muted">Brake</text>
+          <text x="130" y="250" class="diagram-text-muted">Frameless motor</text>
+          <text x="130" y="266" class="diagram-text-muted">stator in housing, rotor on shaft</text>
+          <text x="246" y="250" class="diagram-text-muted">Bearing A</text>
+          <text x="246" y="266" class="diagram-text-muted">bore A</text>
+          <text x="310" y="250" class="diagram-text-muted">Reduction stage</text>
+          <text x="310" y="266" class="diagram-text-muted">centre distance, tooth accuracy</text>
+          <text x="410" y="250" class="diagram-text-muted">Output bearing</text>
+          <text x="410" y="266" class="diagram-text-muted">bore B, preload</text>
+          <text x="470" y="250" class="diagram-text-muted">Output flange</text>
+          <text x="470" y="266" class="diagram-text-muted">encoder air gap</text>
+          <text x="530" y="250" class="diagram-text-muted">Seal</text>
+          <text x="255" y="92">Bore A to bore B: coaxiality and parallelism set the tilt of the whole train</text>
+          <text x="40" y="300" class="diagram-text-muted">Datum axis (dashed). Machine bores A and B in one setup so their relation comes from the machine, not from two fixtures.</text>
+          <text x="40" y="318" class="diagram-text-muted">Radial offsets add along the axis; divided by the bearing span they become a tilt that loads one edge of every tooth.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. The actuator as a stack. The two bearing bores, their fits, the gear centre distance, and the encoder gap are the dimensions that decide life; Module 3's stack-up method applies directly.</figcaption>
+    </figure>
+    <p>Three things follow. First, the datum strategy of Module 3 is not a drawing nicety here: the bearing bores must be toleranced to one axis, and the cheapest way to make them coaxial is to machine both in one setup, so that their relationship comes from the machine spindle rather than from two fixtures. Second, radial offsets add along the axis and divide by the bearing span to become a tilt; a tilt of a few tenths of a milliradian across a 20 mm gear face concentrates the load on one end of every tooth, which is the misalignment edge loading behind most early gear failures. Third, the encoder gap, the seal running surface, and the brake face all ride on the same stack, so a bore that is out of position shows up as an encoder fault, a leak, or a dragging brake before it shows up as a gear failure.</p>
+
+    <h2 id="spec">Reading an actuator specification</h2>
+    <p>Gear manufacturers define their terms precisely, and the definitions differ in ways that matter to a test engineer. Nabtesco's catalogue reads stiffness and lost motion from a torsional hysteresis curve taken with the input fixed and torque applied at the output: lost motion is the torsion angle at the mid-point of the hysteresis width at ±3 percent of rated torque, and backlash is the torsion angle where the torque is zero.<sup class="cite"><a href="#ref-3">[3]</a></sup> Harmonic Drive defines lost motion as the rotation of the low-speed shaft when the high-speed shaft is fixed and a slight load torque is applied at the output in each direction.<sup class="cite"><a href="#ref-2">[2]</a></sup> The two numbers are not interchangeable, and a planetary gearbox's "torsional backlash" in arcminutes is a third convention. When you write an end-of-line test, you write down which one you are measuring and at what torque.</p>
+    <figure>
+      <svg viewBox="0 0 640 300" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Torsional hysteresis curve of a gear train</title>
+        <desc id="fig2-desc">A chart with output torsion angle on the horizontal axis and applied torque on the vertical axis. A closed S-shaped hysteresis loop passes through positive and negative torque. The width of the loop at zero torque is labelled backlash. Two horizontal lines at plus and minus three percent of rated torque cut the loop; the width between the mid-points of the loop at those lines is labelled lost motion. The slope of the loop's straight portion is labelled torsional stiffness.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M320 20 V280 M60 150 H600"/>
+          <path d="M120 250 C 200 245, 250 200, 285 160 C 300 150, 300 150, 300 150 L 355 150 C 380 130, 430 90, 520 50" class="diagram-accent" stroke-width="3"/>
+          <path d="M520 50 C 440 55, 390 100, 355 140 C 340 150, 340 150, 340 150 L 285 150 C 260 170, 210 210, 120 250" class="diagram-accent" stroke-width="3"/>
+          <path d="M60 138 H600 M60 162 H600" class="diagram-soft" stroke-dasharray="4 4"/>
+          <path d="M300 150 V175 M340 150 V175" class="diagram-soft"/>
+          <path d="M300 172 H340" class="diagram-soft"/>
+          <path d="M286 138 V185 M354 138 V185" class="diagram-soft" stroke-dasharray="2 3"/>
+        </g>
+        <g class="diagram-text">
+          <text x="330" y="32" class="diagram-text-muted">Torque</text>
+          <text x="540" y="168" class="diagram-text-muted">Torsion angle</text>
+          <text x="604" y="134" class="diagram-text-muted">+3 % Tr</text>
+          <text x="604" y="172" class="diagram-text-muted">−3 % Tr</text>
+          <text x="262" y="200">Backlash: width at zero torque</text>
+          <text x="262" y="218" class="diagram-text-muted">Lost motion: width between mid-points at ±3 % of rated torque</text>
+          <text x="430" y="70">Slope: torsional stiffness</text>
+          <text x="60" y="290" class="diagram-text-muted">Definitions follow the cycloidal catalogue cited; other suppliers use different torque fractions.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. The hysteresis curve is the actuator's signature. Backlash, lost motion, and stiffness are all read from it, which is why an end-of-line torsional test replaces three separate checks.<sup class="cite"><a href="#ref-3">[3]</a></sup></figcaption>
+    </figure>
+    <h3>Torque ratings</h3>
+    <p>A catalogue gives at least three torques. Rated torque is what the life figure is quoted at. A repeated peak or acceleration torque is allowed for a stated number of cycles. A momentary peak torque covers collisions, and it has a mechanical basis: Harmonic Drive notes that momentary peak torque can be limited by the flexspline's bolted joint rather than by the gear teeth, and that if excessive torque, which the catalogue puts at 8 to 9 times rated torque, is applied while the gear is in motion, the teeth may not engage properly. That event is called ratcheting, and it "may cause the Flexspline to become non-concentric with the Circular Spline", after which continued operation shortens life and can end in flexspline fatigue failure.<sup class="cite"><a href="#ref-2">[2]</a></sup> Nabtesco sets the momentary maximum allowable torque of its cycloidal reducers at 500 percent of rated and requires shock loads to be counted against a cycle limit.<sup class="cite"><a href="#ref-3">[3]</a></sup> For a robot that will be crashed into things, the number that matters is the one for the collision case, and it comes with a cycle budget.</p>
+    <h3>Life</h3>
+    <p>Gear life in a strain wave unit is the life of the wave generator bearing. Harmonic Drive quotes L10 of 7,000 hours for its CSF, CSD, SHF, SHD, and CSF-mini series and 10,000 hours for CSG and SHG, with L50 of 35,000 and 50,000 hours, at rated torque and rated input speed, and scales it with the formula L<sub>h</sub> = L<sub>n</sub> (T<sub>r</sub>/T<sub>av</sub>)<sup>3</sup> (N<sub>r</sub>/N<sub>av</sub>) for the average load and speed of the duty cycle.<sup class="cite"><a href="#ref-2">[2]</a></sup> Nabtesco's rated service life is L10 of 6,000 hours at rated torque and speed.<sup class="cite"><a href="#ref-3">[3]</a></sup> The cube in that formula is the same cube that governs bearings, and it is the single most useful fact in actuator sizing: a duty cycle that averages 60 percent of rated torque gives about 4.6 times the rated life.</p>
+    <h3>Backlash classes</h3>
+    <p>Planetary suppliers sell backlash in grades. WITTENSTEIN's product lines run from 0 arcmin for its Galaxie drive, through ≤1 to 3 arcmin and ≤1 to 4 arcmin for the premium and advanced lines, to ≤5, ≤8, and ≤12 arcmin for the value and basic lines.<sup class="cite"><a href="#ref-4">[4]</a></sup> Neugart offers reduced backlash under 1 arcmin on selected frame sizes.<sup class="cite"><a href="#ref-5">[5]</a></sup> Each step down in backlash is a step up in gear accuracy class, selective assembly, or preloading, and therefore in price.</p>
+
+    <h2 id="architecture">Choosing an architecture</h2>
+    <p>The choice is between four families, and the honest comparison is on what each gives up.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Actuator architectures. Values are catalogue and paper ranges cited in the text; "typical" means as quoted by the sources, not a design value.</caption>
+        <thead><tr><th>Architecture</th><th>Ratio range</th><th>Backlash and lost motion</th><th>What it gives up</th><th>Manufacturing implications</th></tr></thead>
+        <tbody>
+          <tr><td>Planetary (one to three stages)</td><td>About 3:1 to 100:1 in stages</td><td>≤1 to ≤12 arcmin by class<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>Backlash unless preloaded; noise; efficiency per stage</td><td>Hobbed, shaved, or ground gears; carrier and ring bore concentricity; load sharing between planets</td></tr>
+          <tr><td>Strain wave (harmonic)</td><td>About 30:1 to 160:1 in one stage</td><td>Near-zero backlash; lost motion specified<sup class="cite"><a href="#ref-2">[2]</a></sup></td><td>Torsional compliance; ratcheting under overload; life set by wave generator bearing<sup class="cite"><a href="#ref-2">[2]</a></sup></td><td>Flexspline as a fatigue part; housing stiffness affects ratcheting torque; bolt torque limits peak torque</td></tr>
+          <tr><td>Cycloidal (RV type)</td><td>About 30:1 to 200:1</td><td>Lost motion under 1 arcmin class; backlash at zero torque specified<sup class="cite"><a href="#ref-3">[3]</a></sup></td><td>Mass; cost; torque ripple</td><td>Pin and roller wear; crank and disc bearings; main bearing integrated</td></tr>
+          <tr><td>Quasi-direct drive</td><td>About 6:1 to 10:1</td><td>Backlash accepted; Katz's actuator about 0.005 rad<sup class="cite"><a href="#ref-8">[8]</a></sup></td><td>Torque density; needs a large motor</td><td>Off-the-shelf gears and motors; simple; torque from current<sup class="cite"><a href="#ref-7">[7]</a></sup></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The quasi-direct drive case is worth reading in the original papers because it inverts the usual instinct. Wensing and colleagues at MIT argued that conventional manufacturing-robot actuators cannot deliver the high torque density and impact handling that dynamic legged machines need, and proposed proprioceptive actuation: collocated force control at the joint through a low-ratio, backdrivable transmission, with an impact mitigation factor to quantify backdrivability; the Cheetah leg controlled contact forces at contact times down to 85 ms and peak forces over 450 N.<sup class="cite"><a href="#ref-6">[6]</a></sup> Grimminger and colleagues built an open-source module from a brushless motor, a 9:1 dual-stage timing belt transmission, and an optical encoder on the motor shaft; it weighs 150 g and eight of them make a 2.2 kg quadruped, and the low ratio gives enough transparency to control torque from motor current alone.<sup class="cite"><a href="#ref-7">[7]</a></sup> Katz's thesis actuator uses a drone-class motor with a 6:1 single-stage planetary reduction and an integrated controller; its bill of materials is about US$300 in sub-50 quantities, one to two orders of magnitude below the Cheetah's actuators, and it accepts about 0.005 rad (0.28°) of output backlash from off-the-shelf gears because positioning accuracy and backlash were deliberately not design drivers.<sup class="cite"><a href="#ref-8">[8]</a></sup></p>
+    <p>The manufacturing lesson is that architecture decides the factory. A strain wave joint is bought as a component and its factory is the supplier's; the buyer's job is the housing, the bolted joints, the bearing preload, and the test. A quasi-direct drive joint is built from commodity parts and its factory is yours: gear inspection, press fits, encoder alignment, and the calibration that makes torque from current honest.</p>
+
+    <h2 id="gears">Gear failure modes, by their names</h2>
+    <p>ANSI/AGMA 1010 is the standard nomenclature for gear tooth wear and failure; it classifies and describes the common modes so that an engineer looking at a failed tooth can name what happened and judge how far it has progressed.<sup class="cite"><a href="#ref-10">[10]</a></sup> Its families, as used in this course:</p>
+    <ul>
+      <li><strong>Pitting and micropitting.</strong> Surface fatigue from repeated contact stress; micropitting as a grey frosting on the flank, macropitting as craters. Driven by load, lubricant film, and surface finish.</li>
+      <li><strong>Scuffing.</strong> Adhesive welding and tearing of the flanks when the lubricant film fails, usually at high sliding speed and temperature. Sudden, not fatigue.</li>
+      <li><strong>Wear.</strong> Abrasive or adhesive removal of material; the profile changes and backlash grows.</li>
+      <li><strong>Tooth root bending fatigue.</strong> Cracks at the root fillet that end in breakage; the mode that a rating method such as ISO 6336 is designed to prevent.<sup class="cite"><a href="#ref-26">[26]</a></sup></li>
+      <li><strong>Misalignment edge loading.</strong> Not a mode but a cause: a tilt between mating gears puts the whole load on one end of the face, and every mode above arrives early. In a robot joint the tilt comes from the housing stack of Figure 1.</li>
+    </ul>
+    <p>The accuracy that resists these is specified by flank tolerance class under ISO 1328-1, which defines the terms, the class structure, and allowable values for cylindrical involute gears.<sup class="cite"><a href="#ref-9">[9]</a></sup> Commonly quoted process capabilities put hobbing at roughly AGMA quality 8 to 11, shaping and shaving near 9 to 10, honing at 10 to 13, and grinding at 12 and above, with heat treatment after cutting costing about a class; these are vendor figures and vary with machine, tooling, and material, so specify the class from the standard and ask the gear maker which process reaches it.<sup class="cite"><a href="#ref-25">[25]</a></sup></p>
+
+    <h2 id="bearings">Bearing failure modes and bearing life</h2>
+    <p>ISO 15243 classifies in-service failures of rolling bearings by appearance and cause.<sup class="cite"><a href="#ref-13">[13]</a></sup> SKF's failure atlas lays the standard's tree out as six modes with sub-modes: rolling contact fatigue (subsurface initiated, surface initiated); wear (abrasive, adhesive); corrosion (moisture corrosion, and frictional corrosion divided into fretting corrosion and false brinelling); electrical erosion (excessive current, current leakage); plastic deformation (overload, indentations from particles); and cracking and fracture.<sup class="cite"><a href="#ref-14">[14]</a></sup> Three of these are the robot engineer's daily concern:</p>
+    <ul>
+      <li><strong>False brinelling</strong> is frictional corrosion at rolling element spacing whose root cause is vibration during standstill; SKF's example is a bearing in auxiliary equipment with long standstill periods, showing several sets of marks, one per standstill.<sup class="cite"><a href="#ref-14">[14]</a></sup> A robot that ships by truck with its joints unpowered, or that idles on a vibrating floor, is that bearing.</li>
+      <li><strong>True brinelling</strong> is plastic deformation from overload or shock: a dropped joint, an impact, a press-fit force taken through the rolling elements.<sup class="cite"><a href="#ref-14">[14]</a></sup></li>
+      <li><strong>Preload loss</strong> is wear's consequence. NASA's life tests of the grease-lubricated input-shaft bearings of the Space Shuttle body flap actuators found "wear that can cause loss of bearing preload" as the failure mechanism, and used a two-parameter Weibull analysis of the rig data to put reliability at 96.9 percent for 12 missions for the four actuators on one vehicle.<sup class="cite"><a href="#ref-16">[16]</a></sup> A preloaded pair that loses preload becomes a pair with clearance, and the encoder sees it first.</li>
+    </ul>
+    <h3>Life</h3>
+    <p>ISO 281 defines the basic rating life as the life associated with 90 percent reliability under conventional conditions and adds a modified life for other reliabilities, lubrication, and contamination; it explicitly does not cover wear, corrosion, or electrical erosion.<sup class="cite"><a href="#ref-11">[11]</a></sup> The working formula, in NSK's words, is that L10 is how long identical bearings run until flaking appears on 10 percent of them, with L10 = (C/P)<sup>3</sup> for ball bearings and (C/P)<sup>10/3</sup> for roller bearings, in millions of revolutions, where C is the dynamic load rating and P the equivalent load; halving the load gives about 8 times the life for a ball bearing and 10 times for a roller bearing.<sup class="cite"><a href="#ref-12">[12]</a></sup> Two consequences for actuators. Life is a load problem far more than a speed problem, so the output bearing's moment load from the arm, not the motor speed, sizes it. And an L10 says nothing about the failures a robot actually sees, which are mostly the excluded ones: contamination, false brinelling, preload loss, and lubricant death.</p>
+    <p>NASA's mechanisms lessons-learned study, a review of decades of flight anomalies, is blunt on the fundamentals: use rolling rather than sliding contact wherever possible, lubricate or separate every moving surface with a suitable grease or dry film "no exceptions", keep loads on hard coatings below the substrate's bearing yield strength, and use a compliant preload where thermal cycling would otherwise brinell the races.<sup class="cite"><a href="#ref-15">[15]</a></sup> Those were written for spacecraft, and every one of them applies to a joint in a warehouse.</p>
+
+    <h2 id="specifics">Strain wave, cycloidal, planetary: what wears</h2>
+    <p><strong>Strain wave.</strong> The flexspline is a thin steel cup flexed twice per input revolution; it is a fatigue part by design and its life is set by the wave generator bearing, as the catalogue life figures show.<sup class="cite"><a href="#ref-2">[2]</a></sup> Ratcheting under overload leaves it non-concentric and starts a fatigue failure.<sup class="cite"><a href="#ref-2">[2]</a></sup> Lost motion grows over life as flank wear and wave generator bearing wear accumulate, so an end-of-line lost motion value is a baseline, not a constant. Ratcheting torque depends on the stiffness of the housing the circular spline is bolted into, which is a housing design decision, not a supplier one.<sup class="cite"><a href="#ref-2">[2]</a></sup></p>
+    <p><strong>Cycloidal.</strong> Load is shared between pins and rollers and disks on eccentric crankshafts; wear of pins and rollers and misalignment of the carrier are the life items, and the integrated main bearing carries the arm's moment, so the moment rating is as important as the torque rating.<sup class="cite"><a href="#ref-3">[3]</a></sup></p>
+    <p><strong>Planetary.</strong> Load sharing between planets depends on carrier pin position accuracy and ring bore concentricity; a carrier that is out puts more than its share on one planet and that planet pits first. Backlash grows with flank wear; a run-in period is normal and should be part of the test plan rather than a surprise.</p>
+    <p><strong>Lubrication.</strong> Klüber's rolling bearing guidance selects grease by operating temperature, speed factor, load ratio C/P, consistency, and base oil viscosity, and warns that the grease's upper service temperature should exceed the bearing's operating temperature by a generous margin, because above it the grease ages quickly and relubrication becomes necessary where lubrication for life was intended.<sup class="cite"><a href="#ref-18">[18]</a></sup> For a sealed actuator the design questions are fill quantity (too much churns and heats, too little starves), leakage paths past shaft seals, and the temperature the grease sees next to a motor winding.</p>
+
+    <h2 id="other">Motors, encoders, brakes, fasteners, wheels, frames, batteries</h2>
+    <p><strong>Motor and electronics failures the mechanical engineer owns.</strong> Winding over-temperature is a thermal path problem: the stator sits in the housing and the housing is the heat sink. Magnet demagnetisation follows over-temperature. Encoder faults are contamination, air gap, and alignment: a magnetic or optical encoder needs a gap and a concentricity held by the same bores as everything else, and field-oriented control needs the electrical offset between the rotor's d-axis and the encoder's index, found at calibration by aligning the rotor with a d-axis excitation and reading the encoder; that offset is a per-unit number and belongs in the unit's record.<sup class="cite"><a href="#ref-23">[23]</a></sup> Cable fatigue at moving joints and connector wear are the harness items of Module 19.</p>
+    <p><strong>Brakes.</strong> A friction brake wears, glazes, and drifts in holding torque; a spring-applied brake that must release before motion is a mechanism that can stick. The Curiosity rover's drill feed stalled shortly after disengaging its magnetically actuated friction brake at the start of a move, and the actuator then moved in and out of a high-drag state until the mechanism could no longer be relied on.<sup class="cite"><a href="#ref-17">[17]</a></sup> Holding torque and release are both end-of-line test items.</p>
+    <p><strong>Fasteners under vibration.</strong> The Junker test applies transverse displacement to a bolted joint and plots preload against cycles; an unsecured joint is first run at increasing displacement until it loosens in about 300 cycles, and the secured joint is then run at that displacement for at least 2,000 cycles to show what preload remains.<sup class="cite"><a href="#ref-19">[19]</a></sup> ISO 16130 standardises the method for aerospace fasteners as a comparative evaluation of locking elements, and says explicitly that the result is not an absolute statement of service behaviour because rig stiffness differs.<sup class="cite"><a href="#ref-20">[20]</a></sup> In a robot the practical controls are the ones of Module 13: torque control, thread locker where disassembly allows, and designing joints so that transverse motion cannot occur.</p>
+    <p><strong>Wheels and tread.</strong> Polyurethane treads are specified by hardness and chemistry. Blickle's standard treads are 92 ± 3 Shore A for its Extrathane and Besthane materials and 75 Shore A for its soft grades; the Besthane grades are hydrolysis resistant and resist heat build-up under dynamic load, and are rated for speeds up to 16 km/h.<sup class="cite"><a href="#ref-21">[21]</a></sup> Flat spotting under sustained static load, delamination from the hub, and wear rate against the floor are the field items; a fleet robot that parks loaded for a weekend tests the first of these every week.</p>
+    <p><strong>Frames, welds, and batteries.</strong> Brackets fail at welds by fatigue under vibration, which is Module 13's welding section plus a vibration test. Battery packs and charging contacts are mechanical wear items too: a contact that mates thousands of times a year needs a mating cycle rating, and a pack that is dropped needs the abuse tests of Module 19.</p>
+    <p><strong>Grid and drive-unit mechanisms in public documents.</strong> Two public records show what fleet-scale mechanisms look like. The Kiva Systems patent describes a mobile drive unit with a docking head, including a self-aligning docking cone, raised by a docking actuator to lift an inventory holder, a motorised axle with two driven wheels and two stabilising wheels, and a position sensor reading reference markers on the floor.<sup class="cite"><a href="#ref-27">[27]</a></sup> The 2023 English Patents Court judgment in AutoStore v Ocado describes grid storage robots that run on rails in X and Y, raising one wheel set while the other drives, lift bins with a gripper, and differ in whether the bin is carried in a cantilevered position or a central cavity, with the footprint consequences that follow.<sup class="cite"><a href="#ref-28">[28]</a></sup> Wheel change, lifting, and charging mechanisms of that kind are the drive-unit actuators this module is about.</p>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Manufacturing rules for a robot actuator. Numeric values are ranges from the cited sources; where sources are vendor figures or secondary, the row says so.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Gear accuracy</td><td>Specify a flank tolerance class, not a process</td><td>ISO 1328-1 class system</td><td>Class is what the gear maker can measure; process is their choice</td><td><a href="#ref-9">[9]</a></td></tr>
+          <tr><td>Gear process versus class</td><td>Expect grinding for high classes</td><td>Commonly quoted: hobbing about AGMA 8 to 11; grinding 12 and above; heat treatment costs about a class (vendor figures)</td><td>Cost and lead time follow the process</td><td><a href="#ref-25">[25]</a> (secondary)</td></tr>
+          <tr><td>Bearing bores</td><td>One datum axis, one setup</td><td>Bores A and B machined in one setup; position and parallelism to the axis on the drawing</td><td>Tilt from two setups edge-loads every tooth</td><td>Module 3; Figure 1</td></tr>
+          <tr><td>Bearing life</td><td>Size on load, not speed</td><td>L10 = (C/P)<sup>3</sup> ball, (C/P)<sup>10/3</sup> roller; halving load gives 8 to 10× life</td><td>Cubic law</td><td><a href="#ref-11">[11]</a>, <a href="#ref-12">[12]</a></td></tr>
+          <tr><td>Bearing fits</td><td>Tight fit on the ring that sees circumferential load</td><td>Loose fit lets the ring creep and damages ring and seat</td><td>Creep wears the seat and loses location</td><td><a href="#ref-24">[24]</a> (secondary)</td></tr>
+          <tr><td>Preload setting</td><td>Choose the method for the volume</td><td>Manual, preset assemblies, Set-Right, Acro-Set, Projecta-Set, Torque-Set; excessive preload drastically reduces fatigue life</td><td>Preload is a process, not a dimension</td><td><a href="#ref-22">[22]</a></td></tr>
+          <tr><td>Press fits</td><td>Never through the rolling elements; monitor force versus displacement</td><td>Curve within a window from master parts (Module 18)</td><td>Brinelling from press force; wrong part detection</td><td><a href="#ref-14">[14]</a>; Module 18</td></tr>
+          <tr><td>Standstill vibration</td><td>Protect in transport and idle</td><td>False brinelling from vibration at standstill</td><td>Marks at rolling element spacing</td><td><a href="#ref-14">[14]</a></td></tr>
+          <tr><td>Overload torque</td><td>Stay below the collision limit with a cycle budget</td><td>Strain wave: ratcheting at about 8 to 9× rated while in motion; cycloidal: momentary maximum 500 % of rated</td><td>Ratcheting starts flexspline fatigue</td><td><a href="#ref-2">[2]</a>, <a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Gear life scaling</td><td>Cube of the torque ratio</td><td>L<sub>h</sub> = L<sub>n</sub> (T<sub>r</sub>/T<sub>av</sub>)<sup>3</sup> (N<sub>r</sub>/N<sub>av</sub>); L10 6,000 to 10,000 h at rating</td><td>Duty cycle averaging</td><td><a href="#ref-2">[2]</a>, <a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Backlash class</td><td>Buy the class the function needs</td><td>0 to ≤12 arcmin by product line; under 1 arcmin as an option</td><td>Each class is a price step</td><td><a href="#ref-4">[4]</a>, <a href="#ref-5">[5]</a></td></tr>
+          <tr><td>Lost motion measurement</td><td>State the torque fraction</td><td>Cycloidal: mid-point width at ±3 % of rated torque; backlash at zero torque</td><td>Definitions differ between suppliers</td><td><a href="#ref-3">[3]</a></td></tr>
+          <tr><td>Grease selection</td><td>Temperature margin</td><td>Select by temperature, speed factor, C/P, consistency, base oil viscosity; upper service temperature well above operating</td><td>Grease ages fast near its limit</td><td><a href="#ref-18">[18]</a></td></tr>
+          <tr><td>Bearing storage</td><td>Controlled, time-limited</td><td>Up to 3 years; +5 to +40 °C; ≤65 % relative humidity</td><td>Grease and corrosion protection age</td><td><a href="#ref-24">[24]</a></td></tr>
+          <tr><td>Encoder alignment</td><td>Calibrate per unit and record it</td><td>Electrical offset between rotor d-axis and encoder index</td><td>Field-oriented control needs it</td><td><a href="#ref-23">[23]</a></td></tr>
+          <tr><td>Fasteners</td><td>Design out transverse motion; verify locking by test</td><td>Junker: at least 2,000 cycles at the loosening displacement; ISO 16130 comparative only</td><td>Self-loosening under vibration</td><td><a href="#ref-19">[19]</a>, <a href="#ref-20">[20]</a></td></tr>
+          <tr><td>Wheel tread</td><td>Specify hardness and chemistry</td><td>75 or 92 ± 3 Shore A polyurethane; hydrolysis resistance; speed rating up to 16 km/h</td><td>Load, floor, and moisture</td><td><a href="#ref-21">[21]</a></td></tr>
+          <tr><td>Flight-heritage fundamentals</td><td>Lubricate or separate every moving surface</td><td>"No exceptions"; compliant preload against thermal brinelling</td><td>Decades of anomalies say so</td><td><a href="#ref-15">[15]</a>, <a href="#ref-29">[29]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: a brake, a bearing, and a drill</h2>
+    <p>Two NASA cases bracket what goes wrong in a small actuator. On 30 November 2016, Sol 1536 of the mission, Curiosity was commanded to drill its sixteenth rock sample. The drill feed mechanism stalled shortly after disengaging its magnetically actuated friction brake at the start of the extension move. Diagnostic experiments showed the actuator moving in and out of a high-drag state in which it could not actuate; reliability degraded over the following months, and by June 2017 the team concluded the feed could not be relied on. They succeeded in fully extending the feed and developed a new sampling technique that used the arm instead of the feed, collecting the first feed-extended sample on Sol 2057, 521 sols after the stall.<sup class="cite"><a href="#ref-17">[17]</a></sup> The JPL paper on the anomaly draws lessons on mechanism design, mission architecture, and operations; for a fleet engineer the transferable one is that a brake is a mechanism with its own failure modes, and that a drag state that comes and goes is exactly what an end-of-line no-load torque sweep exists to catch before shipment.</p>
+    <p>The second case is slower. The Shuttle's body flap actuators had grease-lubricated ball bearings on their input shafts. Rig tests to failure found wear that caused loss of preload, and a Weibull analysis of the test data gave a reliability of 96.9 percent for 12 missions for the four actuators on a vehicle, each with a two-bearing shaft.<sup class="cite"><a href="#ref-16">[16]</a></sup> That is a preloaded pair losing its preload through wear rather than fatigue, which is the life the L10 formula does not predict, found by testing to failure rather than by calculation. The fleet equivalent is a sample of actuators run to failure at the qualification build, so that the life the field will see is measured, not assumed.</p>
+    <!-- AUTHOR: optional personal note here (an actuator failure you diagnosed, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Sizing the gear on peak torque and the bearing on speed.</strong> Consequence: an oversized gearbox with an undersized output bearing that fails under the arm's moment. Fix: size the gear on the duty cycle average with the cubic life formula and the bearing on the equivalent load.</li>
+      <li><strong>Two setups for two bores.</strong> Consequence: a coaxiality that depends on two fixtures, a tilt across the gear face, and pitting on one end of every tooth. Fix: one datum axis, one setup, and the stack-up on the drawing.</li>
+      <li><strong>Pressing bearings through the rolling elements.</strong> Consequence: true brinelling at assembly, found as noise at end of line or as spalling in the field. Fix: press on the ring being fitted, monitor force versus displacement.</li>
+      <li><strong>Treating preload as a dimension.</strong> Consequence: a shim thickness on the drawing and preload that varies with every stack. Fix: a setting method chosen for the volume, with the measurement recorded per unit.</li>
+      <li><strong>Shipping and idling unpowered on vibration.</strong> Consequence: false brinelling before the robot has worked a day. Fix: transport fixtures that unload the joints or lock them, and idle strategies that move them.</li>
+      <li><strong>Ignoring the collision case.</strong> Consequence: a ratcheted flexspline and a fatigue failure weeks later. Fix: specify momentary peak torque for the impact the robot will actually see, with a cycle budget, and log overloads.</li>
+      <li><strong>Grease chosen by name.</strong> Consequence: a grease near its upper service temperature next to a motor winding, aged in months. Fix: select by temperature margin, speed factor, and load ratio, and measure the temperature at the bearing in DVT.</li>
+      <li><strong>Backlash bought instead of designed.</strong> Consequence: a premium backlash class paid for on a joint whose function never needed it. Fix: write down the positioning requirement, then buy the class it implies.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: pick the actuator, size the bearing, check the bores</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program. Catalogue values named in the solution are the ones cited above; everything else is an assumption stated in the text.</em></p>
+    <p>A mobile manipulator's shoulder joint needs 60 N·m continuous and 150 N·m for collisions, at 30 rpm output, with lost motion no more than 3 arcmin, inside a 90 mm diameter envelope, for 20,000 units per year with a target of 40,000 hours of life at a duty cycle averaging 60 percent of rated torque.</p>
+    <ol>
+      <li><strong>Architecture.</strong> Compare a 6:1 quasi-direct drive, a 10:1 planetary, and a 50:1 strain wave on motor torque, backlash, collision handling, and factory implications, and choose.</li>
+      <li><strong>Output bearing life.</strong> The output cross-roller bearing has a dynamic load rating C of 28 kN. The radial-equivalent load spectrum is 2.5 kN for 55 percent of the time, 5.0 kN for 35 percent, and 9.0 kN for 10 percent. Compute L10 in hours at 30 rpm, and compare with sizing on the 9.0 kN peak alone.</li>
+      <li><strong>Bore-to-bore stack-up.</strong> The two bearing bores are 70 mm apart. Contributors, as radial offsets: bore A position to datum 0.010 mm, bore B position to datum 0.010 mm, outer ring runout 0.005 mm at each bearing, radial clearance 0.004 mm at each bearing, shaft journal eccentricity 0.006 mm. Compute the worst-case and RSS tilt and the resulting offset across a 20 mm gear face. Then recompute the worst case if both bores are machined in one setup with a direct coaxiality of 0.008 mm.</li>
+    </ol>
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>1. Architecture.</strong> Motor torque needed: at 6:1, 10 N·m continuous and 25 N·m peak at 180 rpm; at 10:1, 6 and 15 N·m at 300 rpm; at 50:1, 1.2 and 3 N·m at 1,500 rpm. The quasi-direct drive needs a large, expensive motor and accepts backlash of the order of Katz's 0.005 rad (17 arcmin), which fails the 3 arcmin lost motion requirement outright.<sup class="cite"><a href="#ref-8">[8]</a></sup> The 10:1 planetary meets 3 arcmin only in the premium classes (≤1 to 3 arcmin), which is the price step the requirement forces.<sup class="cite"><a href="#ref-4">[4]</a></sup> The 50:1 strain wave meets lost motion easily and fits the envelope with the smallest motor; its exposures are torsional compliance and the collision case: 150 N·m against a unit rated near 60 N·m is 2.5 times rated, well inside the momentary peak rating and far below the 8 to 9 times rated at which the catalogue warns of ratcheting, provided the housing stiffness the supplier assumes is met.<sup class="cite"><a href="#ref-2">[2]</a></sup> Choice: strain wave, with the housing stiffness and bolted joint designed to the supplier's data, a cycle budget for collisions, and lost motion measured at end of line as the baseline for growth. The factory consequence is that the gear is bought and the housing, bearings, and test are yours.</p>
+      <p><strong>2. Output bearing life.</strong> For a roller bearing, p = 10/3. The equivalent load for a stepped spectrum is P = (Σ q<sub>i</sub> P<sub>i</sub><sup>p</sup>)<sup>1/p</sup> = (0.55 × 2.5<sup>3.333</sup> + 0.35 × 5.0<sup>3.333</sup> + 0.10 × 9.0<sup>3.333</sup>)<sup>0.3</sup> = 5.17 kN. L10 = (28 ÷ 5.17)<sup>3.333</sup> = 280 million revolutions. At 30 rpm that is 280 × 10<sup>6</sup> ÷ (60 × 30) = 155,500 hours, about 39 years at 4,000 hours a year: the bearing is not the life limit. Sized on the 9.0 kN peak alone, L10 would be (28 ÷ 9)<sup>3.333</sup> × 10<sup>6</sup> ÷ 1,800 = 24,400 hours, which would fail the 40,000 hour target and lead to a needlessly larger bearing. The spectrum matters. Remember what this number excludes: false brinelling in transport, contamination past the seal, and preload loss through wear are not in it.<sup class="cite"><a href="#ref-11">[11]</a></sup><sup class="cite"><a href="#ref-12">[12]</a></sup></p>
+      <p><strong>3. Stack-up.</strong> Worst case: 0.010 + 0.010 + 0.005 + 0.005 + 0.004 + 0.004 + 0.006 = 0.044 mm radial offset over 70 mm, a tilt of 0.63 mrad (0.036°), which across a 20 mm gear face is 12.6 µm of offset from one end of the tooth to the other. RSS: √(0.010² + 0.010² + 0.005² + 0.005² + 0.004² + 0.004² + 0.006²) = 0.018 mm, a tilt of 0.25 mrad and 5 µm across the face. Machining both bores in one setup replaces the two 0.010 mm position terms with one 0.008 mm coaxiality: worst case 0.032 mm and 0.46 mrad, a 27 percent reduction from a process decision that costs nothing at the drawing. Whether 12.6 µm across a 20 mm face is acceptable depends on the gear class and the crowning the supplier applies; the exercise's point is that the housing decides the number, and Module 3's method puts it on the drawing.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+    <form class="quiz" data-module="17">
+      <fieldset class="q" data-answer="c">
+        <legend>1. In the cycloidal reducer catalogue cited, lost motion is read from the hysteresis curve</legend>
+        <label><input type="radio" name="q1" value="a"> at zero torque</label>
+        <label><input type="radio" name="q1" value="b"> at rated torque</label>
+        <label><input type="radio" name="q1" value="c"> as the width between mid-points at ±3 percent of rated torque</label>
+        <label><input type="radio" name="q1" value="d"> at the momentary maximum torque</label>
+        <p class="explain" hidden>Backlash is the width at zero torque; lost motion at ±3 percent of rated includes some elastic wind-up.</p>
+      </fieldset>
+      <fieldset class="q" data-type="numeric" data-answer="64815" data-tolerance="700">
+        <legend>2. A strain wave unit has L10 of 7,000 h at rated torque and speed. With the life formula L<sub>h</sub> = L<sub>n</sub> (T<sub>r</sub>/T<sub>av</sub>)<sup>3</sup> (N<sub>r</sub>/N<sub>av</sub>), what is its L10 in hours at an average torque of 60 percent of rated and an average speed of 50 percent of rated?</legend>
+        <label>Answer (hours): <input type="number" name="q2" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>7,000 × (1/0.6)^3 × (1/0.5) = 7,000 × 4.63 × 2 ≈ 64,800 h.</p>
+      </fieldset>
+      <fieldset class="q" data-answer="b">
+        <legend>3. Ratcheting in a strain wave gear</legend>
+        <label><input type="radio" name="q3" value="a"> is normal operation at rated torque</label>
+        <label><input type="radio" name="q3" value="b"> is teeth failing to engage properly under excessive torque while in motion, which can leave the flexspline non-concentric and lead to fatigue failure</label>
+        <label><input type="radio" name="q3" value="c"> only affects the motor</label>
+        <label><input type="radio" name="q3" value="d"> improves stiffness</label>
+        <p class="explain" hidden>The catalogue puts the excessive torque at 8 to 9 times rated and notes housing stiffness affects the ratcheting torque.</p>
+      </fieldset>
+      <fieldset class="q" data-type="numeric" data-answer="10.08" data-tolerance="0.3">
+        <legend>4. By what factor does the L10 life of a roller bearing (exponent 10/3) increase when the equivalent load is halved?</legend>
+        <label>Answer: <input type="number" name="q4" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>2^(10/3) ≈ 10.1. For a ball bearing (exponent 3) it is 8.</p>
+      </fieldset>
+      <fieldset class="q" data-answer="a">
+        <legend>5. False brinelling, under ISO 15243 as laid out in the SKF atlas, is</legend>
+        <label><input type="radio" name="q5" value="a"> frictional corrosion at rolling element spacing whose root cause is vibration during standstill</label>
+        <label><input type="radio" name="q5" value="b"> plastic deformation from a dropped bearing</label>
+        <label><input type="radio" name="q5" value="c"> subsurface fatigue at the end of life</label>
+        <label><input type="radio" name="q5" value="d"> electrical erosion from current leakage</label>
+        <p class="explain" hidden>Transport and unpowered idling on a vibrating floor are the robot cases.</p>
+      </fieldset>
+      <fieldset class="q" data-answer="d">
+        <legend>6. The Shuttle body flap actuator bearing tests found the failure mechanism to be</legend>
+        <label><input type="radio" name="q6" value="a"> rolling contact fatigue at the L10 life</label>
+        <label><input type="radio" name="q6" value="b"> corrosion</label>
+        <label><input type="radio" name="q6" value="c"> electrical erosion</label>
+        <label><input type="radio" name="q6" value="d"> wear leading to loss of bearing preload</label>
+        <p class="explain" hidden>A mode the L10 formula does not predict, measured by testing to failure.</p>
+      </fieldset>
+      <fieldset class="q" data-answer="b">
+        <legend>7. Why does this module insist that both bearing bores be machined in one setup?</legend>
+        <label><input type="radio" name="q7" value="a"> It is faster</label>
+        <label><input type="radio" name="q7" value="b"> Their coaxiality then comes from the machine rather than from two fixtures, reducing the tilt that edge-loads the gear teeth</label>
+        <label><input type="radio" name="q7" value="c"> It reduces material cost</label>
+        <label><input type="radio" name="q7" value="d"> Standards require it</label>
+        <p class="explain" hidden>In the exercise, one setup cut the worst-case tilt by about a quarter at no drawing cost.</p>
+      </fieldset>
+      <fieldset class="q" data-answer="c">
+        <legend>8. The quasi-direct drive papers accept backlash and low ratios because</legend>
+        <label><input type="radio" name="q8" value="a"> gears are unavailable</label>
+        <label><input type="radio" name="q8" value="b"> positioning accuracy is the only requirement</label>
+        <label><input type="radio" name="q8" value="c"> a low-ratio, backdrivable transmission lets the joint control contact force from motor current and survive impacts, which those robots need more than positioning accuracy</label>
+        <label><input type="radio" name="q8" value="d"> strain wave gears are cheaper</label>
+        <p class="explain" hidden>Proprioceptive actuation trades backlash and torque density for backdrivability and cost.</p>
+      </fieldset>
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>c. Mid-point width at ±3 percent of rated torque.</li>
+        <li>About 64,800 hours.</li>
+        <li>b. Teeth failing to engage under excessive torque in motion.</li>
+        <li>About 10.1.</li>
+        <li>a. Standstill vibration.</li>
+        <li>d. Wear and preload loss.</li>
+        <li>b. Coaxiality from the machine, not the fixtures.</li>
+        <li>c. Force control and impact survival.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>A joint is a stack: two bearing bores, their fits and preload, the gear centre distance, and the encoder gap. Tolerance them to one axis and machine them in one setup.</li>
+      <li>Read the specification in the supplier's own definitions: backlash at zero torque, lost motion at a stated torque fraction, momentary peak with a cycle budget, life at rated conditions scaled by the cube of the torque ratio.</li>
+      <li>Architecture decides the factory. Strain wave and cycloidal units are bought; quasi-direct drives are built from commodity parts and calibrated.</li>
+      <li>Name failures by their standards: AGMA 1010 for gears, ISO 15243 for bearings. Misalignment brings every mode early.</li>
+      <li>L10 is a fatigue life at 90 percent reliability. Robots mostly die of what it excludes: false brinelling, contamination, preload loss, dead grease. Test to failure to find those.</li>
+      <li>Brakes, fasteners, treads, encoders, and grease are mechanisms with their own failure modes and their own end-of-line tests.</li>
+      <li>The fundamentals of the space mechanisms lessons apply on the warehouse floor: lubricate or separate every moving surface, no exceptions.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-11. Standards are cited from their publishers' catalogue pages unless the entry says the document was read.</p>
+    <ol class="references">
+      <li id="ref-1">DellaCorte, C., Krantz, T. L., Dube, M. J. <em>ISS Solar Array Alpha Rotary Joint (SARJ) Bearing Failure and Recovery: Technical and Project Management Lessons Learned.</em> NASA/TP-2011-217116, August 2011. <a href="https://ntrs.nasa.gov/api/citations/20110015384/downloads/20110015384.pdf">https://ntrs.nasa.gov/api/citations/20110015384/downloads/20110015384.pdf</a></li>
+      <li id="ref-2">Harmonic Drive LLC. <em>Reducer Catalog: Speed Reducers for Precision Motion Control, Engineering Data.</em> n.d. <a href="https://www.harmonicdrive.net/_hd/content/documents/reducer_catalog.pdf">https://www.harmonicdrive.net/_hd/content/documents/reducer_catalog.pdf</a></li>
+      <li id="ref-3">Nabtesco. <em>RV Series Product Catalog.</em> n.d. <a href="https://s3.amazonaws.com/www.motionusa.com/nabtesco/RV_Series_Full_Catalog.pdf">https://s3.amazonaws.com/www.motionusa.com/nabtesco/RV_Series_Full_Catalog.pdf</a></li>
+      <li id="ref-4">WITTENSTEIN SE. "Servo gearboxes." n.d. <a href="https://www.wittenstein-group.com/int-en/products/servo-gearboxes">https://www.wittenstein-group.com/int-en/products/servo-gearboxes</a></li>
+      <li id="ref-5">Neugart GmbH. "Low Backlash Gearboxes." n.d. <a href="https://www.neugart.com/en/low-backlash-gearboxes">https://www.neugart.com/en/low-backlash-gearboxes</a></li>
+      <li id="ref-6">Wensing, P. M., Wang, A., Seok, S., Otten, D., Lang, J., Kim, S. "Proprioceptive Actuator Design in the MIT Cheetah: Impact Mitigation and High-Bandwidth Physical Interaction for Dynamic Legged Robots." <em>IEEE Transactions on Robotics</em> 33(3):509 to 522, 2017. <a href="https://doi.org/10.1109/TRO.2016.2640183">https://doi.org/10.1109/TRO.2016.2640183</a> <span class="tag">(abstract read; full text paywalled)</span></li>
+      <li id="ref-7">Grimminger, F., Meduri, A., Khadiv, M., Viereck, J., Wüthrich, M., Naveau, M., Berenz, V., Heim, S., Widmaier, F., Flayols, T., Fiene, J., Badri-Spröwitz, A., Righetti, L. "An Open Torque-Controlled Modular Robot Architecture for Legged Locomotion Research." <em>IEEE Robotics and Automation Letters</em>, 2020; arXiv:1910.00093. <a href="https://arxiv.org/abs/1910.00093">https://arxiv.org/abs/1910.00093</a></li>
+      <li id="ref-8">Katz, B. G. <em>A Low Cost Modular Actuator for Dynamic Robots.</em> MS thesis, Massachusetts Institute of Technology, 2018. <a href="https://dspace.mit.edu/handle/1721.1/118671">https://dspace.mit.edu/handle/1721.1/118671</a></li>
+      <li id="ref-9">ISO. <em>ISO 1328-1:2013 Cylindrical gears: ISO system of flank tolerance classification. Part 1: Definitions and allowable values of deviations relevant to flanks of gear teeth.</em> <a href="https://www.iso.org/standard/45309.html">https://www.iso.org/standard/45309.html</a></li>
+      <li id="ref-10">AGMA. <em>ANSI/AGMA 1010-F14 (R2020) Appearance of Gear Teeth: Terminology of Wear and Failure.</em> 2014, reaffirmed 2020. ANSI webstore listing. <a href="https://webstore.ansi.org/standards/agma/ansiagma1010f14r2020">https://webstore.ansi.org/standards/agma/ansiagma1010f14r2020</a></li>
+      <li id="ref-11">ISO. <em>ISO 281:2007 Rolling bearings: Dynamic load ratings and rating life.</em> <a href="https://www.iso.org/standard/38102.html">https://www.iso.org/standard/38102.html</a></li>
+      <li id="ref-12">NSK Ltd. "Dynamic Load Ratings and Fatigue Life." ABC of Bearings, part 4, n.d. <a href="https://www.nsk.com/tools-resources/abc-bearings/dynamic-load-ratings-and-fatigue-life/">https://www.nsk.com/tools-resources/abc-bearings/dynamic-load-ratings-and-fatigue-life/</a></li>
+      <li id="ref-13">ISO. <em>ISO 15243:2017 Rolling bearings: Damage and failures. Terms, characteristics and causes.</em> <a href="https://www.iso.org/standard/59619.html">https://www.iso.org/standard/59619.html</a></li>
+      <li id="ref-14">SKF Group. <em>Bearing damage and failure analysis.</em> Publication 14219 EN, n.d. <a href="https://cdn.skfmediahub.skf.com/api/public/093168a92d25cc46/pdf_preview_medium/14219_3_EN_-_Bearing_failures_LOW_pdf_preview_medium.pdf">https://cdn.skfmediahub.skf.com/api/public/093168a92d25cc46/pdf_preview_medium/14219_3_EN_-_Bearing_failures_LOW_pdf_preview_medium.pdf</a></li>
+      <li id="ref-15">Shapiro, W., Murray, F., Howarth, R., Fusaro, R. <em>Space Mechanisms Lessons Learned Study, Volume II: Literature Review.</em> NASA TM-107047, September 1995. <a href="https://ntrs.nasa.gov/api/citations/19960011385/downloads/19960011385.pdf">https://ntrs.nasa.gov/api/citations/19960011385/downloads/19960011385.pdf</a></li>
+      <li id="ref-16">Predmore, R. E., Zaretsky, E. V. <em>Probabilistic Analysis of Space Shuttle Body Flap Actuator Ball Bearings.</em> NASA/TM-2008-215057, 2008. <a href="https://ntrs.nasa.gov/api/citations/20080012573/downloads/20080012573.pdf">https://ntrs.nasa.gov/api/citations/20080012573/downloads/20080012573.pdf</a></li>
+      <li id="ref-17">Lin, M. R., Klein, D., Green, T., Kinnett, R. "Remote Diagnosis and Operational Response to an In-Flight Failure of the Drill Feed Mechanism Onboard the Mars Science Laboratory Rover." Jet Propulsion Laboratory, NASA, 11 May 2022. <a href="https://ntrs.nasa.gov/citations/20230005798">https://ntrs.nasa.gov/citations/20230005798</a> <span class="tag">(abstract read; PDF not retrievable)</span></li>
+      <li id="ref-18">Klüber Lubrication. <em>Tips and tricks for the lubrication of rolling bearings.</em> Publication B010000502, 2020. <a href="https://www.klueber.com/ecoma/files/B010000502_Rolling_Bearings_EN_1220.pdf?download=1">https://www.klueber.com/ecoma/files/B010000502_Rolling_Bearings_EN_1220.pdf?download=1</a></li>
+      <li id="ref-19">Vibrationmaster. "How to conduct rigorous Junker vibration tests." n.d. <a href="https://vibrationmaster.com/knowledge-centre/fastener-vibration-testing/how-to-conduct-rigorous-junker-vibration-tests/">https://vibrationmaster.com/knowledge-centre/fastener-vibration-testing/how-to-conduct-rigorous-junker-vibration-tests/</a> <span class="tag">(test-equipment vendor)</span></li>
+      <li id="ref-20">ISO. <em>ISO 16130:2015 Aerospace series: Dynamic testing of the locking behaviour of bolted connections under transverse loading conditions (vibration test).</em> <a href="https://www.iso.org/standard/55728.html">https://www.iso.org/standard/55728.html</a></li>
+      <li id="ref-21">Blickle. "Material description for wheel treads." n.d. <a href="https://www.blickle.us/en-us/guide/material-description-wheel-treads">https://www.blickle.us/en-us/guide/material-description-wheel-treads</a></li>
+      <li id="ref-22">The Timken Company. <em>Setting Techniques for Tapered Roller Bearings.</em> Brochure 5556, n.d. <a href="https://www.timken.com/wp-content/uploads/2016/10/5556_Bearing-Setting-Brochure-1.pdf">https://www.timken.com/wp-content/uploads/2016/10/5556_Bearing-Setting-Brochure-1.pdf</a></li>
+      <li id="ref-23">MathWorks. "Quadrature Encoder Offset Calibration for PMSM Motor." Motor Control Blockset documentation, n.d. <a href="https://www.mathworks.com/help/mcb/gs/quadrature-encoder-offset-calibration-pmsm-motor.html">https://www.mathworks.com/help/mcb/gs/quadrature-encoder-offset-calibration-pmsm-motor.html</a></li>
+      <li id="ref-24">Schaeffler. "Mounting and Dismounting of Rolling Bearings." Schaeffler medias, n.d. <a href="https://medias.schaeffler.us/en/mounting-and-dismounting">https://medias.schaeffler.us/en/mounting-and-dismounting</a> <span class="tag">(storage and handling read; the fit rule is secondary, from the WL 80100 manual which could not be retrieved)</span></li>
+      <li id="ref-25">Tanhon. "AGMA and ISO Standards for Industrial Gear Quality." n.d. <a href="https://tanhon.com/industry-standards-agma-iso-gear-quality/">https://tanhon.com/industry-standards-agma-iso-gear-quality/</a> <span class="tag">(secondary: gear manufacturer's commonly quoted process ranges)</span></li>
+      <li id="ref-26">ISO. <em>ISO 6336-1:2019 Calculation of load capacity of spur and helical gears. Part 1: Basic principles, introduction and general influence factors.</em> <a href="https://www.iso.org/standard/63819.html">https://www.iso.org/standard/63819.html</a></li>
+      <li id="ref-27">Mountz, M. C., D'Andrea, R., LaPlante, J. A., Lyons, D. P., Mansfield, P. K., Amsbury, B. W. <em>Inventory system with mobile drive unit and inventory holder.</em> US Patent 7,402,018 B2, granted 22 July 2008. <a href="https://patents.google.com/patent/US7402018B2/en">https://patents.google.com/patent/US7402018B2/en</a></li>
+      <li id="ref-28">England and Wales High Court (Patents Court). <em>AutoStore Technology AS v Ocado Group plc and others</em> [2023] EWHC 716 (Pat), 30 March 2023. <a href="https://caselaw.nationalarchives.gov.uk/ewhc/pat/2023/716">https://caselaw.nationalarchives.gov.uk/ewhc/pat/2023/716</a></li>
+      <li id="ref-29">NASA. <em>NASA-STD-5017B Design and Development Requirements for Mechanisms.</em> 6 December 2022. <a href="https://standards.nasa.gov/standard/NASA/NASA-STD-5017">https://standards.nasa.gov/standard/NASA/NASA-STD-5017</a></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Budynas, R. G., Nisbett, J. K. <em>Shigley's Mechanical Engineering Design</em>, 11th ed. McGraw-Hill, 2020. Gear and bearing chapters.</li>
+      <li>Radzevich, S. P. <em>Dudley's Handbook of Practical Gear Design and Manufacture</em>, 4th ed. CRC Press, 2021.</li>
+      <li>Harris, T. A., Kotzalas, M. N. <em>Rolling Bearing Analysis</em>, 5th ed. CRC Press, 2006.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-11. Part of <a href="https://erdemyilmaz.me/">erdemyilmaz.me</a>.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>

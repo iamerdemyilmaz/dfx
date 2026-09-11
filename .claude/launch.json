@@ -24,6 +24,18 @@
         "C:/Users/erdm_/Downloads/erdemyilmaz.me"
       ],
       "port": 8766
+    },
+    {
+      "name": "dfx-static2",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8767",
+        "--bind",
+        "127.0.0.1"
+      ],
+      "port": 8767
     }
   ]
 }

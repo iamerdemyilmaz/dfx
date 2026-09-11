@@ -25,7 +25,10 @@
     { num: "13", slug: "13-materials-finishes-joining", title: "Materials, finishes, and joining", built: true },
     { num: "14", slug: "14-suppliers", title: "Working with suppliers and contract manufacturers", built: true },
     { num: "15", slug: "15-cost-modeling", title: "Cost modeling and should-cost", built: true },
-    { num: "16", slug: "16-capstone", title: "Capstone: a full DFx review", built: true }
+    { num: "16", slug: "16-capstone", title: "Capstone: a full DFx review", built: true },
+    { num: "17", slug: "17-actuators-gear-trains", title: "Actuators and gear trains: DFx and failure modes", built: true, part: "Part 8: Robotic systems" },
+    { num: "18", slug: "18-test-stations-fixtures", title: "Test stations, fixtures, and jigs for actuators and robots", built: false },
+    { num: "19", slug: "19-building-the-fleet", title: "Building the fleet: system-level DFx, safety certification, and the assembly line", built: false }
   ];
 
   var PASS_MARK = 0.7; /* fraction of quiz questions needed to mark a module complete */
@@ -78,6 +81,7 @@
     nav.appendChild(h);
     var ol = el("ol");
     MODULES.forEach(function (m) {
+      if (m.part) { ol.appendChild(el("li", { "class": "part" }, m.part)); }
       var li = el("li");
       if (m.num === cur) { li.className += " current"; }
       if (progress[m.num]) { li.className += " done"; }
@@ -196,6 +200,7 @@
     if (!list) { return; }
     var progress = loadProgress();
     MODULES.forEach(function (m) {
+      if (m.part) { list.appendChild(el("li", { "class": "part" }, m.part)); }
       var li = el("li");
       li.appendChild(el("span", { "class": "num" }, m.num));
       var body = el("div");
