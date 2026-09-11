@@ -12,6 +12,7 @@ Spec: CLAUDE.md. Source register: SOURCES.md.
 | C – Remaining modules | Complete: modules 00 to 16, glossary, references, about | 2026-09-07 |
 | D – Verification pass | Complete (see Phase D record) | 2026-09-07 |
 | E – Ship (README, final summary) | Complete (see Phase E record) | 2026-09-07 |
+| Part 8 R1 – Robotics Phase A (Modules 17 to 19) | Complete, awaiting author approval | 2026-09-11 |
 
 Author decisions (2026-09-07): outlines and examples approved; Module 11 uses the Boeing 787 battery case (Ariane 5 kept as alternative); capstone product is the portable 12 V tyre inflator; books appear only in an unnumbered "Further reading" list, never as numbered references; licence text shown in footers as "proposed" until confirmed.
 
@@ -54,6 +55,47 @@ At the author's request each module now opens with a three-question "Before you 
 ## Post-ship change (2026-09-10): quizzes
 
 At the author's request Module 0 (introduction) has no quiz and no pre-check; it is flagged `quiz: false` and the progress bar counts the 16 quizzed modules. Pre-check questions were reworded so that none asks about a particular study, case, or named source: Module 1 question 3 (phase-gate purpose), Module 12 question 1 (derating), Module 15 question 3 (should-cost), Module 16 questions 2 and 3, and several explanations. End-of-module quizzes are unchanged and still include a question on each module's cited case where relevant.
+
+## Part 8 – Robotic systems: Phase A record (Session R1, 2026-09-11)
+
+**Model recommendation printed at session start:** strongest model (Fable 5.1), as ROBOTICS.md specifies for R1.
+
+**Scope:** Phase A only, for Modules 17, 18, 19 as defined in ROBOTICS.md. No HTML written. 61 sources examined; 47 registered in SOURCES.md as S-163 to S-223 (S-206 unused), of which 40 verified (PDF, page, or catalogue page read) and 7 secondary. Per module: 17 has 31 entries (26 verified), 18 has 11 (9 verified), 19 has 17 (15 verified); several are shared.
+
+**Blocked or failed sources (recorded, not used or used as secondary):** SKF web pages (404 or blocked); Schaeffler WL 80100 manual and Molex product specifications (403 or timeout); NIOSH manual PDF (403); Springer chapter body (paywall); ODrive documentation (CDN access denied); moteus calibration guide (thin); Klüber gear grease PDF (skimmed only); Wittenstein backlash "constant over life" claim (marketing page; not used).
+
+### Module 17 – Actuators and gear trains: DFx and failure modes (outline)
+
+A robot joint or drive unit is a stack of tolerances: housing bore concentricity and parallelism, bearing fits and preload, gear centre distance, encoder air gap; a worked bore-to-bore stack-up links back to Module 3. Architecture choice (planetary, strain wave, cycloidal, quasi-direct drive) is framed by what the specification sheets actually define: Harmonic Drive's ratcheting torque, lost motion, wave generator L10 of 7,000 to 10,000 h and its life formula (S-170); Nabtesco's lost motion at ±3 % of rated torque, backlash at zero torque, momentary maximum of 500 % (S-171); planetary backlash classes from under 1 to 12 arcmin (S-172, S-173); and the quasi-direct drive case for backdrivability and cheap, low-ratio transmissions (S-174 to S-176, with Katz's US$300 BOM and 0.28° backlash as the honest trade). Failure modes follow the two standards that name them: gear modes per ANSI/AGMA 1010 (S-164) and bearing modes per ISO 15243 as laid out in SKF's atlas (S-168, S-169), with false brinelling from standstill vibration, true brinelling from shock, preload loss from wear (S-178), and lubrication and kinematic design failures (S-179) as the recurring early killers. Lubrication (S-185), fasteners under vibration with the Junker test (S-183, S-184), tread materials (S-187), and the manufacturing rules table (gear grade versus process, bore datum strategy, fit selection, press-fit control, preload setting per S-189, grease dosing, encoder alignment per S-192, traceability) complete the module. Diagrams: actuator cross-section with the stack labelled; torsional hysteresis curve showing lost motion and backlash.
+
+### Module 18 – Test stations, fixtures, and jigs (outline)
+
+The test ladder from incoming inspection to actuator end-of-line, robot end-of-line, burn-in, and audit, with each actuator test tied to what it detects: no-load torque versus speed and breakaway torque for friction and assembly damage (friction taught from the Stribeck regimes, S-200); torsional hysteresis for backlash, lost motion, and stiffness (S-170, S-171); transmission error and single-flank testing for gear quality and noise (S-198, S-199); brake holding torque, thermal rise, encoder offset calibration (S-192), leak or ingress checks. Robot end-of-line uses ISO 9283 pose repeatability as the datasheet language (S-194, S-195) and a short mission on a fixture. HALT in design and HASS in production (S-201, S-202) and MIL-STD-810 as a tailoring framework (S-203). Gauge R&R on every station links to the Six Sigma course (S-205). Fixtures: press-fit force-displacement monitoring with the curve as a gauge (S-196, S-197); alignment and parallelism checks; preload setting fixtures (S-189); 3-2-1 location and fixture calibration. Diagrams: Stribeck curve; press-fit curve with good and bad signatures; test ladder.
+
+### Module 19 – Building the fleet (outline)
+
+What changes from ten to a thousand units: harness and connector wear (mating cycle ratings, S-193), battery pack safety (S-214, S-215), serviceability and modular drive units, traceability per serial with test data (Module 14's ECO discipline at fleet scale). The safety map before DVT: ISO 3691-4:2023 for driverless trucks including AMRs (S-207), ANSI/RIA R15.08-1 with IMR Types A, B, C (S-208), UL 3100 for automated mobile platforms (S-209), ISO 10218-1:2025 and ISO/TS 15066 for manipulators and collaborative operation (S-210, S-211), ISO 13849-1 performance levels and IEC 61508 (S-212, S-213), with OTTO Motors' published third-party assessment as the example of what a manufacturer states (S-223). The assembly line: takt from demand (S-217), line balancing procedure and efficiency (S-218), MODAPTS and MOST as predetermined time systems and when each fits (S-219, S-220), discrete event simulation and what it answers (S-221), NIOSH lifting limits for heavy modules (S-216), kitting and poka-yoke, and the economic case for automating a station. Diagram: line balance chart. Amazon's fleet numbers (S-222) and the Kiva drive unit patent (S-182) show what a fleet-scale mechanism looks like in public documents.
+
+### Real-world examples intended, with sources
+
+- Module 17: ISS Solar Alpha Rotary Joint bearing failure and recovery, NASA/TP-2011-217116 (S-179); Space Shuttle body flap actuator bearings, wear leading to preload loss, NASA/TM-2008-215057 (S-178); Curiosity drill feed mechanism stall after brake release, JPL 2022 (S-180); why quasi-direct drive was chosen over high-ratio gearing, MIT Cheetah and ODRI papers and Katz thesis (S-174 to S-176); grid storage robot mechanics from the AutoStore v Ocado judgment (S-181).
+- Module 18: UR5e datasheet quoting ISO 9283 repeatability (S-195); press-fit monitoring practice from Promess and Sciemetric (S-196, S-197); gear noise and ghost frequencies in production, Gravel 2013 (S-198); Harmonic Drive and Nabtesco hysteresis-curve definitions as the basis of an end-of-line torsional test (S-170, S-171).
+- Module 19: OTTO Motors third-party safety assessment to R15.08 (S-223); Amazon's more than one million robots since 2012 and the Kiva drive unit patent (S-222, S-182); gearbox assembly line balancing with FlexSim (S-221, abstract only).
+
+### Claims I could not verify to the standard required, and how they will be handled
+
+1. Gear accuracy grade achievable by process (hobbing, shaving, honing, grinding): only vendor blogs found. Will be given as "commonly quoted ranges" with ISO 1328-1 named as the class system, labelled secondary (S-191), unless an AGMA or Gear Technology source is found in R2.
+2. NIOSH load constant 23 kg and multiplier formulas: manual PDF blocked; secondary until read (S-216).
+3. MODAPTS 1 MOD = 0.129 s and MOST TMU = 0.036 s: from summaries and Wikipedia; labelled secondary (S-219, S-220).
+4. Connector durability of 30 mating cycles: Molex documents unreachable by script; secondary (S-193).
+5. HALT origin with Gregg Hobbs in 1988: secondary (S-202).
+6. Curiosity drill foreign-object-debris hypothesis: press reports only; the JPL abstract (brake, high-drag state) is what will be cited.
+7. Bearing fit rules (tight fit on the ring under circumferential load): Schaeffler manual blocked; secondary until read (S-188).
+8. Wittenstein's "backlash constant over service life": marketing statement, not used.
+9. Tesla Optimus talks, Ocado and Locus ramp figures: not pursued; Amazon's own published count is the fleet-scale figure used.
+10. ODrive encoder and anti-cogging calibration: documentation inaccessible; encoder offset will be taught from the MathWorks example (S-192) and cogging described qualitatively.
+
+**Resume here (Part 8):** Phase A complete for Modules 17 to 19; awaiting the author's approval of the outlines and examples above. Next is Session R2: build Module 17 (strongest model), then stop for review. Numbering: Module 16 remains the capstone of the process modules; the index gets a "Part 8: Robotic systems" heading; `course.js` gets three new entries with `built: false` until each module is complete.
 
 ## Phase C log
 
