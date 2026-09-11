@@ -73,9 +73,9 @@
     <h2 id="stack">The joint as a stack of tolerances</h2>
     <p>Figure 1 is a generic rotary actuator: a frameless motor on a shaft, a reduction stage, an output bearing carrying the load, an input bearing, an encoder at each end, a brake, seals, and a housing. Every one of those parts is located by a bore or a face in the housing, and the housing is where the stack begins.</p>
     <figure>
-      <svg viewBox="0 0 640 330" role="img" aria-labelledby="fig1-title fig1-desc">
+      <svg viewBox="0 0 640 370" role="img" aria-labelledby="fig1-title fig1-desc">
         <title id="fig1-title">Cross-section of a rotary actuator with the tolerance stack labelled</title>
-        <desc id="fig1-desc">A schematic half cross-section of a rotary actuator. From left to right: an input encoder, a frameless motor with stator in the housing and rotor on the shaft, an input bearing in bore A, a reduction stage, an output bearing in bore B, an output flange with an output encoder, and a brake at the input end. Callouts mark the tolerance contributors: bore A and bore B position to the datum axis, bore parallelism, bearing fits and preload, gear centre distance, encoder air gap, and the seal running surface. A note says that bores A and B should be machined in one setup.</desc>
+        <desc id="fig1-desc">A schematic half cross-section of a rotary actuator. From left to right: a brake, a frameless motor with stator in the housing and rotor on the shaft, an input bearing in bore A, a reduction stage, an output bearing in bore B, an output flange with an output encoder, and a seal. Callouts mark the tolerance contributors: bore A and bore B position to the datum axis, bore parallelism, bearing fits and preload, gear centre distance and tooth class, encoder air gap, and the seal running surface. A note says that bores A and B should be machined in one setup.</desc>
         <g fill="none" stroke="currentColor" stroke-width="2">
           <path d="M40 110 H600 V230 H40 Z" class="diagram-soft"/>
           <path d="M40 150 H600 M40 190 H600" class="diagram-soft" stroke-dasharray="4 4"/>
@@ -91,23 +91,24 @@
           <rect x="535" y="140" width="30" height="60" class="diagram-soft"/>
           <path d="M255 100 V118 M441 100 V112" class="diagram-accent"/>
           <path d="M255 100 H441" class="diagram-accent" stroke-dasharray="4 3"/>
+          <path d="M265 230 V284 M428 230 V284 M550 230 V244 H572" class="diagram-soft"/>
         </g>
         <g class="diagram-text">
-          <text x="66" y="250" class="diagram-text-muted">Brake</text>
-          <text x="130" y="250" class="diagram-text-muted">Frameless motor</text>
-          <text x="130" y="266" class="diagram-text-muted">stator in housing, rotor on shaft</text>
-          <text x="246" y="250" class="diagram-text-muted">Bearing A</text>
-          <text x="246" y="266" class="diagram-text-muted">bore A</text>
-          <text x="310" y="250" class="diagram-text-muted">Reduction stage</text>
-          <text x="310" y="266" class="diagram-text-muted">centre distance, tooth accuracy</text>
-          <text x="410" y="250" class="diagram-text-muted">Output bearing</text>
-          <text x="410" y="266" class="diagram-text-muted">bore B, preload</text>
-          <text x="470" y="250" class="diagram-text-muted">Output flange</text>
-          <text x="470" y="266" class="diagram-text-muted">encoder air gap</text>
-          <text x="530" y="250" class="diagram-text-muted">Seal</text>
+          <text x="60" y="250" class="diagram-text-muted">Brake</text>
+          <text x="120" y="250" class="diagram-text-muted">Frameless motor</text>
+          <text x="120" y="266" class="diagram-text-muted">stator in housing</text>
+          <text x="240" y="298" class="diagram-text-muted">Bearing A</text>
+          <text x="240" y="314" class="diagram-text-muted">bore A</text>
+          <text x="290" y="250" class="diagram-text-muted">Reduction stage</text>
+          <text x="290" y="266" class="diagram-text-muted">centre distance, tooth class</text>
+          <text x="405" y="298" class="diagram-text-muted">Output bearing</text>
+          <text x="405" y="314" class="diagram-text-muted">bore B, preload</text>
+          <text x="455" y="250" class="diagram-text-muted">Output flange</text>
+          <text x="455" y="266" class="diagram-text-muted">encoder air gap</text>
+          <text x="576" y="250" class="diagram-text-muted">Seal</text>
           <text x="255" y="92">Bore A to bore B: coaxiality and parallelism set the tilt of the whole train</text>
-          <text x="40" y="300" class="diagram-text-muted">Datum axis (dashed). Machine bores A and B in one setup so their relation comes from the machine, not from two fixtures.</text>
-          <text x="40" y="318" class="diagram-text-muted">Radial offsets add along the axis; divided by the bearing span they become a tilt that loads one edge of every tooth.</text>
+          <text x="40" y="340" class="diagram-text-muted">Datum axis (dashed). Machine bores A and B in one setup so their relation comes from the machine, not from two fixtures.</text>
+          <text x="40" y="358" class="diagram-text-muted">Radial offsets add along the axis; divided by the bearing span they become a tilt that loads one edge of every tooth.</text>
         </g>
       </svg>
       <figcaption>Figure 1. The actuator as a stack. The two bearing bores, their fits, the gear centre distance, and the encoder gap are the dimensions that decide life; Module 3's stack-up method applies directly.</figcaption>
@@ -131,7 +132,7 @@
         </g>
         <g class="diagram-text">
           <text x="330" y="32" class="diagram-text-muted">Torque</text>
-          <text x="540" y="168" class="diagram-text-muted">Torsion angle</text>
+          <text x="470" y="168" class="diagram-text-muted">Torsion angle</text>
           <text x="604" y="134" class="diagram-text-muted">+3 % Tr</text>
           <text x="604" y="172" class="diagram-text-muted">−3 % Tr</text>
           <text x="262" y="200">Backlash: width at zero torque</text>
