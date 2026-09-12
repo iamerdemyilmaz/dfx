@@ -14,7 +14,8 @@ Spec: CLAUDE.md. Source register: SOURCES.md.
 | E – Ship (README, final summary) | Complete (see Phase E record) | 2026-09-07 |
 | Part 8 R1 – Robotics Phase A (Modules 17 to 19) | Complete, approved by author 2026-09-11 | 2026-09-11 |
 | Part 8 R2 and R2b – Module 17 | Built, revised with cable drives and low-volume section, verified, published | 2026-09-11 |
-| Part 8 R1b – Phase A for revised 17 and new 18 | Complete, awaiting author approval | 2026-09-11 |
+| Part 8 R1b – Phase A for revised 17 and new 18 | Approved 2026-09-11 | 2026-09-11 |
+| Part 8 R3 – Module 18 | Built, verified, published | 2026-09-11 |
 
 Author decisions (2026-09-07): outlines and examples approved; Module 11 uses the Boeing 787 battery case (Ariane 5 kept as alternative); capstone product is the portable 12 V tyre inflator; books appear only in an unnumbered "Further reading" list, never as numbered references; licence text shown in footers as "proposed" until confirmed.
 
@@ -97,7 +98,7 @@ What changes from ten to a thousand units: harness and connector wear (mating cy
 9. Tesla Optimus talks, Ocado and Locus ramp figures: not pursued; Amazon's own published count is the fleet-scale figure used.
 10. ODrive encoder and anti-cogging calibration: documentation inaccessible; encoder offset will be taught from the MathWorks example (S-192) and cogging described qualitatively.
 
-**Resume here (Part 8):** Phase A approved 2026-09-11. Session R2 built Module 17 (`modules/17-actuators-gear-trains.html`, linked, published); awaiting the author's review. Next is Session R3: build Module 18 (strongest model) using S-194 to S-205 plus the shared actuator sources, then stop for review; then R4 for Module 19 (mid-tier acceptable) and R5 for index text, glossary, references page, README, and the verification pass. Numbering: Module 16 remains the capstone of the process modules; the index gets a "Part 8: Robotic systems" heading; `course.js` gets three new entries with `built: false` until each module is complete.
+*(Superseded: see "Resume here (Part 8, revised)" below.)*
 
 ## Part 8 revision (2026-09-11, second session): four modules, cable drives added, linear drives module added
 
@@ -133,7 +134,7 @@ Scope: rotary-to-linear drives that move a robot along a structure; rotary reduc
 16. EN 12159:2024 edition: seen only in a webstore listing; the 2012 scope text is what was read.
 17. Rack-drive failure incident: no published incident attributing a collapse to rack or pinion failure was found; the module will say so rather than imply one.
 
-**Resume here (Part 8, revised):** Outlines approved 2026-09-11; R2b done. Session R3 builds Module 18 (`modules/18-linear-drives.html`); then R4 (19, test stations) and R5 (20, fleet) from the sources already registered as S-194 to S-223; R6 for index, glossary, references, README, and the verification pass. `course.js` already carries entries 18, 19, 20 with `built: false`.
+**Resume here (Part 8, revised):** Outlines approved 2026-09-11; R2b and R3 done (Modules 17 and 18 built and published). Next: Session R4 builds Module 19 (`modules/19-test-stations-fixtures.html`) and R5 Module 20 (`modules/20-building-the-fleet.html`) from the sources registered as S-194 to S-223 (re-read PROGRESS Part 8 Phase A outlines for 18 and 19 there, now numbered 19 and 20); then R6 for index, glossary, references, README, and the verification pass. `course.js` carries 19 and 20 with `built: false`.
 
 ## Phase C log
 
@@ -159,6 +160,7 @@ Author instruction (2026-09-07): no em or en dashes anywhere in the course, incl
 | 15 Cost modeling and should-cost | 2026-09-07 | 4,166 | 12 | 2 | 8 | 11 OK; acqnotes.com rejects scripted fetches (TLS/anti-bot) but was read in the browser | Ulrich & Pearson PDF re-read for the Krups scenario, 48 %/31 % ranges, price-versus-cost pairs, and purchased-parts share. Hubs CNC rate table and moulding cost bands read on the live pages. Boothroyd Dewhurst sheet metal costing page used for imperial reference values, converted to metric in Table 1. FAR 15.407-4 read and upgraded to verified. BBP 2.0 memo PDFs (USTRANSCOM 404, OSD 403) replaced by the AcqNotes BBP 3.0 list and a DoD News article for the 2010 origin. Exercise arithmetic recomputed in Python (component rounding gives $10.48 sheet metal, exact $10.47; break-evens 528/349/3,168 with rounded figures). |
 | 16 Capstone | 2026-09-07 | about 2,800 prose words plus 12 tables | 19 | 3 | 8 | 18 OK; Keysight 403 to scripts (known) | Body prose is below the 2,500 to 4,500 target by design: the module is the exam and its content is the specification, baseline BOM, four findings tables, the consolidated scored list, and the redesigned BOM (12 tables, about 2,600 words of table text). Product, dimensions, allowances, and costs are labelled illustrative. All rules cite the module and source that introduced them; no new sources. Arithmetic (IPC-2221 trace width, NADCA draft, DFA indices, part and fastener counts) recomputed in Python. |
 | 17 Actuators and gear trains (Part 8), revised R2b | 2026-09-11 | 6,889 | 39 | 3 | 10 (+3 pre-check) | 33 OK; ISO (5), ANSI webstore, MathWorks, MIT DSpace return 403/405 to scripts, all read in the browser or verified via search | Revision R2b added the cable or tendon drive as a fifth architecture (Table 1 row, Figure 3, a section on friction, pretension, termination, proof loading, and life), a low-volume manufacturing section, five design rules, a ninth common mistake, exercise part 4 (cable sizing: F 200 N, T0 150 N, T1 250 N, factor 8, proof load 1,200 N, idler at 12.5 d fails), two quiz questions, and references 30 to 39. Body text is now about 2,400 words over the 4,500 target; the author accepted 4,900 for the first build and should decide whether to split the cable material into its own page or trim. Common mistakes list has nine entries (guide says five to eight). |
+| 18 Linear drives for mobile and climbing robots (Part 8) | 2026-09-11 | 6,517 | 31 | 2 | 8 (+3 pre-check) | 24 OK; ISO (3) and ANSI webstore (4) return 403 to scripts, read in the browser earlier | Built from the R1b register (S-234 to S-259). Exercise: Hertz p max 329 MPa (b 0.057 mm) for a 20 mm roller at 354 N, 466 MPa for 10 mm, 403 MPa with a 1.5 factor; pitch chain 329 or 182 µm worst case, 100 or 84 µm RSS (the rack catalogue's own 6 m example); holding torque 17.7 N·m at the pinion, 0.44 N·m per motor at 20:1. Body text over the 4,500 target by about 2,000 words because the module covers six drive families, contact stress, the installation procedure, climbing safety, and the patent record; the author should decide whether to trim. S-260 (slip tutorial) was not read and is not cited. verify_all reports the IPAF reference URL as absent from SOURCES.md although it is present; the checker mishandles the parentheses in the URL (tool false positive). |
 
 Links that return 403 to scripts are recorded here rather than as dead; they will be re-checked by hand in Phase D.
 

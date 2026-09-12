@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 18: Drive units for mobile and climbing robots: linear drives and their manufacturing · DFx Course</title>
+<meta name="description" content="Rack and pinion, roller pinion, screw, belt, and friction drives that move a robot along a structure: rolling against sliding contact, Hertz contact stress as the sizing limit, the tolerance chain from drive axis to rack joints over a tall structure, climbing brakes and overspeed devices, failure modes, and the manufacturing and installation rules that follow.">
+<link rel="stylesheet" href="../assets/css/course.css">
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "cfd39382023243b08cf5932468455c77"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+<body data-root="../" data-module="18">
+
+<header class="site-header">
+  <a class="brand" href="../index.html">DFx Course <span>· From Prototype to Production</span></a>
+  <a class="home-link" href="https://erdemyilmaz.me/">Back to erdemyilmaz.me</a>
+  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation" data-nav></nav>
+
+  <main id="main">
+    <p class="kicker">Module 18 · Part 8: Robotic systems</p>
+    <h1>Drive units for mobile and climbing robots: linear drives and their manufacturing</h1>
+    <p class="lead">Module 17 stopped at the output flange of a rotary joint. This module follows the torque one step further, into the mechanism that converts it to motion along a structure: a pinion on a rack, a roller pinion, a screw, a belt, or a wheel pressed against a surface. When the structure is vertical the drive also carries the robot's weight, and the questions change: what holds it when the power fails, how far can a pitch error accumulate over ten metres of rack, and what does a roller do to a hardened flank a million times a year. The answers are manufacturing answers, and the last one is an installation procedure.</p>
+    <p><em>This module is written for a company building robots that move along a fixed structure at fleet scale. No specific company's internal practice is described. Mechanisms appear only from public sources: patents, catalogues, operating manuals, standards, and incident investigations. Numbers are ranges quoted from those sources, not design values.</em></p>
+
+    <h2 id="objectives">Learning objectives</h2>
+    <ul class="objectives">
+      <li><strong>Compare</strong> involute rack and pinion, roller pinion, screw, belt, and friction drives for a stated force, speed, accuracy, and life, and state what each gives up.</li>
+      <li><strong>Compute</strong> a Hertz line-contact stress for a roller on a flank, a pitch error chain across joined rack sections, and the holding torque a reversible drive needs when it stops on a vertical rack.</li>
+      <li><strong>Specify</strong> a rack by quality class and pitch deviation per length, and write the installation and joining procedure that makes the class mean something on the structure.</li>
+      <li><strong>Identify</strong> the failure modes of a linear drive, from roller bearing wear to rack flank wear to a loose rack joint, and the inspection that catches each.</li>
+      <li><strong>Explain</strong> what the hoist and mast climber standards require of a drive that carries people, and which of those requirements a robot that carries nobody still inherits.</li>
+    </ul>
+
+    <h2 id="precheck">Before you start</h2>
+    <p>Three quick questions on what this module covers. They do not count toward completion; use them to see what you already know, then read on. The module quiz at the end is the one that marks the module complete.</p>
+    <form class="quiz quiz-pre" data-pre data-module="18">
+        <fieldset class="q" data-answer="b">
+          <legend>1. In a rack and pinion drive, backlash is</legend>
+          <label><input type="radio" name="p1" value="a"> the force needed to start the pinion moving</label>
+          <label><input type="radio" name="p1" value="b"> the clearance between mating teeth that lets the pinion move a little without moving the rack</label>
+          <label><input type="radio" name="p1" value="c"> the wear on the rack after a year</label>
+          <label><input type="radio" name="p1" value="d"> the length of one tooth</label>
+          <p class="explain" hidden>Backlash is tooth clearance. It can be removed by preloading two pinions or two pinion halves against each other, or by a tooth geometry that loads rolling elements in opposition.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="c">
+          <legend>2. A drive is said to back-drive when</legend>
+          <label><input type="radio" name="p2" value="a"> it runs in reverse under motor power</label>
+          <label><input type="radio" name="p2" value="b"> its motor overheats</label>
+          <label><input type="radio" name="p2" value="c"> the load on the output turns the input, so the load moves when the motor is unpowered</label>
+          <label><input type="radio" name="p2" value="d"> its brake is applied</label>
+          <p class="explain" hidden>Efficient drives back-drive. A climbing robot on an efficient drive needs a brake or a self-locking stage to stay where it stopped.</p>
+        </fieldset>
+        <fieldset class="q" data-answer="a">
+          <legend>3. Pitting on a hardened steel surface that rolls under load starts</legend>
+          <label><input type="radio" name="p3" value="a"> below the surface, where the shear stress from the contact is highest</label>
+          <label><input type="radio" name="p3" value="b"> at the centre of the contact on the surface, where the pressure is highest</label>
+          <label><input type="radio" name="p3" value="c"> only where there is corrosion</label>
+          <label><input type="radio" name="p3" value="d"> in the lubricant</label>
+          <p class="explain" hidden>Hertz contact theory puts the maximum shear stress a fraction of the contact width below the surface; fatigue cracks start there and break out as pits.</p>
+        </fieldset>
+      <button type="submit">Check</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+
+    <h2 id="why">Why this matters</h2>
+    <p>A drive that moves a robot along a structure has one property a joint does not: its accuracy and its life depend on a part the robot does not carry. The rack, the rail, or the chain is bolted to a building, a shelving system, or a mast, in sections, by people with a torque wrench and a dial gauge, and the drive unit meets it at every joint. A rack maker's catalogue works the arithmetic for a 6 m axis of quality 6 racks: built from three 2 m sections the maximum pitch error is 182 µm, from six 1 m sections it is 329 µm, and from twelve half-metre sections it is 587 µm, because each joint adds its own 25 µm and each section its own class error.<sup class="cite"><a href="#ref-9">[9]</a></sup> The drive unit did not change between those three lines. The installation did.</p>
+    <p>When the structure is vertical the drive carries the weight, and the public record on what goes wrong comes from machines that carry people. The two mast climbing work platform collapses that the United States Occupational Safety and Health Administration investigated in Austin in 2009 and Raleigh in 2015 killed three workers each. Neither was a drive failure. Austin came down because a levelling bolt was threaded along its full length and carried its load through threads in the shear plane, single-ear connections were used, and the platform was overloaded with stucco on its outriggers.<sup class="cite"><a href="#ref-24">[24]</a></sup> Raleigh came down during dismantling with the mast free-standing at about 14.3 m (47 ft) against an allowed 12.2 m (40 ft), a platform load of about 1,930 kg (4,260 lb) against a rated 1,360 kg (3,000 lb), tie spacing beyond the maximum, and a swing bolt that failed at the sixth floor.<sup class="cite"><a href="#ref-25">[25]</a></sup> The rack and pinion drives did what they were built to do. The teaching point for a fleet engineer is uncomfortable: the drive is the part with the standard, the type test, and the overspeed device, and the machine still fails at a bolt, a tie, and an overload. Design the drive to the standard; then spend the same care on everything it is bolted to.</p>
+    <p>The third reason this module exists is that the roller-on-rack family is the one the robot industry is quietly building on. Climbing storage robots in the patent record engage racks in the corners of shafts with pinion wheels,<sup class="cite"><a href="#ref-7">[7]</a></sup> deploy toothed wheels on arms against tensioned chains or racks on the uprights,<sup class="cite"><a href="#ref-8">[8]</a></sup> and mesh a compliant pinion into a rack while counterwheels react the cantilevered weight.<sup class="cite"><a href="#ref-6">[6]</a></sup> None of these documents tells you how to manufacture the drive. The hoist manuals, the rack catalogues, and the roller pinion white paper do, and that is where this module goes.</p>
+
+    <h2 id="families">The families: rolling against sliding</h2>
+    <p>Every linear drive in this module converts a rotation into a force along a line, and the first question is whether the conversion happens through rolling contact or sliding contact. Sliding costs efficiency, heat, and wear, and it makes the drive hold itself. Rolling gives efficiency and life, and it makes the drive fall.</p>
+    <p><strong>Involute rack and pinion</strong> is the machine tool answer. Racks are sold in quality classes: one maker's programme runs from quality 5, hardened and ground, with a total pitch error of ±30 µm per metre, through quality 6 at ±34 µm/m and quality 7 at ±52 µm/m to the milled, quenched and tempered basic classes at ±100 µm/m and beyond, with tooth thickness tolerances that widen in step and maximum lengths of 1,000 to 2,000 mm.<sup class="cite"><a href="#ref-9">[9]</a></sup> Another maker offers five grades Q5 to Q9, of which Q5, Q6, and Q8 are hardened and ground, Q7 is milled from tempered alloy steel, and Q9 is milled and hardened, with the cumulative pitch deviation F<sub>p</sub> per length stated for every rack.<sup class="cite"><a href="#ref-11">[11]</a></sup> The classes refer to the DIN 3961 to 3967 tolerance system for cylindrical gear teeth, twelve qualities in all, and a third maker writes the pitch total deviation in micrometres per rack length into the ordering code itself and states the quality as Q5 or Q6 to DIN 3962, 3963, and 3967.<sup class="cite"><a href="#ref-12">[12]</a><a href="#ref-10">[10]</a></sup> Backlash is inherent and is removed, where it matters, by two pinions preloaded against each other electrically or by a split pinion whose halves are sprung against opposite flanks; vendor pages describe both, and this module treats them as secondary because they were not read in full.<sup class="cite"><a href="#ref-31">[31]</a></sup> Tooth contact is a rolling and sliding mix, so the rack needs lubrication and the flank wears.</p>
+    <p><strong>Roller pinion on a generated rack</strong> replaces the involute pinion with a ring of bearing-supported rollers and generates a rack tooth profile for them. The white paper on one such system explains the geometry in three steps: a point contact on a conventional profile, the point replaced by a roller, and the profile modified again so that the rollers are loaded in opposition, which eliminates backlash and lets each roller glide into the tooth face on a tangent path with no tooth slap.<sup class="cite"><a href="#ref-1">[1]</a></sup> The maker claims 99 percent efficiency from rolling contact, rollers sealed and lubricated for life, a rack lubricated at installation and then every six months or 2 million pinion revolutions, and a pinion life of 60 million revolutions at rated performance, which its catalogue converts to up to 36 million metres of travel with the rack typically outlasting several pinions.<sup class="cite"><a href="#ref-1">[1]</a><a href="#ref-2">[2]</a></sup> In the white paper's own accuracy test the repeatability was better than 2.6 µm from one direction and 5.8 µm from both, which puts the measured backlash under 3.2 µm; the catalogue adds that positional accuracy is measured at 20 °C and is subject to mounting surface irregularities, rigidity, and installation.<sup class="cite"><a href="#ref-1">[1]</a><a href="#ref-2">[2]</a></sup> Those are the maker's figures on the maker's test; read them as what the mechanism can do when installed the way the maker says.</p>
+    <p>The idea is older than the product. A 1907 patent describes a gear whose teeth are rollers on tapered roller and ball bearings, meshing with a worm, to minimise friction.<sup class="cite"><a href="#ref-3">[3]</a></sup> A 2011 elevator patent applies the same principle vertically: roller pins arranged in a circle around a shaft engage a rack whose profile has wave troughs and crests, spaced so that two or more pins engage in opposition at all times, with a brake acting on the shaft, positive engagement that lets the drive be locked in position against uncontrolled descent, and a two-drive arrangement in which the brakes are released alternately to lower the car if one drive fails.<sup class="cite"><a href="#ref-4">[4]</a></sup> A 2018 lift patent puts a nine- or twelve-roller pinion on twin racks that form a ladder, argues that a flat upper tooth surface supports the roller better and urges the pinion off the rack less than wave-crest profiles, and adds a hydraulic speed limiter with a one-way check valve for a slow descent if the drive fails.<sup class="cite"><a href="#ref-5">[5]</a></sup> Between them these three documents hold the whole family: rollers in opposition, positive engagement, a brake on the shaft, and an independent device for the day the drive fails.</p>
+    <p><strong>Ball screws and planetary roller screws</strong> are the precision choice when the stroke is short enough to carry the screw. Life is a bearing life: the nominal life L10 is the number of revolutions that 90 percent of a group of identical screws reach before the first flaking, and for a ball screw L10 = (C<sub>a</sub>/F<sub>a</sub>)<sup>3</sup> × 10<sup>6</sup> revolutions with C<sub>a</sub> the basic dynamic load rating and F<sub>a</sub> the axial load.<sup class="cite"><a href="#ref-14">[14]</a><a href="#ref-15">[15]</a></sup> A roller screw catalogue uses the same 90 percent definition and adds three manufacturing facts: radial forces and misalignment are detrimental to life and must be sized for if they cannot be avoided; the maximum cycle load should not exceed 80 percent of C<sub>a</sub> to reach the L10 life; and, apart from a few specific sizes, roller screws are reversible or can be back-driven under most circumstances, so a braking mechanism, a gear reducer or a brake, must be part of the design if back-driving is to be avoided.<sup class="cite"><a href="#ref-13">[13]</a></sup> Nuts come with axial play or preloaded without backlash; the same catalogue distinguishes direct efficiency, the torque to turn rotation into translation, from indirect efficiency, the axial load that turns translation into rotation, and uses the indirect figure to compute the braking torque.<sup class="cite"><a href="#ref-13">[13]</a></sup></p>
+    <p><strong>Lead screws</strong> slide, and that is their virtue on a vertical axis. A screw maker's guide defines forward and backdrive efficiencies separately and states the rule plainly: a negative backdrive efficiency means the screw is self-locking and the load cannot turn it; its worked example gives a 20° lead angle screw about 65 percent forward and 52 percent backdrive efficiency, which does back-drive and needs a braking torque, while ball screws run about 90 percent forward and 80 percent backdrive at every lead and always need a brake.<sup class="cite"><a href="#ref-16">[16]</a></sup> The price of self-locking is heat and wear on every stroke, and a climbing robot's duty cycle pays it continuously.</p>
+    <p><strong>Synchronous belts</strong> are light and long. The technical section of one distributor's handbook, drawing on the belt maker's data, says that curvilinear profiles have proportionally deeper teeth so that tooth jumping is less probable, that installation tension is small so bearing loads are light, and that the newer profile gives better registration and about four times the tooth jump resistance of the older curvilinear profile in its comparison, so lower average tensions can be used without ratcheting at the low end of the tension tolerance.<sup class="cite"><a href="#ref-17">[17]</a></sup> It also says the older high torque profile is not acceptable for most precision indexing applications.<sup class="cite"><a href="#ref-17">[17]</a></sup> Belt tension decays after installation and is re-measured, which makes a belt drive on a climbing robot a maintenance item with a schedule.</p>
+    <p><strong>Friction and traction drives</strong> press a wheel against a surface and are limited by the friction coefficient times the normal force. The same tread data that Module 17 cited for wheels applies: polyurethane treads are specified by hardness and chemistry, 75 or 92 ± 3 Shore A in one maker's standard grades, with hydrolysis resistance and a speed rating.<sup class="cite"><a href="#ref-30">[30]</a></sup> A friction drive has no backlash and no rack to install, and it slips on the first wet or dusty surface, which is why the patent record for climbing robots is a record of racks, chains, and rollers, not of wheels.</p>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 1. Linear drive families for a robot moving along a structure. Values are quoted from the cited sources and are one maker's figures where a maker is cited; none is a design value.</caption>
+        <thead><tr><th>Family</th><th>Contact</th><th>Backlash</th><th>Holds without power?</th><th>What it gives up</th><th>Manufacturing centre of gravity</th></tr></thead>
+        <tbody>
+          <tr><td>Involute rack and pinion</td><td>Rolling and sliding</td><td>Inherent; removed by dual or split pinion<sup class="cite"><a href="#ref-31">[31]</a></sup></td><td>No; brake required</td><td>Lubrication; flank wear; pitch error by class ±30 to ±100 µm/m<sup class="cite"><a href="#ref-9">[9]</a></sup></td><td>Rack class, rack joining, pinion centre distance</td></tr>
+          <tr><td>Roller pinion on generated rack</td><td>Rolling</td><td>Rollers in opposition; under 3.2 µm measured<sup class="cite"><a href="#ref-1">[1]</a></sup></td><td>No; brake on shaft<sup class="cite"><a href="#ref-4">[4]</a></sup></td><td>Cost; rack profile proprietary; roller bearings as life item</td><td>Rack alignment tool at joints; pinion parallel to tooth faces; small preload<sup class="cite"><a href="#ref-1">[1]</a></sup></td></tr>
+          <tr><td>Ball or roller screw</td><td>Rolling</td><td>Axial play or preloaded nut<sup class="cite"><a href="#ref-13">[13]</a></sup></td><td>No; reversible under most circumstances<sup class="cite"><a href="#ref-13">[13]</a></sup></td><td>Stroke carried by the robot; misalignment sensitivity</td><td>Screw end machining; nut preload; alignment at assembly</td></tr>
+          <tr><td>Lead screw</td><td>Sliding</td><td>Nut clearance</td><td>Yes when backdrive efficiency is negative<sup class="cite"><a href="#ref-16">[16]</a></sup></td><td>Efficiency; heat; wear per stroke</td><td>Nut material; lubrication; thread form</td></tr>
+          <tr><td>Synchronous belt</td><td>Tooth engagement</td><td>Profile dependent; low with the newer curvilinear profile<sup class="cite"><a href="#ref-17">[17]</a></sup></td><td>No</td><td>Tension decay; ratcheting at peak load; stiffness</td><td>Pulley alignment; installation tension measured and re-measured</td></tr>
+          <tr><td>Friction or traction wheel</td><td>Rolling with slip</td><td>None</td><td>No</td><td>Traction limited by µ × normal force; contamination</td><td>Tread hardness and chemistry<sup class="cite"><a href="#ref-30">[30]</a></sup>; preload mechanism</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="hertz">Contact stress: the number that sizes a roller</h2>
+    <p>A roller on a rack flank, a ball on a screw raceway, and a wheel on a rail are all Hertz contacts, and the same lecture notes that a precision machine design course uses to teach them give the two formulas a manufacturing engineer needs.<sup class="cite"><a href="#ref-18">[18]</a></sup> For two parallel cylinders of radii R<sub>1</sub> and R<sub>2</sub>, length L, pressed together by a force F, the contact is a rectangle of half-width</p>
+    <p>b = √[ (4F ÷ πL) × ((1 − ν<sub>1</sub>²)/E<sub>1</sub> + (1 − ν<sub>2</sub>²)/E<sub>2</sub>) ÷ (1/R<sub>1</sub> + 1/R<sub>2</sub>) ]</p>
+    <p>and the maximum pressure along its centre line is p<sub>max</sub> = 2F ÷ (πbL). A flat is a cylinder of infinite radius, so a roller on a flat flank drops the 1/R<sub>2</sub> term; a roller in a concave groove has a negative R<sub>2</sub> and a lower pressure for the same load. The maximum shear stress and the von Mises stress are reached below the contact area, not at the surface, and that is where pitting begins, with small pieces of material breaking out of the surface.<sup class="cite"><a href="#ref-18">[18]</a></sup></p>
+    <figure>
+      <svg viewBox="0 0 640 320" role="img" aria-labelledby="fig1-title fig1-desc">
+        <title id="fig1-title">Hertz line contact of a roller on a flat rack flank</title>
+        <desc id="fig1-desc">A cylinder of radius R rests on a flat surface under a force F. The contact is a narrow rectangle of width 2b along the roller length L. A semi-elliptical pressure distribution is drawn under the contact with its peak labelled p max at the centre. Below the surface, a shaded zone at a depth of a fraction of b is labelled as the location of maximum shear stress, where pitting starts. Notes say that the half-width grows with the square root of load and radius and that pressure falls as the square root of radius.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="200" cy="120" r="70"/>
+          <circle cx="200" cy="120" r="6" class="diagram-soft"/>
+          <path d="M60 190 H340" />
+          <path d="M60 190 V230 H340 V190" class="diagram-soft"/>
+          <path d="M200 20 V50 M194 42 L200 50 L206 42" class="diagram-accent"/>
+          <path d="M184 190 H216" class="diagram-accent" stroke-width="4"/>
+          <path d="M150 190 Q200 250 250 190" class="diagram-accent" stroke-dasharray="4 3"/>
+          <rect x="176" y="198" width="48" height="10" class="diagram-accent-fill"/>
+          <path d="M200 120 L249 71" stroke-dasharray="3 3" class="diagram-soft"/>
+          <path d="M184 236 V244 M216 236 V244 M184 240 H216" class="diagram-soft"/>
+          <path d="M400 60 H600 M400 60 V240 M400 240 H600" class="diagram-soft"/>
+          <path d="M400 230 Q470 180 600 90" class="diagram-accent"/>
+        </g>
+        <g class="diagram-text">
+          <text x="212" y="36">F</text>
+          <text x="276" y="64" class="diagram-text-muted">R</text>
+          <text x="192" y="260" class="diagram-text-muted">2b</text>
+          <text x="262" y="222">p max = 2F / (π b L)</text>
+          <text x="60" y="284" class="diagram-text-muted">Shaded band: maximum shear below the surface, where pitting starts</text>
+          <text x="60" y="304" class="diagram-text-muted">Flat flank: R2 is infinite, so 1/R2 = 0. Half-width b grows with the square root of F and R.</text>
+          <text x="410" y="50" class="diagram-text-muted">p max against roller radius R</text>
+          <text x="410" y="258" class="diagram-text-muted">R</text>
+          <text x="560" y="80" class="diagram-text-muted">falls as 1/√R</text>
+        </g>
+      </svg>
+      <figcaption>Figure 1. Hertz line contact. Doubling the roller radius cuts the peak pressure by about 30 percent for the same load and length, which is why the roller diameter, not the pinion torque rating, is the first number to ask for in a roller pinion.<sup class="cite"><a href="#ref-18">[18]</a></sup></figcaption>
+    </figure>
+    <p>The practical consequences are three. First, p<sub>max</sub> scales with √F and 1/√R, so an impact factor on the force is expensive and a larger roller is cheap: the roller pinion catalogue applies a factor of 1.0 for shockless operation, 1.2 for normal, 1.5 for impact, and 2.5 to 3.0 for high impact to the load before entering its life tables.<sup class="cite"><a href="#ref-2">[2]</a></sup> Second, the fatigue life of the contact goes as a steep inverse power of the load; the same catalogue computes pinion life in roller contacts as N = (C ÷ T<sub>avg</sub>)<sup>3.333</sup>, the roller bearing exponent of Module 17, with a cap at a stated maximum.<sup class="cite"><a href="#ref-2">[2]</a></sup> Third, the depth of maximum shear sets the case depth a hardened flank needs: a case shallower than the shear depth puts the crack start in soft core, which is a heat treatment specification of the kind Module 13 covered, and a reason the precision rack classes are hardened and ground rather than milled.<sup class="cite"><a href="#ref-9">[9]</a><a href="#ref-11">[11]</a></sup></p>
+
+    <h2 id="chain">The tolerance chain from drive axis to rack joint</h2>
+    <p>Module 17's stack ran from bore A to bore B inside one housing. A linear drive's stack runs out of the housing, through the pinion, into a rack bolted to a structure in sections, and the two long contributors are the rack's own pitch deviation per length and the error at every joint. Figure 2 draws the chain for a vertical axis.</p>
+    <figure>
+      <svg viewBox="0 0 760 360" role="img" aria-labelledby="fig2-title fig2-desc">
+        <title id="fig2-title">Pitch error accumulating along joined rack sections</title>
+        <desc id="fig2-desc">Left: a vertical mast made of three rack sections stacked end to end with two joints, each section labelled with its class pitch error and each joint with its joint error, and a drive unit with a pinion and a counter roller riding on it. Right: a staircase chart of accumulated maximum pitch error against height for the same 6 m axis built from three 2 m racks, six 1 m racks, and twelve half-metre racks, ending at 182, 329, and 587 micrometres respectively, the rack maker's own example.</desc>
+        <g fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="60" y="30" width="40" height="100"/>
+          <rect x="60" y="136" width="40" height="100"/>
+          <rect x="60" y="242" width="40" height="88"/>
+          <path d="M60 133 H100 M60 239 H100" class="diagram-accent" stroke-width="3"/>
+          <rect x="112" y="150" width="60" height="70" class="diagram-soft"/>
+          <circle cx="108" cy="185" r="12" class="diagram-accent"/>
+          <circle cx="52" cy="185" r="8" class="diagram-soft"/>
+          <path d="M100 40 V120 M100 146 V226 M100 252 V320" stroke-dasharray="3 3" class="diagram-soft"/>
+          <path d="M300 320 H600 M300 320 V40" class="diagram-soft"/>
+          <path d="M300 320 L400 292 L400 285 L500 257 L500 250 L600 222" />
+          <path d="M300 320 L350 303 L350 291 L400 274 L400 262 L450 245 L450 233 L500 216 L500 204 L550 187 L550 175 L600 158" class="diagram-accent"/>
+          <path d="M300 320 L325 313 L325 301 L350 294 L350 282 L375 275 L375 263 L400 256 L400 244 L425 237 L425 225 L450 218 L450 206 L475 199 L475 187 L500 180 L500 168 L525 161 L525 149 L550 142 L550 130 L575 123 L575 111 L600 104" stroke-dasharray="4 3"/>
+        </g>
+        <g class="diagram-text">
+          <text x="180" y="80" class="diagram-text-muted">Rack section: class pitch error</text>
+          <text x="180" y="96" class="diagram-text-muted">per length (e.g. ±34 µm/m at Q6)</text>
+          <text x="180" y="136" class="diagram-text-muted">Joint: e.g. 25 µm with a jig</text>
+          <text x="180" y="240" class="diagram-text-muted">Drive unit, pinion,</text>
+          <text x="180" y="256" class="diagram-text-muted">counter roller behind the rack</text>
+          <text x="300" y="30">Maximum pitch error over a 6 m axis, quality 6</text>
+          <text x="604" y="226">182 µm, 3 × 2 m</text>
+          <text x="604" y="162">329 µm, 6 × 1 m</text>
+          <text x="604" y="108">587 µm, 12 × 0.5 m</text>
+          <text x="300" y="344" class="diagram-text-muted">Height along the axis, 0 to 6 m. Fewer, longer racks mean fewer joints.</text>
+        </g>
+      </svg>
+      <figcaption>Figure 2. The chain and its consequence. Each section contributes its class error and each joint its joint error, so the total depends on how many pieces the installer bolts up; the three totals are the rack maker's own worked example for a module 4, quality 6 axis with a companion rack giving 25 µm joint accuracy.<sup class="cite"><a href="#ref-9">[9]</a></sup></figcaption>
+    </figure>
+    <p>The catalogue that gives those totals also gives the reason the 2 m racks are not simply the same error per metre: its quality 6 racks are specified at 34 µm total pitch error per 1,000 mm but 44 µm per 2,000 mm, which is 22 µm per metre, because the deviation does not grow linearly with length on a ground rack.<sup class="cite"><a href="#ref-9">[9]</a></sup> Longer racks are therefore better twice over: fewer joints and less error per metre. The same page recommends a patented assembly kit for precision joints and notes that a rack ordered without mounting holes can only be used for continuous linking with one side.<sup class="cite"><a href="#ref-9">[9]</a></sup></p>
+    <p>The joint is a process, and two operating manuals describe it. One says you need an assembling jig for aligning the transfers between racks and a needle roller with a dial gauge for the final check; the first rack is positioned centrally over its threaded bores, clamped to the guide rail with a spacer, and bolted at half torque in the mounting direction; the next rack is placed with the jig at the transition, and the racks are optimally aligned when the jig sits flush and backlash-free across the joint. The check before the next rack is placed puts the needle roller in a tooth root on each side of the joint and in the joint itself and reads the height on the dial gauge from the machine carriage; the permitted height deviation from rack to rack is up to about 30 µm and the joint should read between the two racks' highest and lowest values. Only then are the screws tightened to full torque.<sup class="cite"><a href="#ref-10">[10]</a></sup> The second maker sells the procedure as a case: a dial gauge, a push-button unit, and an adjusting tool for the rack joint, with recommended joint tolerances.<sup class="cite"><a href="#ref-11">[11]</a></sup> The roller pinion maker's answer is an alignment tool that uses two teeth on each rack to set the spacing rather than butting racks end to end, so that the transferred error is ± each time and trends to zero over a long run; it also asks for a stepped machine bed with full bottom support and a back plane, for the pinion axis to be set parallel to the rack tooth faces and fully engaged, and for a small preload to take up the clearance in the roller bearings.<sup class="cite"><a href="#ref-1">[1]</a></sup></p>
+    <p>Read those three procedures as one manufacturing statement. The rack's quality class is a property of the part in the box. The axis's accuracy is a property of the installation, and the installation has a fixture (the jig or alignment tool), a gauge (the dial gauge on a needle roller), an acceptance limit (about 30 µm height deviation, a joint reading between its neighbours), a sequence (half torque, check, full torque), and a record. That is a manufacturing process by every definition in this course, and for a fleet of climbing robots it is executed at the customer's site, by installers, hundreds of times. Module 19 turns it into a test station; this module's job is to make sure the drawing asks for it.</p>
+
+    <h2 id="climbing">Climbing: the drive carries the weight</h2>
+    <p>A horizontal drive that loses power stops. A vertical drive that loses power does whatever its efficiency lets it do, and Table 1 says that every rolling drive back-drives. The machines that have carried people up racks for decades have three answers, all visible in their manuals and standards.</p>
+    <p><strong>A brake on the drive.</strong> A construction hoist drive unit in one maker's technical description has two or three pinions on the mast rack, each driven through a helical gearbox by an induction motor with a built-in electromagnetic disc brake; a manual handle releases the brake for emergency lowering when power fails, and an optional centrifugal brake in the drive machinery holds a constant speed during gravity lowering so the overspeed device is not tripped.<sup class="cite"><a href="#ref-23">[23]</a><a href="#ref-22">[22]</a></sup> The brake is spring applied and electrically released, so the unpowered state is the held state, which is the same logic as Module 17's spring-applied joint brake and the same failure mode: a brake that sticks.</p>
+    <p><strong>An independent overspeed device.</strong> The mast climbing work platform guidance defines overspeed as any speed above rated speed and a safety mechanism as a mechanical device for stopping and maintaining the work platform stationary on the mast in the event of overspeed.<sup class="cite"><a href="#ref-21">[21]</a></sup> The hoist maker's device is a shaft with a centrifugal weight and a pinion constantly engaged with the rack; when the weight flies out it screws a brake cone into a lining inside the device and stops the platform progressively.<sup class="cite"><a href="#ref-22">[22]</a><a href="#ref-23">[23]</a></sup> Note what that requires of the manufacturing engineer: a second pinion, always in mesh, on the same rack, with the same alignment requirements as the drive pinion, and a device whose trip speed and stopping distance are type-tested and periodically verified.</p>
+    <p><strong>Standards that cover the life of the machine.</strong> EN 12159 covers power-operated builders hoists with vertically guided cages for persons and materials, driven by rack and pinion, by rope on a drum, or by expanding linkage, and deals with the hazards over the equipment's life; goods-only hoists and mast climbing work platforms are covered elsewhere.<sup class="cite"><a href="#ref-19">[19]</a></sup> EN 1495 states the special safety requirements for mast climbing work platforms, manually or power operated, moving persons, equipment, and materials along a mast.<sup class="cite"><a href="#ref-20">[20]</a></sup> A robot that carries no people is outside the scope of both, and Module 20 maps the standards it does fall under. What it inherits is the engineering: a held unpowered state, an independent means of arresting an overspeed, a way to lower it by hand, and an inspection list that includes the condition of the rack and pinion drive.<sup class="cite"><a href="#ref-21">[21]</a></sup></p>
+    <p>The manufacturing content of those three answers is in the hoist manual's maintenance chapter, and it is the best published example of a wear specification for a rack drive. The pinion is measured with calipers: 38.5 mm new, 37.1 mm maximum wear. The rack is measured over an 8 mm gauge rod laid in the tooth space: 39.9 mm new, 38.2 mm maximum wear. The counter roller that keeps the pinion in mesh is changed together with the pinion.<sup class="cite"><a href="#ref-22">[22]</a></sup> Four numbers and a rule, and they define the inspection gauge, the acceptance limit, and the replacement policy for the whole drive. A robot's rack drive needs the same four numbers, measured on its own geometry, before the first unit ships.</p>
+
+    <h2 id="publicrecord">Climbing robots in the patent record</h2>
+    <p>Patents are the only public place where a company describes its climbing mechanism in engineering terms, and three recent ones show the design problems the manufacturing engineer inherits. A 2016 application for a storage and retrieval system describes a vehicle whose pinion wheels are single bodies serving as both conveyance wheel and gear, with each shaft carrying eight sets of rack teeth, two at each corner facing inward; wheel carriages on one axis are raised and lowered relative to the frame to transfer between track and rack, and the text says that independent operation of the wheels in opposite rotational directions at each side is of greater significance in order to maintain proper alignment and balance during rack-and-pinion conveyance.<sup class="cite"><a href="#ref-7">[7]</a></sup> Four pinions on four racks in one shaft is a parallel drive, and a parallel drive is a tolerance problem: four racks, installed in sections, must agree to within the compliance of the vehicle.</p>
+    <p>A 2021 patent for a warehouse trolley deploys four toothed wheels on arms transversely so that they engage the links of a substantially tensioned roller chain or the teeth of a rack on the uprights of the facing shelves, and climbs by controlling the rotation of the sprockets; four running wheels carry it on the floor.<sup class="cite"><a href="#ref-8">[8]</a></sup> A tensioned chain is a rack that forgives installation error at the cost of stiffness and stretch; the trade is the same one a cable drive made in Module 17.</p>
+    <p>A 2024 patent for a climbing robot states the manufacturing problem outright. Its pinion is driven through splines with rotational play that gives a degree of free rotation of the drive gear relative to its mount, so that when the pinion engages the rack the system is not over-constrained; both pinion and rack have chamfered lead-in portions to facilitate meshing engagement; counterwheels react the cantilevered weight of the robot while the pinion carries it vertically; and the drive motor extends the pinion along its axis into the rack at the transition from floor to climbing.<sup class="cite"><a href="#ref-6">[6]</a></sup> Every one of those features is a tolerance decision: play where a rigid coupling would fight the rack, chamfers where an installer's rack cannot be trusted to the tooth, and a separate load path for the moment so the pinion sees force, not tilt. It is Module 17's rule about tilt loading one edge of every tooth, solved by compliance rather than by coaxiality, because the rack is not in the robot maker's factory.</p>
+
+    <h2 id="failures">Failure modes</h2>
+    <p>The gear and bearing vocabulary of Module 17 carries over. Pitting, spalling, and wear on a rack flank are named in the gear tooth terminology standard; the roller bearings inside a roller pinion and the counter rollers fail by the modes of the bearing damage standard, and the same atlas that Module 17 used to picture them applies.<sup class="cite"><a href="#ref-29">[29]</a><a href="#ref-26">[26]</a><a href="#ref-27">[27]</a></sup> What is new is the part outside the housing.</p>
+    <ul>
+      <li><strong>Rack flank wear</strong> is progressive and measurable; the hoist manual's gauge rod and limit are the model.<sup class="cite"><a href="#ref-22">[22]</a></sup> On an involute rack it is sliding wear that lubrication slows; on a generated rack under rollers it is rolling wear and pitting from contact stress, which a larger roller slows.<sup class="cite"><a href="#ref-18">[18]</a></sup></li>
+      <li><strong>Roller bearing wear and flat spotting</strong> in a roller pinion: a roller that stops turning becomes a sliding contact on one flat, and the pinion's life rating is a bearing L10 that assumes clean conditions, as the catalogue says.<sup class="cite"><a href="#ref-2">[2]</a><a href="#ref-28">[28]</a></sup> False brinelling in a robot parked on a vibrating structure is the same standstill mode as Module 17's.<sup class="cite"><a href="#ref-27">[27]</a></sup></li>
+      <li><strong>Joint step and joint gap</strong>: a joint outside the manual's 30 µm height limit or a gap widened by an over-pressed jig is a tooth that every pinion hits at every pass, and the manual warns that too great a pressing force on the assembling jig may widen the rack gap.<sup class="cite"><a href="#ref-10">[10]</a></sup> The symptom is periodic noise and a wear mark that repeats at the rack section length.</li>
+      <li><strong>Debris on an open rack</strong>: an open rack collects whatever the building sheds, and the roller pinion maker's answer, a rack that can run lubrication-free at limited speed and rollers sealed for life, is a design choice for that environment.<sup class="cite"><a href="#ref-2">[2]</a><a href="#ref-1">[1]</a></sup></li>
+      <li><strong>Lubricant starvation</strong> on a rack that needs it: the six-month or 2 million revolution interval is a maintenance record, and the rack that is missed pits first.<sup class="cite"><a href="#ref-1">[1]</a></sup></li>
+      <li><strong>Loss of preload or engagement</strong>: a preloader that drifts, a counter roller that wears, or a compliant mount that takes a set moves the pinion out of full engagement, and a flat-topped tooth that supports the roller was one patent's answer to a roller urged off the rack.<sup class="cite"><a href="#ref-5">[5]</a></sup></li>
+      <li><strong>Fastener loosening</strong> in rack mounting screws and structure ties under the vibration of every pass: the Junker mechanism of Module 17, on a joint nobody can see from the robot. The Raleigh report's failed swing bolt and the Austin report's threaded-through levelling bolt are the structural version.<sup class="cite"><a href="#ref-25">[25]</a><a href="#ref-24">[24]</a></sup></li>
+      <li><strong>Misalignment</strong> of the pinion axis to the tooth faces: edge loading on every roller or tooth, the white paper's parallelism requirement violated, and a life that no life table predicts.<sup class="cite"><a href="#ref-1">[1]</a></sup></li>
+      <li><strong>Brake and overspeed device faults</strong>: a brake that glazes or sticks, a centrifugal device whose pinion has worn out of mesh; both are periodic inspection and test items, not calculations.<sup class="cite"><a href="#ref-22">[22]</a><a href="#ref-21">[21]</a></sup></li>
+      <li><strong>Upstream</strong>: the reducer, the motor, the encoder, and the harness fail by the modes of Module 17 and are not repeated here.</li>
+    </ul>
+
+    <h2 id="rules">Design rules table</h2>
+    <div class="table-wrap">
+      <table>
+        <caption>Table 2. Manufacturing and installation rules for a linear drive on a structure. Values are ranges from the cited sources; where a source is one maker's manual or a vendor page, the row says so.</caption>
+        <thead><tr><th>Feature</th><th>Rule of thumb</th><th>Typical value or range</th><th>Why</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Rack quality class</td><td>Specify class and pitch deviation per length, not a process</td><td>Q5 ±30 µm/m; Q6 ±34 µm/m; Q7 ±52 µm/m; basic classes ±100 µm/m and above (one maker)</td><td>Class is what the maker measures and warrants</td><td><a href="#ref-9">[9]</a>, <a href="#ref-12">[12]</a></td></tr>
+          <tr><td>Rack process by class</td><td>Expect hardened and ground for Q5, Q6, Q8; milled for Q7 and Q9</td><td>Five grades Q5 to Q9 (one maker)</td><td>Process follows class; hardening depth against subsurface shear</td><td><a href="#ref-11">[11]</a>, <a href="#ref-18">[18]</a></td></tr>
+          <tr><td>Rack length</td><td>Fewer, longer racks</td><td>2,000 mm racks at 44 µm total against 34 µm per 1,000 mm; 6 m example 182 against 329 against 587 µm</td><td>Fewer joints and lower error per metre</td><td><a href="#ref-9">[9]</a></td></tr>
+          <tr><td>Rack joint</td><td>Jig at the transition; needle roller and dial gauge; half torque, check, full torque</td><td>Height deviation rack to rack up to about 30 µm; joint between neighbours' extremes (one maker's manual)</td><td>Every pinion hits every joint at every pass</td><td><a href="#ref-10">[10]</a>, <a href="#ref-11">[11]</a></td></tr>
+          <tr><td>Roller pinion rack joint</td><td>Alignment tool on two teeth of each rack</td><td>Transferred error ± each joint, trending to zero</td><td>Butting racks end to end accumulates error</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Pinion alignment</td><td>Axis parallel to tooth faces, fully engaged, small preload</td><td>Parallelism over flatness; preload takes up roller bearing clearance</td><td>Edge loading; backlash from bearing clearance</td><td><a href="#ref-1">[1]</a></td></tr>
+          <tr><td>Contact stress</td><td>Larger roller before higher rating</td><td>p<sub>max</sub> = 2F/(πbL); falls as 1/√R</td><td>Pitting starts at subsurface shear</td><td><a href="#ref-18">[18]</a></td></tr>
+          <tr><td>Load factor</td><td>Apply an impact factor before the life table</td><td>1.0 shockless; 1.2 normal; 1.5 impact; 2.5 to 3.0 high impact (one maker)</td><td>Life goes as load to the power 3.333</td><td><a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Screw load</td><td>Keep peak load well under rating</td><td>F<sub>max</sub> ≤ 80 % of C<sub>a</sub> to reach L10; L10 = (C<sub>a</sub>/F<sub>a</sub>)<sup>3</sup> × 10<sup>6</sup> rev</td><td>Fatigue life definition at 90 % survival</td><td><a href="#ref-13">[13]</a>, <a href="#ref-14">[14]</a></td></tr>
+          <tr><td>Holding a vertical load</td><td>Assume the drive back-drives unless proven self-locking</td><td>Roller screws reversible under most circumstances; ball screws about 80 % backdrive efficiency; negative backdrive efficiency means self-locking</td><td>Unpowered state must be held</td><td><a href="#ref-13">[13]</a>, <a href="#ref-16">[16]</a></td></tr>
+          <tr><td>Brake</td><td>Spring applied, electrically released, manual release for lowering</td><td>Electromagnetic disc brake per motor; handle at deck level (one maker)</td><td>Held when unpowered; recoverable by hand</td><td><a href="#ref-23">[23]</a>, <a href="#ref-22">[22]</a></td></tr>
+          <tr><td>Overspeed protection</td><td>Independent mechanical device, always in mesh</td><td>Centrifugal weight on a pinion engaged with the rack; brake cone; progressive stop</td><td>Drive failure must not become a fall</td><td><a href="#ref-22">[22]</a>, <a href="#ref-21">[21]</a>, <a href="#ref-4">[4]</a></td></tr>
+          <tr><td>Wear limits</td><td>Publish gauge, new value, limit, and pairing rule</td><td>Pinion 38.5 new, 37.1 limit; rack over 8 mm rod 39.9 new, 38.2 limit; counter roller changed with pinion (one hoist)</td><td>Inspection needs a number</td><td><a href="#ref-22">[22]</a></td></tr>
+          <tr><td>Rack lubrication</td><td>Schedule it or design it out</td><td>At installation, then every six months or 2 million pinion revolutions; lubrication-free option at limited speed (one maker)</td><td>Starved rack pits first</td><td><a href="#ref-1">[1]</a>, <a href="#ref-2">[2]</a></td></tr>
+          <tr><td>Belt tension</td><td>Measure at installation and on schedule</td><td>Low installation tension; deeper teeth resist ratcheting; newer profile for indexing</td><td>Tension decays; ratcheting at peak load</td><td><a href="#ref-17">[17]</a></td></tr>
+          <tr><td>Engagement compliance</td><td>Let the pinion find the rack</td><td>Rotational play in the spline; chamfered lead-ins; counterwheels for the moment</td><td>Rack installed by others; avoid over-constraint</td><td><a href="#ref-6">[6]</a></td></tr>
+          <tr><td>Structure fasteners</td><td>Treat ties and mounting bolts as drive parts</td><td>Two collapses from bolts, ties, and overload, none from the drive</td><td>The drive's standard does not protect the bolt</td><td><a href="#ref-24">[24]</a>, <a href="#ref-25">[25]</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="case">Real-world example: a rack maker's arithmetic and a hoist maker's gauge rod</h2>
+    <p>Two published documents, read together, are the case study. The first is the rack catalogue's own comparison for a 6 m axis of module 4, quality 6 racks mounted with a companion rack that gives a joint accuracy of 25 µm. With three 2 m racks the maximum pitch error is 3 × 44 + 2 × 25 = 182 µm, with 48 screws and two joints. With six 1 m racks it is 6 × 34 + 5 × 25 = 329 µm, with 48 screws and five joints. With twelve half-metre racks at 26 µm each it is 12 × 26 + 11 × 25 = 587 µm, with 48 screws, eleven joints, and 24 pins.<sup class="cite"><a href="#ref-9">[9]</a></sup> The screw count is the same in all three; the joint count, the pin count, the installation time, and the error are not. The maker's point is commercial, but the engineering is general: on a structure the installer builds, the number of pieces is a design variable with a tolerance consequence, and the drawing that leaves it to the installer has left the accuracy to the installer.</p>
+    <p>The second document is the hoist maintenance manual with its four wear numbers and its pairing rule.<sup class="cite"><a href="#ref-22">[22]</a></sup> Put next to the catalogue it closes the loop: the catalogue says what the rack is when it arrives, the operating manual says how to install it so the class survives the structure, and the maintenance manual says how to measure it for the rest of its life and when to change the pinion and the roller that holds it in mesh. A robot fleet needs all three documents for its own drive, and the manufacturing engineer writes the second and third.</p>
+    <!-- AUTHOR: optional personal note here (a rack or rail installation lesson, without employer-specific detail) -->
+
+    <h2 id="mistakes">Common mistakes</h2>
+    <ol>
+      <li><strong>Specifying the rack, not the axis.</strong> Consequence: a quality 6 rack installed to quality 9, with a 300 µm pitch error the drawing never mentioned. Fix: state the axis accuracy, the maximum number of sections, the joint method, and the acceptance check on the drawing.</li>
+      <li><strong>Sizing the roller pinion on torque and ignoring the roller.</strong> Consequence: pitting on the rack flank under a small roller at a high impact factor. Fix: compute p<sub>max</sub>, apply the impact factor to the load, and buy the roller diameter before the torque rating.</li>
+      <li><strong>Assuming a 99 percent efficient drive holds.</strong> Consequence: a robot that descends when the contactor opens. Fix: a spring-applied brake sized on the indirect efficiency, a manual release, and an independent overspeed device.</li>
+      <li><strong>A rigid pinion on somebody else's rack.</strong> Consequence: over-constraint, jamming at the transition, edge loading at every joint. Fix: rotational compliance, chamfered lead-ins, and a separate load path for the moment.</li>
+      <li><strong>No wear limits.</strong> Consequence: an inspector with calipers and no number, so every drive is either fine or replaced. Fix: publish the gauge, the new value, the limit, and the pairing rule before the first unit ships.</li>
+      <li><strong>Joining racks by butting them.</strong> Consequence: a step at every joint that every pinion hits at every pass. Fix: a jig at the transition, a needle roller and dial gauge check, half torque then full torque, and a record per joint.</li>
+      <li><strong>Treating the structure as the customer's problem.</strong> Consequence: the two collapses in this module, from bolts, ties, and overload, with the drive intact. Fix: the tie spacing, the fastener specification, and the load limit are on the robot maker's installation drawing and in the installer's training.</li>
+      <li><strong>Lubrication by good intentions.</strong> Consequence: a rack pitted at the section farthest from the door. Fix: an interval in revolutions and months, logged by the robot, or a lubrication-free rack chosen for the speed.</li>
+    </ol>
+
+    <h2 id="exercise">Worked exercise: a climbing robot's rack drive</h2>
+    <p><em>This is an illustrative example with invented but realistic numbers, not a real program. Catalogue values named in the solution are the ones cited above; everything else is an assumption stated in the text.</em></p>
+    <p>A 60 kg inspection robot climbs a vertical rack in a plant, accelerating at 2 m/s². It is driven by two roller pinions, one on each side of the rack, sharing the load equally; each pinion has rollers of 20 mm diameter and 12 mm length running on a flat hardened flank (steel on steel, E = 210 GPa, ν = 0.3). The pinion pitch radius is 30 mm and the motor drives it through a 20:1 reducer. The rack is 6 m tall.</p>
+    <ol>
+      <li><strong>Contact stress.</strong> Take the worst instant as one roller per pinion carrying that pinion's whole share of the vertical load while accelerating upward. Compute the contact half-width b and p<sub>max</sub>. Recompute p<sub>max</sub> for 10 mm diameter rollers, and for the 20 mm rollers with a 1.5 impact factor on the load.</li>
+      <li><strong>Pitch error chain.</strong> The rack is quality 6 and is joined with a companion rack giving 25 µm joint accuracy. Using the catalogue's per-length figures (34 µm per 1,000 mm rack, 44 µm per 2,000 mm rack), give the worst-case accumulated pitch error for six 1 m racks and for three 2 m racks. Then give the root-sum-square estimate for both, and say which number belongs on the drawing.</li>
+      <li><strong>Holding torque.</strong> The drive is essentially reversible. Compute the torque at the pinion shaft from the robot's weight alone, then the torque at the motor shaft through the 20:1 reducer, ignoring reducer losses, and say why the brake is sized on the motor-side number with the margin the applicable standard demands rather than on this figure alone.</li>
+    </ol>
+    <details>
+      <summary>Show the worked solution</summary>
+      <p><strong>1. Contact stress.</strong> Vertical force during upward acceleration: F<sub>v</sub> = m (g + a) = 60 × (9.81 + 2.0) = 709 N. Per pinion: 354 N, all on one roller at the worst instant. Roller on a flat: 1/R<sub>2</sub> = 0, R<sub>1</sub> = 10 mm. The material term is 2 × (1 − 0.3²) ÷ 210,000 MPa = 8.67 × 10<sup>-6</sup> mm²/N. Half-width: b = √[ (4 × 354 ÷ (π × 12)) × 8.67 × 10<sup>-6</sup> ÷ (1/10) ] = √[ 37.6 × 8.67 × 10<sup>-6</sup> × 10 ] = √(3.26 × 10<sup>-3</sup>) = 0.057 mm. Peak pressure: p<sub>max</sub> = 2 × 354 ÷ (π × 0.057 × 12) = 329 MPa.<sup class="cite"><a href="#ref-18">[18]</a></sup> With 10 mm rollers (R<sub>1</sub> = 5 mm), b falls to 0.040 mm and p<sub>max</sub> rises to 466 MPa, a 41 percent increase for halving the radius, as 1/√R predicts. With the 20 mm rollers and a 1.5 impact factor, F = 531 N per roller, b = 0.070 mm, and p<sub>max</sub> = 403 MPa. Whether 329 or 466 MPa is acceptable is a question for the rack's hardness, case depth, and the life table the roller pinion maker publishes for its own geometry; the exercise's point is that the roller radius moved the number by 41 percent and the impact factor by 22 percent, and both were free to choose at the drawing.</p>
+      <p><strong>2. Pitch error chain.</strong> Six 1 m racks, worst case: 6 × 34 + 5 × 25 = 329 µm. Three 2 m racks: 3 × 44 + 2 × 25 = 182 µm, the catalogue's own two figures.<sup class="cite"><a href="#ref-9">[9]</a></sup> Root sum square, treating each section and joint error as independent: √(6 × 34² + 5 × 25²) = √(6,936 + 3,125) = 100 µm for the 1 m racks and √(3 × 44² + 2 × 25²) = √(5,808 + 1,250) = 84 µm for the 2 m racks. The drawing carries the worst case, because a pitch error is a systematic quantity within one rack and the RSS assumption of independence is weak across a rack whose deviation trends in one direction; the RSS figure is what you expect to measure on a typical installation, and the gap between the two is the reason to require the joint check rather than trust the statistics. Either way the 2 m racks win by about 45 percent on worst case and 16 percent on RSS, before counting the three fewer joints the installer has to make.</p>
+      <p><strong>3. Holding torque.</strong> Weight: 60 × 9.81 = 589 N. Torque at the pinion shaft: 589 × 0.030 = 17.7 N·m, shared by two pinions, so 8.8 N·m each. Through the 20:1 reducer, ignoring losses, each motor sees 0.44 N·m; with a single drive motor carrying both pinions it would see 0.88 N·m. A brake rated at that figure holds a stationary robot on a frictionless drive and nothing else. The real brake is sized on the indirect efficiency of the whole train, which for a 99 percent efficient rolling drive is close to unity so the load arrives at the brake nearly undiminished,<sup class="cite"><a href="#ref-13">[13]</a></sup> with the dynamic case of stopping from rated speed with the payload, and with the holding margin, test, and periodic verification that the standard for the machine's category requires. For a robot that carries nobody that standard is a Module 20 question; the hoist and platform standards show what the answer looks like when the payload is a person.<sup class="cite"><a href="#ref-19">[19]</a><a href="#ref-20">[20]</a></sup> And the brake is not the last line: the overspeed device on its own pinion is, and it needs its own trip test.</p>
+    </details>
+
+    <h2 id="quiz">Quiz</h2>
+    <p>Eight questions. Score 70 % or more to mark this module complete on this device.</p>
+    <form class="quiz" data-module="18">
+      <fieldset class="q" data-answer="c">
+        <legend>1. The roller pinion white paper eliminates backlash by</legend>
+        <label><input type="radio" name="q1" value="a"> grinding the rack to a tighter class</label>
+        <label><input type="radio" name="q1" value="b"> preloading two pinions against each other</label>
+        <label><input type="radio" name="q1" value="c"> generating a rack tooth profile in which the rollers are loaded in opposition</label>
+        <label><input type="radio" name="q1" value="d"> using a lead screw</label>
+        <p class="explain" hidden>Rollers in opposition at all times; the measured backlash in the maker's test was under 3.2 µm.</p>
+      </fieldset>
+      <fieldset class="q" data-type="numeric" data-answer="182" data-tolerance="5">
+        <legend>2. A 6 m axis is built from three 2 m racks with a total pitch error of 44 µm each and two joints of 25 µm each. What is the worst-case accumulated pitch error in µm?</legend>
+        <label>Answer (µm): <input type="number" name="q2" step="any" inputmode="decimal"></label>
+        <p class="explain" hidden>3 × 44 + 2 × 25 = 182 µm, the rack maker's own example.</p>
+      </fieldset>
+      <fieldset class="q" data-answer="b">
+        <legend>3. Doubling the roller radius on a flat flank, at the same load and roller length, changes the Hertz peak pressure by a factor of about</legend>
+        <label><input type="radio" name="q3" value="a"> 0.5</label>
+        <label><input type="radio" name="q3" value="b"> 0.71</label>
+        <label><input type="radio" name="q3" value="c"> 1.0</label>
+        <label><input type="radio" name="q3" value="d"> 2.0</label>
+        <p class="explain" hidden>p max falls as 1/√R; 1/√2 = 0.71.</p>
+      </fieldset>
+      <fieldset class="q" data-answer="d">
+        <legend>4. According to the roller screw catalogue cited, roller screws</legend>
+        <label><input type="radio" name="q4" value="a"> are always self-locking</label>
+        <label><input type="radio" name="q4" value="b"> never need lubrication</label>
+        <label><input type="radio" name="q4" value="c"> have zero axial play as standard</label>
+        <label><input type="radio" name="q4" value="d"> are reversible under most circumstances, so a brake or gear reducer is needed if back-driving is to be avoided</label>
+        <p class="explain" hidden>Only a few specific sizes are exceptions; the indirect efficiency gives the braking torque.</p>
+      </fieldset>
+      <fieldset class="q" data-answer="a">
+        <legend>5. The hoist maker's overspeed safety device works by</legend>
+        <label><input type="radio" name="q5" value="a"> a centrifugal weight on a shaft driven by a pinion constantly engaged with the rack, which screws a brake cone into a lining when the speed is exceeded</label>
+        <label><input type="radio" name="q5" value="b"> cutting the motor power</label>
+        <label><input type="radio" name="q5" value="c"> a software speed limit</label>
+        <label><input type="radio" name="q5" value="d"> a rope and counterweight</label>
+        <p class="explain" hidden>It is mechanical and independent of the drive, and it needs its own pinion in mesh.</p>
+      </fieldset>
+      <fieldset class="q" data-answer="c">
+        <legend>6. The two mast climber collapses investigated by OSHA in 2009 and 2015 were attributed to</legend>
+        <label><input type="radio" name="q6" value="a"> rack and pinion drive failure</label>
+        <label><input type="radio" name="q6" value="b"> motor brake failure</label>
+        <label><input type="radio" name="q6" value="c"> bolts, connections, tie spacing, free-standing height, and overload, with the drives intact</label>
+        <label><input type="radio" name="q6" value="d"> overspeed device failure</label>
+        <p class="explain" hidden>The drive has the standard and the type test; the structure it is bolted to needs the same care.</p>
+      </fieldset>
+      <fieldset class="q" data-answer="b">
+        <legend>7. In the rack operating manual cited, the racks are optimally aligned at a joint when</legend>
+        <label><input type="radio" name="q7" value="a"> the screws are at full torque</label>
+        <label><input type="radio" name="q7" value="b"> the assembling jig sits flush and backlash-free across the transition, and the dial gauge on a needle roller reads the joint between the two racks' extremes within about 30 µm</label>
+        <label><input type="radio" name="q7" value="c"> the racks touch end to end</label>
+        <label><input type="radio" name="q7" value="d"> the pinion runs quietly</label>
+        <p class="explain" hidden>Half torque, check, full torque, and a record per joint.</p>
+      </fieldset>
+      <fieldset class="q" data-answer="d">
+        <legend>8. The 2024 climbing robot patent gives its pinion rotational play in the spline and chamfered lead-in teeth in order to</legend>
+        <label><input type="radio" name="q8" value="a"> reduce cost</label>
+        <label><input type="radio" name="q8" value="b"> increase speed</label>
+        <label><input type="radio" name="q8" value="c"> eliminate the need for a rack</label>
+        <label><input type="radio" name="q8" value="d"> let the pinion find and mesh with a rack it did not manufacture without jamming or over-constraining the system</label>
+        <p class="explain" hidden>Compliance where coaxiality cannot be controlled, and counterwheels to carry the moment.</p>
+      </fieldset>
+      <button type="submit">Check answers</button>
+      <button type="reset" class="secondary">Clear</button>
+      <output class="quiz-score" aria-live="polite"></output>
+    </form>
+    <details>
+      <summary>Answer key</summary>
+      <ol>
+        <li>c. Rollers loaded in opposition.</li>
+        <li>182 µm.</li>
+        <li>b. About 0.71.</li>
+        <li>d. Reversible; brake or reducer needed.</li>
+        <li>a. Centrifugal weight, pinion in mesh, brake cone.</li>
+        <li>c. Structure, bolts, ties, and overload.</li>
+        <li>b. Jig flush and backlash-free; dial gauge within about 30 µm.</li>
+        <li>d. Compliance to mesh without over-constraint.</li>
+      </ol>
+    </details>
+
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul class="takeaways">
+      <li>Rolling contact gives efficiency and life and takes away self-holding. Every rolling drive on a vertical axis needs a brake sized on indirect efficiency and an independent overspeed device.</li>
+      <li>Hertz pressure falls as 1/√R and rises as √F. Buy the roller diameter before the torque rating, and apply the impact factor before the life table.</li>
+      <li>The rack class is a property of the part; the axis accuracy is a property of the installation. Fewer, longer racks, a jig at every joint, a dial gauge check, and a record per joint.</li>
+      <li>Where the rack is installed by others, design compliance into the pinion: rotational play, chamfered lead-ins, and a separate load path for the moment.</li>
+      <li>Publish wear limits as a gauge, a new value, a limit, and a pairing rule before the first unit ships.</li>
+      <li>The hoist standards do not apply to a robot that carries nobody, but the engineering they encode, held when unpowered, arrested at overspeed, lowerable by hand, inspected on a list, does.</li>
+      <li>The drive is the part with the standard; the machines still fell at a bolt and a tie. The installation drawing is part of the drive.</li>
+    </ul>
+
+    <h2 id="references">References</h2>
+    <p class="small">All web sources accessed 2026-09-11. Standards are cited from their publishers' or resellers' catalogue pages unless the entry says the document was read.</p>
+    <ol class="references">
+      <li id="ref-1">Nexen Group. <em>Roller Pinion System: An Alternative to Traditional Linear Drive Systems.</em> White paper, n.d. (hosted by FFJournal). <a href="https://www.ffjournal.net/images/stories/whitepapers/RPS_White_Paper.pdf">https://www.ffjournal.net/images/stories/whitepapers/RPS_White_Paper.pdf</a> <span class="tag">(manufacturer's white paper)</span></li>
+      <li id="ref-2">Nexen Group. <em>Precision Motion Control Application and Selection Guide: Roller Pinion System.</em> Publication 21282, n.d. <a href="https://www.nexengroup.com/media/gated_content/LitPDF/21282.pdf">https://www.nexengroup.com/media/gated_content/LitPDF/21282.pdf</a> <span class="tag">(manufacturer's catalogue)</span></li>
+      <li id="ref-3">Janson, C. A. <em>Roller-tooth gear.</em> US Patent 874,342, granted 17 December 1907. <a href="https://patents.google.com/patent/US874342A/en">https://patents.google.com/patent/US874342A/en</a></li>
+      <li id="ref-4">Inventio AG. <em>Elevator with roller-pinion drive.</em> European Patent Application EP 2390220 A1, published 30 November 2011. <a href="https://patents.google.com/patent/EP2390220A1/en">https://patents.google.com/patent/EP2390220A1/en</a></li>
+      <li id="ref-5">Eversole, N. R., Loyet, J. R., Eversole, B. K. <em>Rack and roller pinion lift system.</em> US Patent 10,017,359 B2, assigned to Modern Concepts Outdoors LLC, granted 10 July 2018. <a href="https://patents.google.com/patent/US10017359B2/en">https://patents.google.com/patent/US10017359B2/en</a></li>
+      <li id="ref-6">Fosnight, W. J. et al. <em>Climbing robot with compliant pinion drive.</em> US Patent 11,951,620 B2, assigned to Advanced Systems &amp; Robotics LLC, Walmart Inc., and Symbotic Inc., granted 9 April 2024. <a href="https://patents.google.com/patent/US11951620B2/en">https://patents.google.com/patent/US11951620B2/en</a></li>
+      <li id="ref-7">Gravelle, S., Cowley, R. G., Woolf, A. B. <em>Storage and retrieval system.</em> International Patent Application WO 2016/172793 A1, applicant Attabotics Inc., published 3 November 2016. <a href="https://patents.google.com/patent/WO2016172793A1/en">https://patents.google.com/patent/WO2016172793A1/en</a></li>
+      <li id="ref-8">Moulin, R., Heitz, R. <em>System for storing and transporting objects stored in racks of a warehouse.</em> US Patent 11,208,264 B2, assigned to Exotec Product SAS, granted 28 December 2021. <a href="https://patents.google.com/patent/US11208264B2/en">https://patents.google.com/patent/US11208264B2/en</a></li>
+      <li id="ref-9">ATLANTA Drive Systems, Inc. <em>Rack &amp; Pinion Drive Systems</em> catalogue: product overview and racks chapter (class table, rack pages, 6 m axis assembly example). n.d. <a href="https://www.atlantadrives.com/pdf/atlanta.pdf">https://www.atlantadrives.com/pdf/atlanta.pdf</a> and <a href="https://www.atlantadrives.com/pdf/ads_racks.pdf">https://www.atlantadrives.com/pdf/ads_racks.pdf</a> <span class="tag">(manufacturer's catalogue)</span></li>
+      <li id="ref-10">WITTENSTEIN alpha GmbH. <em>alpha Linear System: Rack &amp; Pinion Operating Manual.</em> Document D012825, revision 05, 2022. <a href="https://www.evolutionmotion.com/wp-content/uploads/2023/06/wittenstein-rack_and_pinion_operating-manual.pdf">https://www.evolutionmotion.com/wp-content/uploads/2023/06/wittenstein-rack_and_pinion_operating-manual.pdf</a> <span class="tag">(manufacturer's manual, distributor mirror)</span></li>
+      <li id="ref-11">Güdel Group AG. <em>Racks and Pinions</em> catalogue. n.d. (distributor mirror). <a href="https://hvhindustrial.com/pdfs/Gudel-Rack-Pinion.pdf">https://hvhindustrial.com/pdfs/Gudel-Rack-Pinion.pdf</a> <span class="tag">(manufacturer's catalogue)</span></li>
+      <li id="ref-12">DIN. <em>DIN 3961, DIN 3962-1, -2, -3, DIN 3963, DIN 3964, DIN 3967: Tolerances for cylindrical gear teeth</em> (1978 to 1980). ANSI webstore package listing. <a href="https://webstore.ansi.org/standards/din/din39613962396339643967">https://webstore.ansi.org/standards/din/din39613962396339643967</a></li>
+      <li id="ref-13">Ewellix. <em>Roller screws.</em> Catalogue IL-05003, June 2020 (distributor mirror). <a href="https://www.concar.de/fileadmin/user_upload/Download_PDF_engl/IL-05003_1-EN-June_2020_Roller_screws.pdf">https://www.concar.de/fileadmin/user_upload/Download_PDF_engl/IL-05003_1-EN-June_2020_Roller_screws.pdf</a> <span class="tag">(manufacturer's catalogue)</span></li>
+      <li id="ref-14">THK Co., Ltd. <em>Ball Screw General Catalog A15: Selecting a Model Number, Nominal Life.</em> n.d. <a href="https://tech.thk.com/en/products/pdf/en_a15_046.pdf">https://tech.thk.com/en/products/pdf/en_a15_046.pdf</a> <span class="tag">(manufacturer's catalogue)</span></li>
+      <li id="ref-15">ISO. <em>ISO 3408-1:2006 Ball screws. Part 1: Vocabulary and designation.</em> <a href="https://www.iso.org/standard/35022.html">https://www.iso.org/standard/35022.html</a></li>
+      <li id="ref-16">Roton Products, Inc. "Screw Backdriving Efficiency." Screw University, n.d. <a href="https://www.roton.com/screw-university/screw-actions/screw-backdriving-efficiency/">https://www.roton.com/screw-university/screw-actions/screw-backdriving-efficiency/</a> <span class="tag">(manufacturer's guide)</span></li>
+      <li id="ref-17">Stock Drive Products / Sterling Instrument. <em>Handbook of Timing Belts, Pulleys, Chains and Sprockets: Technical Section.</em> n.d. <a href="https://sdp-si.com/D820/PDFS/Technical-Section.pdf">https://sdp-si.com/D820/PDFS/Technical-Section.pdf</a> <span class="tag">(distributor's handbook, crediting Gates Rubber Co.)</span></li>
+      <li id="ref-18">University of Utah, Department of Mechanical Engineering. "Contact Stresses and Deformations." ME EN 7960 Precision Machine Design, lecture notes, n.d. <a href="https://my.mech.utah.edu/~me7960/lectures/Topic7-ContactStressesAndDeformations.pdf">https://my.mech.utah.edu/~me7960/lectures/Topic7-ContactStressesAndDeformations.pdf</a></li>
+      <li id="ref-19">BSI. <em>BS EN 12159:2012 Builders hoists for persons and materials with vertically guided cages.</em> Scope text on the ANSI webstore. <a href="https://webstore.ansi.org/standards/bsi/bsen121592012">https://webstore.ansi.org/standards/bsi/bsen121592012</a></li>
+      <li id="ref-20">DIN. <em>DIN EN 1495:2009 Lifting platforms. Mast climbing work platforms (EN 1495:1997+A2:2009).</em> Scope text on the ANSI webstore. <a href="https://webstore.ansi.org/standards/din/dinen14952009">https://webstore.ansi.org/standards/din/dinen14952009</a></li>
+      <li id="ref-21">International Powered Access Federation. <em>Guidelines for the Safe Use of Mast Climbing Work Platforms.</em> USAO 0710-002 EN-US. <a href="https://www.ipaf.org/sites/default/files/2018-01/IPAF%20Guidelines%20for%20the%20Safe%20Use%20of%20Mast%20Climbing%20Work%20Platforms%20(USAO%200710-002%20EN-US).pdf">https://www.ipaf.org/sites/default/files/2018-01/IPAF Guidelines for the Safe Use of Mast Climbing Work Platforms (USAO 0710-002 EN-US).pdf</a></li>
+      <li id="ref-22">Alimak. <em>ALIMAK APF Technical Description &amp; Instruction Manual.</em> n.d. (distributor mirror). <a href="https://www.mastclimbers.com/wp-content/uploads/Alimak-APF-Manual.pdf">https://www.mastclimbers.com/wp-content/uploads/Alimak-APF-Manual.pdf</a> <span class="tag">(manufacturer's manual)</span></li>
+      <li id="ref-23">Alimak. <em>Technical Description: ALIMAK SCANDO 650 Construction Hoists.</em> n.d. (distributor mirror). <a href="https://www.staffordcranegroup.com/wp-content/uploads/2020/07/ca69b80cccc69e2cc3ab467e0b128e94.pdf">https://www.staffordcranegroup.com/wp-content/uploads/2020/07/ca69b80cccc69e2cc3ab467e0b128e94.pdf</a> <span class="tag">(manufacturer's description)</span></li>
+      <li id="ref-24">Ayub, M. et al. <em>Investigation of the June 10, 2009 Mast Climbing Platform Collapse in Austin, Texas.</em> US Department of Labor, OSHA Directorate of Construction, December 2009. Summary on eLCOSH (CPWR). <a href="https://www.elcosh.org/document/3655/d001197/Investigation+of+the+June+10,+2009+Mast+Climbing+Platform+Collapse+in+Austin,+Texas.html">https://www.elcosh.org/document/3655/d001197/</a> <span class="tag">(summary read; the OSHA PDF is not retrievable by script)</span></li>
+      <li id="ref-25">Ayub, M., Horres, B., Shah, D. et al. <em>Investigation of the March 23, 2015 Mast Climbing Scaffold Collapse during Dismantling at Raleigh, NC.</em> US Department of Labor, OSHA Directorate of Construction, August 2015. Summary on eLCOSH (CPWR). <a href="https://www.elcosh.org/document/4182/d001472/">https://www.elcosh.org/document/4182/d001472/</a> <span class="tag">(summary read)</span></li>
+      <li id="ref-26">ISO. <em>ISO 15243:2017 Rolling bearings: Damage and failures. Terms, characteristics and causes.</em> <a href="https://www.iso.org/standard/59619.html">https://www.iso.org/standard/59619.html</a></li>
+      <li id="ref-27">SKF Group. <em>Bearing damage and failure analysis.</em> Publication 14219 EN, n.d. <a href="https://cdn.skfmediahub.skf.com/api/public/093168a92d25cc46/pdf_preview_medium/14219_3_EN_-_Bearing_failures_LOW_pdf_preview_medium.pdf">https://cdn.skfmediahub.skf.com/api/public/093168a92d25cc46/pdf_preview_medium/14219_3_EN_-_Bearing_failures_LOW_pdf_preview_medium.pdf</a></li>
+      <li id="ref-28">ISO. <em>ISO 281:2007 Rolling bearings: Dynamic load ratings and rating life.</em> <a href="https://www.iso.org/standard/38102.html">https://www.iso.org/standard/38102.html</a></li>
+      <li id="ref-29">AGMA. <em>ANSI/AGMA 1010-F14 (R2020) Appearance of Gear Teeth: Terminology of Wear and Failure.</em> 2014, reaffirmed 2020. ANSI webstore listing. <a href="https://webstore.ansi.org/standards/agma/ansiagma1010f14r2020">https://webstore.ansi.org/standards/agma/ansiagma1010f14r2020</a></li>
+      <li id="ref-30">Blickle. "Material description for wheel treads." n.d. <a href="https://www.blickle.us/en-us/guide/material-description-wheel-treads">https://www.blickle.us/en-us/guide/material-description-wheel-treads</a> <span class="tag">(manufacturer's guide)</span></li>
+      <li id="ref-31">ATLANTA Drive Systems, Inc. "Zero-backlash rack and pinion systems: dual pinion and split pinion." n.d. <a href="https://atlantadrives.com/systems1.htm">https://atlantadrives.com/systems1.htm</a> <span class="tag">(secondary: seen in search excerpts, not read in full)</span></li>
+    </ol>
+    <h3>Further reading</h3>
+    <ul class="small">
+      <li>Budynas, R. G., Nisbett, J. K. <em>Shigley's Mechanical Engineering Design</em>, 11th ed. McGraw-Hill, 2020. Contact stress and power screw sections.</li>
+      <li>Slocum, A. H. <em>Precision Machine Design.</em> Society of Manufacturing Engineers, 1992. Linear drive and error budget chapters.</li>
+      <li>Johnson, K. L. <em>Contact Mechanics.</em> Cambridge University Press, 1985.</li>
+    </ul>
+
+    <nav class="pager" aria-label="Module navigation" data-pager></nav>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <p>© <span data-year>2026</span> Erdem Yilmaz. <!-- AUTHOR: confirm name and copyright line --></p>
+  <p>Content licence: CC BY-NC-SA 4.0 (proposed, to be confirmed by the author). Code: MIT (proposed).</p>
+  <p>Last updated 2026-09-11. Part of <a href="https://erdemyilmaz.me/">erdemyilmaz.me</a>.</p>
+</footer>
+
+<script src="../assets/js/course.js"></script>
+</body>
+</html>
